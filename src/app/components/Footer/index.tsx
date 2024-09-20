@@ -4,7 +4,7 @@ import React from 'react';
 
 export default function Footer() {
   return (
-    <footer className="w-full bg-mediumWhite rounded-t-[30px] md:gap-5 flex flex-col md:flex-row items-center pl-4 md:pl-4 xl:pl-14 pt-12 pb-7 mt-10">
+    <footer className="w-full bg-mediumWhite rounded-t-[30px] md:gap-5 flex flex-col md:flex-row items-center pl-4 md:pl-4 xl:pl-14 pt-12 pb-7 ">
       <div className="flex flex-col gap-[30px] items-center md:items-start">
         <Image
           alt="logo iaça"
@@ -37,7 +37,7 @@ export default function Footer() {
           />
         </div>
       </div>
-      <div className="flex gap-10 md:gap-16 md:pl-10 lg:pl-24 xl:gap-28 xl:pl-60 pt-7 flex-col sm:flex-row items-center">
+      <div className="flex gap-10 md:gap-16 md:pl-10 lg:pl-24 xl:gap-28 xl:pl-60 pt-7 flex-col sm:flex-row items-start">
         <div className="flex gap-10 md:gap-16 xl:gap-28">
           <div className="flex flex-col gap-4">
             <h3 className="text-darkPurple font-bold text-xl">ÍAÇA</h3>

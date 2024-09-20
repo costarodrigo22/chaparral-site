@@ -16,7 +16,8 @@ const config: Config = {
         mediumWhite: '#FDECE5',
         
         darkGray: '#1E1E1E',
-        darkPurple: '#2B0036',
+        darkPurple: '#3c004a',
+        
 
         pastelPink: '#DB0084',
         pastelBlue: '#5E14FF',
