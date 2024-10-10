@@ -43,7 +43,7 @@ export default function FindUs() {
         <Image
           alt="Imagem de uma cumbuca de açai"
           height={299}
-          width={618}
+          width={298}
           src={'/cumbuca-acai.svg'}
         />
       </div>

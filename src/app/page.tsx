@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import FindUs from './components/FindUs';
 import FoodService from './components/FoodService';
 import Footer from './components/Footer';
@@ -32,6 +33,15 @@ export default function Home() {
       <FindUs />
       <div className=" lg:mx-8">
         <Footer />
+      </div>
+      <div className="w-full h-full relative">
+        <Image
+          className="z-50 hover:cursor-pointer right-1 bottom-[50px] fixed animate-shakeWithPause"
+          src="/whatsapp-icon.svg"
+          alt="Ícone do whatsapp"
+          width={70}
+          height={70}
+        />
       </div>
     </div>
   );
