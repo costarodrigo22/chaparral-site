@@ -29,7 +29,7 @@ export default function Nav() {
             <span
               className={`font-bold text-base ${Nunitofont.className} hidden md:block`}
             >
-              Sobre o IAÇA
+              Sobre o ÍAÇA
             </span>
             <span
               className={`font-bold text-base ${Nunitofont.className} hidden md:block`}
@@ -48,7 +48,7 @@ export default function Nav() {
             </span>
             <div className="flex items-center gap-[71px]">
               <SearchInput />
-              <div className="w-12 h-12 rounded-full fixed md:static right-3 bg-transparent flex items-center justify-center hover:bg-[#3b1344a1] transition-all duration-300 ease-in-out cursor-pointer">
+              <div className="w-12 h-12 rounded-full fixed md:static right-16 bg-transparent flex items-center justify-center hover:bg-[#3b1344a1] transition-all duration-300 ease-in-out cursor-pointer">
                 <Image
                   alt="Carrinho de compras"
                   height={24}
@@ -114,7 +114,7 @@ export default function Nav() {
           </li>
           <li className="mb-4">
             <a href="#" className={`text-base ${Nunitofont.className}`}>
-              IAÇA
+              Sobre o ÍAÇA
             </a>
           </li>
           <li className="mb-4">
