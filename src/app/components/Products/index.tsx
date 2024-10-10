@@ -28,15 +28,15 @@ export default function Products() {
 
   const getRoundedClass = (index: number, arrayLength: number) => {
     if (arrayLength === 1) {
-      return 'rounded-[30px]';
+      return ' rounded-[30px]';
     } else if (arrayLength === 2) {
-      if (index === 0) return 'rounded-l-[30px] ';
-      if (index === 1) return 'rounded-r-[30px] ';
+      if (index === 0) return ' rounded-l-[30px] ';
+      if (index === 1) return ' rounded-r-[30px] ';
     } else if (arrayLength >= 3) {
       if (index === 0)
-        return 'rounded-t-[30px] lg:rounded-l-[30px] lg:rounded-r-none';
+        return ' rounded-t-[30px] lg:rounded-l-[30px] lg:rounded-r-none';
       if (index === arrayLength - 1)
-        return 'rounded-b-[30px] lg:rounded-r-[30px] lg:rounded-l-none';
+        return ' rounded-b-[30px] lg:rounded-r-[30px] lg:rounded-l-none';
     }
     return '';
   };
@@ -47,13 +47,11 @@ export default function Products() {
         {dataArray.map((item, index) => (
           <ProductCard
             backgroundImage={item.backgroundImage}
+            backgroundColor={item.background}
             srcLogo={item.logoSrc}
             src={item.src}
             key={index}
-            customClass={`h-full bg-[${item.background}] ${getRoundedClass(
-              index,
-              dataArray.length
-            )}`}
+            customClass={`h-full${getRoundedClass(index, dataArray.length)}`}
             text={item.text}
           />
         ))}
