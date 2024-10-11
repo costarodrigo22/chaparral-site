@@ -1,4 +1,6 @@
+'use client';
 import Button from '@/app/global/components/button';
+import { handleScroll } from '@/app/utils/handleScroll';
 import Image from 'next/image';
 import React from 'react';
 
@@ -7,7 +9,7 @@ export default function Footer() {
     <footer className="w-full bg-mediumWhite rounded-t-[30px] md:gap-5 flex flex-col md:flex-row items-center pl-4 md:pl-4 xl:pl-14 pt-12 pb-7 ">
       <div className="flex flex-col gap-[30px] items-center md:items-start">
         <Image
-          alt="logo iaça"
+          alt="logo Íaça"
           width={98}
           height={56}
           src={'/logo-iaca-purple.svg'}
@@ -26,8 +28,12 @@ export default function Footer() {
           <Image
             alt="logo instagram"
             src={'/instagram-logo.svg'}
+            onClick={() => {
+              window.open('https://www.instagram.com/iacapuro/', '_blank');
+            }}
             height={25}
             width={27}
+            className="hover:cursor-pointer"
           />
           <Image
             alt="logo facebook"
@@ -41,10 +47,13 @@ export default function Footer() {
         <div className="flex gap-10 md:gap-16 xl:gap-28">
           <div className="flex flex-col gap-4">
             <h3 className="text-darkPurple font-bold text-xl">ÍAÇA</h3>
-            <span className="text-darkPurple text-base font-normal">
+            <a href="/sobre" className="text-darkPurple text-base font-normal">
               Sobre a Empresa
-            </span>
-            <span className="text-darkPurple text-base font-normal">
+            </a>
+            <span
+              className="text-darkPurple hover:cursor-pointer text-base font-normal"
+              onClick={() => handleScroll('foodservice')}
+            >
               Food Service
             </span>
             <span className="text-darkPurple text-base font-normal">

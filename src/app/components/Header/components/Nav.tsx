@@ -2,7 +2,16 @@
 import { useState } from 'react';
 import Image from 'next/image';
 import { Nunito } from 'next/font/google';
-import SearchInput from './SearchInput';
+import { handleScroll } from '@/app/utils/handleScroll';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/DropdownMenu';
+// import SearchInput from './SearchInput';
 
 const Nunitofont = Nunito({
   weight: ['200', '300', '400', '500', '600', '700', '800', '900'],
@@ -21,23 +30,26 @@ export default function Nav() {
       <nav className="w-full h-[90px] fixed flex z-50 bg-gradient-to-r from-[#2B0036] to-[#36133D] text-white">
         <div className="flex items-center justify-center w-[15%]">
           <div className="relative hidden md:block max-w-[139px] h-auto mt-5">
-            <Image src="/iaça-logo.svg" alt="Logo" width={139} height={80} />
+            <Image src="/iaça-logo.svg" alt="Logo" width={110} height={80} />
           </div>
         </div>
-        <div className="flex items-center w-[85%] mt-4">
-          <div className="flex items-center md:gap-[78px] lg:gap-[80px] xl:gap-[78px]">
-            <span
+        <div className="flex items-center justify-between w-[85%] mt-4">
+          <div className="flex items-center md:gap-[65px] lg:gap-[80px] xl:gap-[90px]">
+            <a
+              href="/sobre"
               className={`font-bold text-base ${Nunitofont.className} hidden md:block`}
             >
               Sobre o ÍAÇA
-            </span>
+            </a>
             <span
-              className={`font-bold text-base ${Nunitofont.className} hidden md:block`}
+              className={` hover:cursor-pointer font-bold text-base ${Nunitofont.className} hidden md:block`}
+              onClick={() => handleScroll('produtos')}
             >
               Produtos
             </span>
             <span
-              className={`font-bold text-base ${Nunitofont.className} hidden md:block`}
+              className={` hover:cursor-pointer font-bold text-base ${Nunitofont.className} hidden md:block`}
+              onClick={() => handleScroll('receitas')}
             >
               Receitas
             </span>
@@ -46,24 +58,77 @@ export default function Nav() {
             >
               Contato
             </span>
-            <div className="flex items-center gap-[71px]">
-              <SearchInput />
-              <div className="w-12 h-12 rounded-full fixed md:static right-16 bg-transparent flex items-center justify-center hover:bg-[#3b1344a1] transition-all duration-300 ease-in-out cursor-pointer">
-                <Image
-                  alt="Carrinho de compras"
-                  height={24}
-                  width={24}
-                  src={'/brasil-flag.svg'}
-                />
-              </div>
-              <div className="w-12 h-12 rounded-full fixed md:static right-3 bg-transparent flex items-center justify-center hover:bg-[#3b1344a1] transition-all duration-300 ease-in-out cursor-pointer">
-                <Image
-                  alt="Carrinho de compras"
-                  height={24}
-                  width={24}
-                  src={'/shopping-cart.svg'}
-                />
-              </div>
+          </div>
+          <div className="flex items-center gap-[71px] lg:mr-20 xl:mr-28">
+            {/* <SearchInput /> */}
+
+            <DropdownMenu>
+              <DropdownMenuTrigger className="outline-none">
+                Open
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-full bg-[#36133D] border-none">
+                <DropdownMenuLabel className="text-center">
+                  <span
+                    className={`w-20 text-white font-semibold text-base ${Nunitofont.className}`}
+                  >
+                    Idioma
+                  </span>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator className="bg-[#6a227a]" />
+                <DropdownMenuItem className="hover:cursor-pointer hover:bg-[#280e2d]">
+                  <div className="flex gap-2 ">
+                    <span
+                      className={`w-20 text-white font-semibold text-base ${Nunitofont.className}`}
+                    >
+                      Português
+                    </span>
+                    <Image
+                      alt="Carrinho de compras"
+                      height={24}
+                      width={24}
+                      src={'/brasil-flag.svg'}
+                    />
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="hover:cursor-pointer hover:bg-[#280e2d]">
+                  <div className="flex gap-2">
+                    <span
+                      className={`w-20 text-white font-semibold text-base ${Nunitofont.className}`}
+                    >
+                      Inglês
+                    </span>
+                    <Image
+                      alt="Carrinho de compras"
+                      height={24}
+                      width={24}
+                      src={'/usa-flag.svg'}
+                    />
+                  </div>
+                </DropdownMenuItem>
+                <DropdownMenuItem className="hover:cursor-pointer hover:bg-[#280e2d]">
+                  <div className="flex gap-2">
+                    <span
+                      className={`w-20 text-white font-semibold text-base ${Nunitofont.className}`}
+                    >
+                      Espanhol
+                    </span>
+                    <Image
+                      alt="Carrinho de compras"
+                      height={24}
+                      width={24}
+                      src={'/es-flag.svg'}
+                    />
+                  </div>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <div className="w-12 h-12 rounded-full fixed md:static right-3 bg-transparent flex items-center justify-center hover:bg-[#3b1344a1] transition-all duration-300 ease-in-out cursor-pointer">
+              <Image
+                alt="Carrinho de compras"
+                height={24}
+                width={24}
+                src={'/shopping-cart.svg'}
+              />
             </div>
           </div>
           <div
@@ -113,14 +178,25 @@ export default function Nav() {
             </div>
           </li>
           <li className="mb-4">
-            <a href="#" className={`text-base ${Nunitofont.className}`}>
+            <a href="/sobre" className={`text-base ${Nunitofont.className}`}>
               Sobre o ÍAÇA
             </a>
           </li>
           <li className="mb-4">
-            <a href="#" className={`text-base ${Nunitofont.className}`}>
+            <span
+              onClick={() => handleScroll('produtos')}
+              className={`text-base ${Nunitofont.className}`}
+            >
               Produtos
-            </a>
+            </span>
+          </li>
+          <li className="mb-4">
+            <span
+              onClick={() => handleScroll('receitas')}
+              className={`text-base ${Nunitofont.className}`}
+            >
+              Receitas
+            </span>
           </li>
           <li>
             <a href="#" className={`text-base ${Nunitofont.className}`}>

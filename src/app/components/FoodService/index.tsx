@@ -3,7 +3,10 @@ import React from 'react';
 
 export default function FoodService() {
   return (
-    <div className=" bg-mediumWhite flex justify-between w-full h-[629px] 2xl:h-[800px]">
+    <div
+      className=" bg-mediumWhite flex justify-between w-full h-[629px] 2xl:h-[800px]"
+      id="foodservice"
+    >
       <div className="px-20 flex items-center lg:items-start bg-[url('/food-service-bg.svg')] bg-no-repeat bg-center bg-cover justify-center flex-col gap-[75px] py-5 w-full lg:w-[56.32%] ">
         <h2 className=" font-normal text-2xl 2xl:text-4xl sm:text-3xl md:text-4xl text-black">
           ÍAÇA Food Service

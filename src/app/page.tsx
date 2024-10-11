@@ -16,7 +16,7 @@ export default function Home() {
       <Others />
       <Products />
       <ShowProduct />
-      <div className="lg:mx-5 xl:mx-10 mb-10">
+      <div className="lg:mx-5 xl:mx-10 mb-10" id="receitas">
         <div className=" lg:h-[715px]">
           <Recipes />
         </div>
@@ -36,7 +36,7 @@ export default function Home() {
       </div>
       <div className="w-full h-full relative">
         <Image
-          className="z-50 hover:cursor-pointer right-1 bottom-[50px] fixed animate-shakeWithPause"
+          className="z-50 hover:cursor-pointer right-1 bottom-[25px] fixed animate-shakeWithPause"
           src="/whatsapp-icon.svg"
           alt="Ícone do whatsapp"
           width={70}

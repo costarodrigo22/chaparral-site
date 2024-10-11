@@ -1,10 +1,12 @@
 'use client';
 import 'swiper/css';
 import 'swiper/css/navigation';
+import 'swiper/css/autoplay'; // Import the autoplay styles
 
 // Import required modules
 import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
+import { Autoplay } from 'swiper/modules'; // Import the Autoplay module
 import ButtonCarousel from './ButtonCarousel';
 
 interface CarouselItem {
@@ -20,7 +22,16 @@ interface CarouselProps {
 export default function CityCarousel({ items }: CarouselProps) {
   return (
     <>
-      <Swiper spaceBetween={50} slidesPerView={1} className="w-full h-full">
+      <Swiper
+        spaceBetween={50}
+        slidesPerView={1}
+        className="w-full h-full"
+        autoplay={{
+          delay: 5000,
+          disableOnInteraction: false,
+        }}
+        modules={[Autoplay]}
+      >
         <ButtonCarousel
           direction="prev"
           src="/arrow-left.svg"
