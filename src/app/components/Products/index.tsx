@@ -30,8 +30,10 @@ export default function Products() {
     if (arrayLength === 1) {
       return ' rounded-[30px]';
     } else if (arrayLength === 2) {
-      if (index === 0) return ' rounded-l-[30px] ';
-      if (index === 1) return ' rounded-r-[30px] ';
+      if (index === 0)
+        return ' rounded-t-[30px] lg:rounded-l-[30px] lg:rounded-tr-[0px]';
+      if (index === 1)
+        return ' rounded-b-[30px] lg:rounded-r-[30px] lg:rounded-bl-[0px]';
     } else if (arrayLength >= 3) {
       if (index === 0)
         return ' rounded-t-[30px] lg:rounded-l-[30px] lg:rounded-r-none';
@@ -42,7 +44,10 @@ export default function Products() {
   };
 
   return (
-    <div className="mx-5 lg:mx-10 h-auto mb-[-30px] z-30 relative">
+    <div
+      className="mx-5 lg:mx-10 h-auto mb-[-30px] z-30 relative"
+      id="produtos"
+    >
       <div className="w-full h-full flex flex-col lg:flex-row rounded-[30px]">
         {dataArray.map((item, index) => (
           <ProductCard
