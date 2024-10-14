@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Nunito } from 'next/font/google';
 import { handleScroll } from '@/app/utils/handleScroll';
@@ -20,11 +20,31 @@ const Nunitofont = Nunito({
 
 export default function Nav() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [flag, setFlag] = useState('');
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  useEffect(() => {
+    const flag = localStorage.getItem('flag');
+    if (flag) {
+      setFlag(flag);
+      return;
+    } else {
+      localStorage.setItem('flag', 'pt-br');
+    }
+  }, []);
+
+  function setLocalStorageFlag(flag: string) {
+    localStorage.setItem('flag', flag);
+    setFlag(flag);
+  }
+  const flagMap: { [key: string]: string } = {
+    'pt-br': '/brasil-flag.svg',
+    'en-us': '/usa-flag.svg',
+    es: '/es-flag.svg',
+  };
   return (
     <>
       <nav className="w-full h-[90px] fixed flex z-50 bg-gradient-to-r from-[#2B0036] to-[#36133D] text-white">
@@ -64,7 +84,16 @@ export default function Nav() {
 
             <DropdownMenu>
               <DropdownMenuTrigger className="outline-none">
-                Open
+                {flag && flagMap[flag] && (
+                  <div className="flex gap-2 mr-20 md:mr-0">
+                    <Image
+                      alt="Carrinho de compras"
+                      height={24}
+                      width={24}
+                      src={flagMap[flag]}
+                    />
+                  </div>
+                )}
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-full bg-[#36133D] border-none">
                 <DropdownMenuLabel className="text-center">
@@ -75,7 +104,10 @@ export default function Nav() {
                   </span>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator className="bg-[#6a227a]" />
-                <DropdownMenuItem className="hover:cursor-pointer hover:bg-[#280e2d]">
+                <DropdownMenuItem
+                  className="hover:cursor-pointer hover:bg-[#280e2d]"
+                  onClick={() => setLocalStorageFlag('pt-br')}
+                >
                   <div className="flex gap-2 ">
                     <span
                       className={`w-20 text-white font-semibold text-base ${Nunitofont.className}`}
@@ -90,7 +122,10 @@ export default function Nav() {
                     />
                   </div>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="hover:cursor-pointer hover:bg-[#280e2d]">
+                <DropdownMenuItem
+                  className="hover:cursor-pointer hover:bg-[#280e2d]"
+                  onClick={() => setLocalStorageFlag('en-us')}
+                >
                   <div className="flex gap-2">
                     <span
                       className={`w-20 text-white font-semibold text-base ${Nunitofont.className}`}
@@ -105,7 +140,10 @@ export default function Nav() {
                     />
                   </div>
                 </DropdownMenuItem>
-                <DropdownMenuItem className="hover:cursor-pointer hover:bg-[#280e2d]">
+                <DropdownMenuItem
+                  className="hover:cursor-pointer hover:bg-[#280e2d]"
+                  onClick={() => setLocalStorageFlag('es')}
+                >
                   <div className="flex gap-2">
                     <span
                       className={`w-20 text-white font-semibold text-base ${Nunitofont.className}`}
