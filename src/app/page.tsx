@@ -1,13 +1,14 @@
 import Image from 'next/image';
 import FindUs from './components/FindUs';
 import FoodService from './components/FoodService';
-import Footer from './components/Footer';
+import Footer from './global/layouts/Footer';
 import Header from './components/Header';
 import Others from './components/Others';
 import Products from './components/Products';
 import Recipes from './components/Recipes';
-import ShowProduct from './components/ShowProduct';
+// import ShowProduct from './components/ShowProduct';
 import Button from './global/components/button';
+import OwnProduction from './components/OnwProduction';
 
 export default function Home() {
   return (
@@ -15,7 +16,8 @@ export default function Home() {
       <Header />
       <Others />
       <Products />
-      <ShowProduct />
+      <OwnProduction />
+      {/* <ShowProduct /> */}
       <div className="lg:mx-5 xl:mx-10 mb-10" id="receitas">
         <div className=" lg:h-[715px]">
           <Recipes />

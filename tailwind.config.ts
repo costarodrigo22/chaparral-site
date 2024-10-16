@@ -12,6 +12,7 @@ const config: Config = {
   		colors: {
   			lightGray: '#898989',
   			ligthPink: '#FC4CD1',
+  			primaryWhite: '#F9F9F9',
   			ligthWhite: '#FFEFE9',
   			mediumWhite: '#FDECE5',
   			darkGray: '#1E1E1E',
@@ -20,6 +21,7 @@ const config: Config = {
   			pastelBlue: '#5E14FF',
   			pastelYellow: '#FBA301',
   			pastelGreen: '#00DB99',
+  			radiantGreen: '#02EA11',
   			background: 'hsl(var(--background))',
   			foreground: 'hsl(var(--foreground))',
   			card: {
