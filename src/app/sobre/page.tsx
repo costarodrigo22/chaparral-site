@@ -1,12 +1,15 @@
 import Image from 'next/image';
-import Footer from '../components/Footer';
-import AboutHeader from './_components/AboutHeader';
+import Footer from '../global/layouts/Footer';
+import AboutHeader from './header/AboutHeader';
+import Sustainability from './sustainabilitySection';
+import Mission from './mission';
 
 export default function Sobre() {
   return (
     <div className="w-full h-full">
       <AboutHeader />
-
+      <Sustainability />
+      <Mission />
       <div className=" lg:mx-8">
         <Footer />
       </div>

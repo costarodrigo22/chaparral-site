@@ -45,7 +45,7 @@ export default function Products() {
 
   return (
     <div
-      className="mx-5 lg:mx-10 h-auto mb-[-30px] z-30 relative"
+      className="mx-5 lg:mx-10 h-auto mb-3 lg:mb-[-30px] z-30 relative"
       id="produtos"
     >
       <div className="w-full h-full flex flex-col lg:flex-row rounded-[30px]">
