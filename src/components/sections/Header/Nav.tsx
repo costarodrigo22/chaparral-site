@@ -18,7 +18,7 @@ const Nunitofont = Nunito({
 	subsets: ['latin'],
 });
 
-export default function AboutNav() {
+export default function Nav() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [flag, setFlag] = useState('');
 
@@ -46,29 +46,20 @@ export default function AboutNav() {
 		es: '/es-flag.svg',
 	};
 	return (
-		<div>
-			<nav className='w-full h-[90px] fixed flex z-50 bg-transparent bg-gradient-to-r from-[#2B0036] to-[#36133D] text-white'>
+		<>
+			<nav className='w-full h-[90px] fixed flex z-50 bg-gradient-to-r from-[#2B0036] to-[#36133D] text-white'>
 				<div className='flex items-center justify-center w-[15%]'>
 					<div className='relative hidden md:block max-w-[139px] h-auto mt-5'>
-						<Image
-							onClick={() => {
-								window.open('/', '_self');
-							}}
-							className='hover:cursor-pointer'
-							src='/iaça-logo.svg'
-							alt='Logo'
-							width={110}
-							height={80}
-						/>
+						<Image src='/iaça-logo.svg' alt='Logo' width={110} height={80} />
 					</div>
 				</div>
 				<div className='flex items-center justify-between w-[85%] mt-4'>
 					<div className='flex items-center md:gap-[65px] lg:gap-[80px] xl:gap-[90px]'>
 						<a
-							href='/'
+							href='/sobre'
 							className={`font-bold text-base ${Nunitofont.className} hidden md:block`}
 						>
-							Home
+							Sobre o ÍAÇA
 						</a>
 						<span
 							className={` hover:cursor-pointer font-bold text-base ${Nunitofont.className} hidden md:block`}
@@ -199,9 +190,6 @@ export default function AboutNav() {
 			>
 				<div className='flex items-center justify-between p-4'>
 					<Image
-						onClick={() => {
-							window.open('/');
-						}}
 						alt='Logo iaca'
 						src={'/iaça-logo.svg'}
 						height={60}
@@ -228,8 +216,8 @@ export default function AboutNav() {
 						</div>
 					</li>
 					<li className='mb-4'>
-						<a href='/' className={`text-base ${Nunitofont.className}`}>
-							Home
+						<a href='/sobre' className={`text-base ${Nunitofont.className}`}>
+							Sobre o ÍAÇA
 						</a>
 					</li>
 					<li className='mb-4'>
@@ -255,6 +243,6 @@ export default function AboutNav() {
 					</li>
 				</ul>
 			</div>
-		</div>
+		</>
 	);
 }
