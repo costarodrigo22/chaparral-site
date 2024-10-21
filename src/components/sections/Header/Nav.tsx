@@ -11,7 +11,10 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
 import { handleScroll } from '@/lib/utils';
+import Link from 'next/link';
 // import SearchInput from './SearchInput';
+
+import { usePathname } from 'next/navigation';
 
 const Nunitofont = Nunito({
 	weight: ['200', '300', '400', '500', '600', '700', '800', '900'],
@@ -21,6 +24,10 @@ const Nunitofont = Nunito({
 export default function Nav() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [flag, setFlag] = useState('');
+
+	const pathname = usePathname();
+
+	console.log(pathname);
 
 	const toggleMenu = () => {
 		setIsMenuOpen(!isMenuOpen);
@@ -49,9 +56,12 @@ export default function Nav() {
 		<>
 			<nav className='w-full h-[90px] fixed flex z-50 bg-gradient-to-r from-[#2B0036] to-[#36133D] text-white'>
 				<div className='flex items-center justify-center w-[15%]'>
-					<div className='relative hidden md:block max-w-[139px] h-auto mt-5'>
+					<Link
+						href='/'
+						className='cursor-pointer relative hidden md:block max-w-[139px] h-auto mt-5'
+					>
 						<Image src='/iaça-logo.svg' alt='Logo' width={110} height={80} />
-					</div>
+					</Link>
 				</div>
 				<div className='flex items-center justify-between w-[85%] mt-4'>
 					<div className='flex items-center md:gap-[65px] lg:gap-[80px] xl:gap-[90px]'>
@@ -61,12 +71,24 @@ export default function Nav() {
 						>
 							Sobre o ÍAÇA
 						</a>
-						<span
-							className={` hover:cursor-pointer font-bold text-base ${Nunitofont.className} hidden md:block`}
-							onClick={() => handleScroll('produtos')}
-						>
-							Produtos
-						</span>
+
+						{pathname === '/' && (
+							<span
+								className={` hover:cursor-pointer font-bold text-base ${Nunitofont.className} hidden md:block`}
+								onClick={() => handleScroll('produtos')}
+							>
+								Produtos
+							</span>
+						)}
+
+						{pathname !== '/' && (
+							<Link
+								href='/product'
+								className={` hover:cursor-pointer font-bold text-base ${Nunitofont.className} hidden md:block`}
+							>
+								Produtos
+							</Link>
+						)}
 						<span
 							className={` hover:cursor-pointer font-bold text-base ${Nunitofont.className} hidden md:block`}
 							onClick={() => handleScroll('receitas')}
@@ -160,14 +182,17 @@ export default function Nav() {
 								</DropdownMenuItem>
 							</DropdownMenuContent>
 						</DropdownMenu>
-						<div className='w-12 h-12 rounded-full fixed md:static right-3 bg-transparent flex items-center justify-center hover:bg-[#3b1344a1] transition-all duration-300 ease-in-out cursor-pointer'>
+						<Link
+							href='/cart'
+							className='w-12 h-12 rounded-full fixed md:static right-3 bg-transparent flex items-center justify-center hover:bg-[#3b1344a1] transition-all duration-300 ease-in-out cursor-pointer'
+						>
 							<Image
 								alt='Carrinho de compras'
 								height={24}
 								width={24}
 								src={'/shopping-cart.svg'}
 							/>
-						</div>
+						</Link>
 					</div>
 					<div
 						className=' fixed cursor-pointer md:hidden left-3'

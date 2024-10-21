@@ -11,6 +11,7 @@ import {
 	DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
 import { handleScroll } from '@/lib/utils';
+import Link from 'next/link';
 // import SearchInput from './SearchInput';
 
 const Nunitofont = Nunito({
@@ -169,14 +170,17 @@ export default function AboutNav() {
 								</DropdownMenuItem>
 							</DropdownMenuContent>
 						</DropdownMenu>
-						<div className='w-12 h-12 rounded-full fixed md:static right-3 bg-transparent flex items-center justify-center hover:bg-[#3b1344a1] transition-all duration-300 ease-in-out cursor-pointer'>
+						<Link
+							href='/cart'
+							className='w-12 h-12 rounded-full fixed md:static right-3 bg-transparent flex items-center justify-center hover:bg-[#3b1344a1] transition-all duration-300 ease-in-out cursor-pointer'
+						>
 							<Image
 								alt='Carrinho de compras'
 								height={24}
 								width={24}
 								src={'/shopping-cart.svg'}
 							/>
-						</div>
+						</Link>
 					</div>
 					<div
 						className=' fixed cursor-pointer md:hidden left-3'

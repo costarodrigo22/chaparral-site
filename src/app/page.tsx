@@ -1,7 +1,7 @@
 import Image from 'next/image';
 // import ShowProduct from './components/ShowProduct';
 import Button from '../components/ui/Button';
-// import Header from '@/components/sections/Header';
+import Header from '@/components/sections/Header';
 import Details from '@/components/sections/Details';
 import Products from '@/components/sections/Products';
 import OwnProduction from '@/components/sections/OnwProduction';
@@ -13,7 +13,7 @@ import FindUs from '@/components/sections/FindUs';
 export default function Home() {
 	return (
 		<div className='w-full h-full'>
-			{/* <Header /> */}
+			<Header />
 			<Details />
 			<Products />
 			<OwnProduction />
