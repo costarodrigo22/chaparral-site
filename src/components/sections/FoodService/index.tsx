@@ -1,4 +1,4 @@
-import Button from '@/components/ui/Button';
+import Button from '@/components/ui/Button/index';
 import React from 'react';
 
 export default function FoodService() {

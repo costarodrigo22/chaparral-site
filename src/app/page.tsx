@@ -1,6 +1,6 @@
 import Image from 'next/image';
 // import ShowProduct from './components/ShowProduct';
-import Button from '../components/ui/Button';
+import Button from '../components/ui/Button/index';
 import Header from '@/components/sections/Header';
 import Details from '@/components/sections/Details';
 import Products from '@/components/sections/Products';

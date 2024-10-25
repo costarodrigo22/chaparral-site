@@ -1,5 +1,5 @@
 'use client';
-import Button from '@/components/ui/Button';
+import Button from '@/components/ui/Button/index';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
 import { useState } from 'react';
