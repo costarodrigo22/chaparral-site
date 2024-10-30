@@ -1,8 +1,8 @@
-import { Button } from '@/components/ui/Button';
+import BuyModalTrigger from '@/components/sections/Delivery/BuyModalTrigger';
 import { Separator } from '@/components/ui/Separator';
 import ToggleQuantity from '@/components/ui/ToggleQuantity';
 import QuantityProvider from '@/contexts/Cart/QuantityContext';
-import { ArrowRight, ChevronRight, Trash2 } from 'lucide-react';
+import { ChevronRight, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Cart() {
@@ -116,10 +116,7 @@ export default function Cart() {
 							<p className='font-semibold text-lg'>R$ 75,00</p>
 						</div>
 
-						<Button className='w-full rounded-full mt-5'>
-							Continuar a compra
-							<ArrowRight />
-						</Button>
+						<BuyModalTrigger />
 					</div>
 				</div>
 			</div>
