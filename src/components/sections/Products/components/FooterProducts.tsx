@@ -17,7 +17,7 @@ export default function FooterProducts() {
 			<ToggleQuantity />
 
 			<Button
-				className='rounded-full w-[380px] h-[50px]'
+				className='rounded-full w-[380px] h-[50px] bg-[#2B0036] hover:bg-[#421d4b]'
 				onClick={handleAddToCart}
 			>
 				Adicionar ao carrino
