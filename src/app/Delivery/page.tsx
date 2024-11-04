@@ -86,7 +86,7 @@ export default function Delivery() {
 							<p className='font-semibold text-lg'>R$ 75,00</p>
 						</div>
 
-						<Link href='/delivery'>
+						<Link href='/Payment'>
 							<Button className='bg-[#2B0036] w-full rounded-full mt-5 hover:bg-[#5a3663]'>
 								Escolher forma de pagamento
 								<ArrowRight />

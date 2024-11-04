@@ -16,6 +16,7 @@ export default function ProductCard({
 	customClass,
 	src,
 	srcLogo,
+	text,
 	backgroundImage,
 }: ProductCardProps) {
 	return (
@@ -35,7 +36,7 @@ export default function ProductCard({
 					<Image alt='logo do Iaça' height={71} width={123} src={srcLogo} />
 				</div>
 				<Link
-					href='/product'
+					href={`/product/${text}`}
 					className='w-full h-full flex flex-col justify-center items-center gap-4 pb-5'
 				>
 					<Image alt='Produto iaça' height={250} width={368} src={src} />
