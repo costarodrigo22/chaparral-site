@@ -1,15 +1,11 @@
 import DeliveryOrPickupSelector from '@/components/sections/Delivery/DeliveryOrPickupSelector';
 import { Button } from '@/components/ui/Button';
-// import { Label } from '@/components/ui/Label';
-// import { RadioGroup, RadioGroupItem } from '@/components/ui/RadioGroup';
 import { Separator } from '@/components/ui/Separator';
 import QuantityProvider from '@/contexts/Cart/QuantityContext';
 import { ArrowRight, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Delivery() {
-	// const form = useForm();
-
 	return (
 		<QuantityProvider>
 			<div className='flex flex-col w-full mb-10'>
@@ -90,9 +86,9 @@ export default function Delivery() {
 							<p className='font-semibold text-lg'>R$ 75,00</p>
 						</div>
 
-						<Link href='/delivery'>
-							<Button className='w-full rounded-full mt-5'>
-								Continuar a compra
+						<Link href='/Payment'>
+							<Button className='bg-[#2B0036] w-full rounded-full mt-5 hover:bg-[#5a3663]'>
+								Escolher forma de pagamento
 								<ArrowRight />
 							</Button>
 						</Link>
