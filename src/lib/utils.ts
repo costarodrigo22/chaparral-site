@@ -19,3 +19,11 @@ export const handleScroll = (id: string) => {
 		});
 	}
 };
+
+export function getColors(text: string): string | undefined {
+	const colorMatch = text.match(/rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/);
+	if (colorMatch) {
+		return colorMatch[0];
+	}
+	return undefined;
+}

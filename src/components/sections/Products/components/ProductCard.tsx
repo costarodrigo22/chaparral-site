@@ -4,12 +4,12 @@ import Image from 'next/image';
 import Link from 'next/link';
 import React from 'react';
 interface ProductCardProps {
-	text: string;
-	customClass: string;
-	src: string;
-	backgroundImage: string;
-	backgroundColor: string;
-	srcLogo: string;
+  text: string;
+  customClass: string;
+  src: string;
+  backgroundImage: string;
+  backgroundColor: string;
+  srcLogo: string;
 }
 export default function ProductCard({
 	backgroundColor,
