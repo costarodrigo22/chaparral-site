@@ -3,7 +3,7 @@
 import { Label } from '@/components/ui/Label';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/RadioGroup';
 import { Separator } from '@/components/ui/Separator';
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import UpdateAddress from './UpdateAddress';
 import {
 	Select,
@@ -13,11 +13,38 @@ import {
 	SelectValue,
 } from '@/components/ui/Select';
 import { House, MapPin, Phone, Timer } from 'lucide-react';
+import axios from 'axios';
+
+interface IDataClientProps {
+	razao_social: string;
+	endereco: string;
+	endereco_numero: string;
+	bairro: string;
+	estado: string;
+	cidade: string;
+	complemento: string;
+}
+
+interface ILocalPickup {
+	id: string;
+	name: string;
+	street: string;
+	number: string;
+	telephone_number: string;
+}
 
 export default function DeliveryOrPickupSelector() {
 	const [selection, setSelection] = useState('');
 	const [localPickUp, setLocalPickUp] = useState('');
 	const [openModalUpdateAddress, setOpenModalUpdateAddress] = useState(false);
+	const [dataClient, setDataClient] = useState<IDataClientProps>();
+	const [localPickupOptions, setLocalPickupOptions] = useState<ILocalPickup[]>(
+		[]
+	);
+	const [selectedLocalDetails, setSelectedLocalDetails] =
+		useState<ILocalPickup>({} as ILocalPickup);
+
+	const cpf_client = localStorage.getItem('cpf_client');
 
 	function handleCloseModalUpdateAddress() {
 		setOpenModalUpdateAddress(false);
@@ -27,24 +54,80 @@ export default function DeliveryOrPickupSelector() {
 		setOpenModalUpdateAddress(true);
 	}
 
-	function handleSelectLocalPickUpChange(value: string) {
-		console.log(value);
+	function handleSelectDelivery(value: string) {
+		setSelection(value);
 
-		setLocalPickUp(value);
+		setLocalPickUp('');
 	}
+
+	async function handleSelectLocalPickUpChange(value: string) {
+		setLocalPickUp(value);
+
+		try {
+			const response = await axios.get(
+				`${process.env.NEXT_PUBLIC_BASE_URL}/api/without/pick_up_location/find_by_id/${value}`
+			);
+			setSelectedLocalDetails(response.data.data);
+		} catch (error) {
+			console.error('Erro ao buscar detalhes do local de retirada:', error);
+		}
+	}
+
+	async function handleLocalPickUpOptions() {
+		try {
+			const response = await axios.get(
+				`${process.env.NEXT_PUBLIC_BASE_URL}/api/without/pick_up_location/get_all`
+			);
+
+			setLocalPickupOptions(response.data.data);
+		} catch (error) {
+			console.error('Erro ao buscar opções de locais de retirada:', error);
+		}
+	}
+
+	const handleGetDataClient = useCallback(async () => {
+		try {
+			const response = await axios.post(
+				`${process.env.NEXT_PUBLIC_BASE_URL}/api/without/omie/filter_client`,
+				{
+					cnpj_cpf: cpf_client,
+				}
+			);
+
+			setDataClient({
+				bairro: response.data.bairro,
+				cidade: response.data.cidade,
+				complemento: response.data.complemento,
+				endereco: response.data.endereco,
+				endereco_numero: response.data.endereco_numero,
+				estado: response.data.estado,
+				razao_social: response.data.razao_social,
+			});
+
+			console.log('DeliveryOrPickUpSelector: ', response);
+		} catch (error) {}
+	}, [cpf_client]);
+
+	useEffect(() => {
+		handleLocalPickUpOptions();
+
+		handleGetDataClient();
+	}, [handleGetDataClient]);
 
 	return (
 		<>
 			<UpdateAddress
 				open={openModalUpdateAddress}
+				razao_social={dataClient?.razao_social || ''}
 				onClose={handleCloseModalUpdateAddress}
+				onUpdateAddress={handleGetDataClient}
 			/>
 
 			<div className='flex'>
 				<div className='w-full'>
 					<RadioGroup
 						className='flex flex-col space-y-1'
-						onValueChange={(value) => setSelection(value)}
+						onValueChange={handleSelectDelivery}
 					>
 						<div className='rounded-md border p-5'>
 							<RadioGroupItem value='Entrega' id='option-one' />
@@ -57,8 +140,9 @@ export default function DeliveryOrPickupSelector() {
 							{selection === 'Entrega' && (
 								<div className='w-full px-10 py-4'>
 									<span>
-										Rua 15 de novembro, 35, Vila nova, Imperatriz, Maranhão Ao
-										lado do supermercado
+										{dataClient?.endereco}, {dataClient?.endereco_numero},{' '}
+										{dataClient?.bairro}, {dataClient?.cidade},{' '}
+										{dataClient?.estado} {dataClient?.complemento}
 									</span>
 
 									<Separator className='my-4' />
@@ -95,47 +179,57 @@ export default function DeliveryOrPickupSelector() {
 												<SelectValue placeholder='Selecione' />
 											</SelectTrigger>
 											<SelectContent>
-												<SelectItem value='Fuji'>Fuji</SelectItem>
-												<SelectItem value='Casa do morango'>
-													Casa do morango
-												</SelectItem>
+												{localPickupOptions?.map((option) => (
+													<SelectItem key={option.id} value={option.id}>
+														{option.name}
+													</SelectItem>
+												))}
 											</SelectContent>
 										</Select>
 
-										<div className='mt-5 flex flex-col gap-2'>
-											<div className='flex items-center gap-2'>
-												<House size={22} />
-
-												<span className='text-base font-medium'>
-													ÍAÇA - Fuji Motors
-												</span>
+										{!localPickUp && (
+											<div className='mt-5 flex flex-col gap-2'>
+												<span>Selecione um local de retirada 😉</span>
 											</div>
+										)}
 
-											<div className='flex items-center gap-2'>
-												<MapPin color='#898989' size={22} />
+										{selectedLocalDetails && localPickUp && (
+											<div className='mt-5 flex flex-col gap-2'>
+												<div className='flex items-center gap-2'>
+													<House size={22} />
 
-												<span className='text-[12px] text-[#898989]'>
-													BR-010, S/N - Km 1361
-												</span>
+													<span className='text-base font-medium'>
+														{selectedLocalDetails.name}
+													</span>
+												</div>
+
+												<div className='flex items-center gap-2'>
+													<MapPin color='#898989' size={22} />
+
+													<span className='text-[12px] text-[#898989]'>
+														{selectedLocalDetails.street},{' '}
+														{selectedLocalDetails.number}
+													</span>
+												</div>
+
+												<div className='flex items-center gap-2'>
+													<Phone color='#898989' size={22} />
+
+													<span className='text-[12px] text-[#898989]'>
+														{selectedLocalDetails.telephone_number}
+													</span>
+												</div>
+
+												<div className='flex items-center gap-2'>
+													<Timer color='#898989' size={22} />
+
+													<span className='text-[12px] text-[#898989]'>
+														Seg a Sex 08:00 às 18:00, Sáb 08:00 às 12:00 e Dom
+														Fechada
+													</span>
+												</div>
 											</div>
-
-											<div className='flex items-center gap-2'>
-												<Phone color='#898989' size={22} />
-
-												<span className='text-[12px] text-[#898989]'>
-													(99) 3321-1150
-												</span>
-											</div>
-
-											<div className='flex items-center gap-2'>
-												<Timer color='#898989' size={22} />
-
-												<span className='text-[12px] text-[#898989]'>
-													Seg a Sex 08:00 às 18:00, Sáb 08:00 às 12:00 e Dom
-													Fechada
-												</span>
-											</div>
-										</div>
+										)}
 									</div>
 								)}
 							</div>

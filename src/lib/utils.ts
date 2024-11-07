@@ -19,3 +19,16 @@ export const handleScroll = (id: string) => {
 		});
 	}
 };
+
+export function formatCurrency(value: number) {
+	return new Intl.NumberFormat('pt-br', {
+		style: 'currency',
+		currency: 'BRL',
+	}).format(value);
+}
+
+export function formatCPF(cpf: string | number) {
+	cpf = cpf.toString().replace(/\D/g, '');
+
+	return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
+}

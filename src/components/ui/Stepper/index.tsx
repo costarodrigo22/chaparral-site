@@ -17,6 +17,7 @@ export const StepperContext = createContext({} as StepperContextProps);
 interface StepperProps {
 	initialStep?: number;
 	steps: {
+		id: number;
 		label: string;
 		content: React.ReactNode;
 	}[];
@@ -33,7 +34,7 @@ interface StepperPreviousStepButtonContainerProps
 
 export default function Stepper({ steps, initialStep = 0 }: StepperProps) {
 	const [currentStep, setCurrentStep] = useState(initialStep);
-	const [isCompleted, setIsCompleted] = useState<boolean[]>(
+	const [, setIsCompleted] = useState<boolean[]>(
 		Array(steps.length).fill(false)
 	);
 
@@ -65,7 +66,7 @@ export default function Stepper({ steps, initialStep = 0 }: StepperProps) {
 
 					{steps.map((step, index) => (
 						<>
-							<div key={step.label} className='flex'>
+							<div key={step.id} className='flex'>
 								<div
 									className={cn(
 										'mr-2 w-[25px] h-[25px] rounded-full border flex items-center justify-center',
@@ -83,7 +84,7 @@ export default function Stepper({ steps, initialStep = 0 }: StepperProps) {
 										)}
 									></div>
 								</div>
-								<li key={step.label}>
+								<li key={step.id}>
 									<span className={cn(currentStep !== index && 'opacity-50')}>
 										{step.label}
 									</span>

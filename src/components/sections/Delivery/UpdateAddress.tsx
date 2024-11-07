@@ -7,10 +7,14 @@ import { Dialog, DialogContent } from '@/components/ui/Dialog';
 import { Label } from '@/components/ui/Label';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { formatCPF } from '@/lib/utils';
+import axios from 'axios';
 
 interface IModalUpdateAddress {
 	open: boolean;
+	razao_social: string;
 	onClose: () => void;
+	onUpdateAddress: () => void;
 }
 
 const schema = z.object({
@@ -29,7 +33,12 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-export default function UpdateAddress({ open, onClose }: IModalUpdateAddress) {
+export default function UpdateAddress({
+	open,
+	razao_social,
+	onClose,
+	onUpdateAddress,
+}: IModalUpdateAddress) {
 	const form = useForm<FormData>({
 		resolver: zodResolver(schema),
 	});
@@ -41,7 +50,42 @@ export default function UpdateAddress({ open, onClose }: IModalUpdateAddress) {
 	}
 
 	const handleSubmit = form.handleSubmit(async (formData) => {
-		console.log(formData);
+		const code = localStorage.getItem('cpf_client');
+
+		const body = {
+			param: [
+				{
+					codigo_cliente_integracao: formatCPF(code || ''),
+					razao_social: razao_social,
+					cep: formData.addressStep.cep,
+					endereco: formData.addressStep.street,
+					endereco_numero: formData.addressStep.number,
+					bairro: formData.addressStep.neighborhood,
+					cidade: formData.addressStep.city,
+					estado: formData.addressStep.state,
+				},
+			],
+		};
+
+		try {
+			localStorage.removeItem('code_client');
+			localStorage.removeItem('cpf_client');
+
+			const response = await axios.post(
+				`${process.env.NEXT_PUBLIC_BASE_URL}/api/without/omie/update_client`,
+				body
+			);
+
+			localStorage.setItem('code_client', response.data.codigo_cliente_omie);
+			localStorage.setItem(
+				'cpf_client',
+				response.data.codigo_cliente_integracao
+			);
+		} catch (error) {
+		} finally {
+			handleCloseModal();
+			onUpdateAddress();
+		}
 	});
 
 	return (
