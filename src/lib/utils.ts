@@ -32,3 +32,10 @@ export function formatCPF(cpf: string | number) {
 
 	return cpf.replace(/(\d{3})(\d{3})(\d{3})(\d{2})/, '$1.$2.$3-$4');
 }
+export function getColors(text: string): string | undefined {
+	const colorMatch = text.match(/rgb\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)/);
+	if (colorMatch) {
+		return colorMatch[0];
+	}
+	return undefined;
+}

@@ -7,6 +7,14 @@
   scrollbar-color: #2c0237 #35113c;
 } */
 
+.custom-list {
+  list-style-position: inside; /* Garante que a bolinha esteja alinhada corretamente */
+}
+
+.custom-list::marker {
+  color: #00db99; /* A cor que você deseja para a bolotinha */
+}
+
 ::-webkit-scrollbar {
   width: 8px;
 }
