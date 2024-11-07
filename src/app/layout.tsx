@@ -3,6 +3,7 @@ import { Libre_Franklin } from 'next/font/google';
 import './globals.css';
 import Footer from '@/components/sections/Footer';
 import Nav from '@/components/sections/Header/Nav';
+import { Toaster } from '@/components/ui/sonner';
 
 const libreFranklin = Libre_Franklin({
 	weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
@@ -29,6 +30,8 @@ export default function RootLayout({
 				<div className=' lg:mx-8'>
 					<Footer />
 				</div>
+
+				<Toaster />
 			</body>
 		</html>
 	);

@@ -1,17 +1,14 @@
 'use client';
 
-import {
-	Dialog,
-	DialogContent,
-	// DialogDescription,
-	// DialogHeader,
-	// DialogTitle,
-} from '@/components/ui/Dialog';
+import { Dialog, DialogContent } from '@/components/ui/Dialog';
 import Image from 'next/image';
 import logoIaca from '../../../../public/logo-iaca-purple.svg';
 import { Label } from '@/components/ui/Label';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import axios from 'axios';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 interface IModalConfirmClient {
 	open: boolean;
@@ -24,6 +21,34 @@ export default function ModalConfirmClient({
 	onClose,
 	onOpenModalCreateAccount,
 }: IModalConfirmClient) {
+	const [cpf, setCpf] = useState('');
+
+	const router = useRouter();
+
+	async function handleSearchInfosClient() {
+		const body = {
+			cnpj_cpf: cpf,
+		};
+
+		localStorage.removeItem('code_client');
+		localStorage.removeItem('cpf_client');
+
+		try {
+			const response = await axios.post(
+				`${process.env.NEXT_PUBLIC_BASE_URL}/api/without/omie/filter_client`,
+				body
+			);
+
+			localStorage.setItem('code_client', response.data.codigo_cliente_omie);
+			localStorage.setItem(
+				'cpf_client',
+				response.data.codigo_cliente_integracao
+			);
+
+			router.push('/Delivery');
+		} catch (error) {}
+	}
+
 	return (
 		<>
 			<Dialog open={open} onOpenChange={onClose}>
@@ -40,10 +65,7 @@ export default function ModalConfirmClient({
 					></div>
 
 					<div className='w-full h-[240px] bg-white'></div>
-					<form
-						onSubmit={() => console.log('submit form')}
-						className='bg-white rounded-md flex items-center justify-center flex-col absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[320px] shadow-md'
-					>
+					<form className='bg-white rounded-md flex items-center justify-center flex-col absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[320px] shadow-md'>
 						<Image src={logoIaca} alt='Logo IAÇA' width={70} height={60} />
 
 						<span className='font-medium text-sm'>
@@ -55,7 +77,11 @@ export default function ModalConfirmClient({
 							<Label className='text-xs' htmlFor='cpf'>
 								CPF
 							</Label>
-							<Input id='cpf' placeholder='CPF' />
+							<Input
+								onChange={(event) => setCpf(event.target.value)}
+								id='cpf'
+								placeholder='CPF'
+							/>
 						</div>
 
 						<span
@@ -65,7 +91,11 @@ export default function ModalConfirmClient({
 							Criar meu cadastro
 						</span>
 
-						<Button className='bg-[#2B0036] rounded-full mt-4 w-40 hover:bg-[#421d4b]'>
+						<Button
+							onClick={handleSearchInfosClient}
+							type='button'
+							className='bg-[#2B0036] rounded-full mt-4 w-40 hover:bg-[#421d4b]'
+						>
 							Confirmar
 						</Button>
 					</form>

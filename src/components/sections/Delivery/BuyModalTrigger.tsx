@@ -43,7 +43,7 @@ export default function BuyModalTrigger() {
 
 			<Button
 				onClick={handleOpenModalConfirmClient}
-				className='w-full rounded-full mt-5'
+				className='w-full rounded-full mt-5 bg-[#2B0036] hover:bg-[#421d4b]'
 			>
 				Continuar a compra
 				<ArrowRight />

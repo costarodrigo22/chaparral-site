@@ -1,7 +1,6 @@
 'use client';
 
 import { Dialog, DialogContent } from '@/components/ui/Dialog';
-// import DeliveryOrPickupSelector from '../Delivery/DeliveryOrPickupSelector';
 import Stepper from '@/components/ui/Stepper';
 import DeliveryForm from '../Delivery/DeliveryForm';
 import PickUpForm from '../Delivery/PickUpForm';
@@ -9,6 +8,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { FormProvider, useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
+import { toast } from 'sonner';
+import { formatCPF } from '@/lib/utils';
 interface IModalCreateAccount {
 	open: boolean;
 	onClose: () => void;
@@ -47,9 +49,51 @@ export default function ModalCreateAccount({
 	const router = useRouter();
 
 	const handleSubmit = form.handleSubmit(async (formData) => {
-		console.log(formData);
+		localStorage.removeItem('code_client');
+		localStorage.removeItem('cpf_client');
 
-		router.push('/Delivery');
+		const body = {
+			param: [
+				{
+					codigo_cliente_integracao: formatCPF(formData.infosStep.cpf_cpnj),
+					cnpj_cpf: formatCPF(formData.infosStep.cpf_cpnj),
+					email: formData.infosStep.email,
+					razao_social: formData.infosStep.name,
+					nome_fantasia: formData.infosStep.name,
+					telefone1_numero: formData.infosStep.phone,
+					cep: formData.addressStep.cep,
+					endereco: formData.addressStep.street,
+					endereco_numero: formData.addressStep.number,
+					bairro: formData.addressStep.neighborhood,
+					cidade: formData.addressStep.city,
+					estado: formData.addressStep.state,
+					tags: [
+						{
+							tag: 'Site',
+						},
+					],
+				},
+			],
+		};
+
+		try {
+			const response = await axios.post(
+				`${process.env.NEXT_PUBLIC_BASE_URL}/api/without/omie/create_client`,
+				body
+			);
+
+			localStorage.setItem('code_client', response.data.codigo_cliente_omie);
+			localStorage.setItem(
+				'cpf_client',
+				response.data.codigo_cliente_integracao
+			);
+
+			form.reset();
+
+			router.push('/Delivery');
+		} catch (error) {
+			toast.error('Algo deu errado ao fazer seu cadastro 😢');
+		}
 	});
 
 	return (
@@ -61,10 +105,12 @@ export default function ModalCreateAccount({
 							initialStep={0}
 							steps={[
 								{
+									id: Math.random(),
 									label: 'Informações pessoais',
 									content: <DeliveryForm />,
 								},
 								{
+									id: Math.random(),
 									label: 'Endereço',
 									content: <PickUpForm />,
 								},

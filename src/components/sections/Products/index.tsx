@@ -4,21 +4,21 @@ import ProductCard from './components/ProductCard';
 export default function Products() {
 	const dataArray = [
 		{
-			text: 'ÍaçaPuro15',
+			text: '11',
 			src: '/acai-puro-sombreado.svg',
 			logoSrc: '/iaca-logo-purple.svg',
 			backgroundImage: '/yellow-products-bg.svg',
 			background: '#FBA301',
 		},
 		{
-			text: 'ÍaçaPuro25',
+			text: '456',
 			src: '/acai-puro-sombreado.svg',
 			logoSrc: '/iaca-logo-purple.svg',
 			backgroundImage: '/pink-products-bg.svg',
 			background: '#DB0084',
 		},
 		{
-			text: 'ÍaçaPuro35',
+			text: '789',
 			src: '/acai-puro-sombreado.svg',
 			logoSrc: '/iaca-logo-purple.svg',
 			backgroundImage: '/cyan-products-bg.svg',

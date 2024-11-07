@@ -1,6 +1,6 @@
 'use client';
 
-import { useQuantity } from '@/contexts/Cart/QuantityContext';
+import { useCart } from '@/contexts/Cart/CartContext';
 import { cn } from '@/lib/utils';
 import { Minus, Plus } from 'lucide-react';
 import { ComponentProps } from 'react';
@@ -8,15 +8,7 @@ import { ComponentProps } from 'react';
 interface IToggleQuantity extends ComponentProps<'div'> {}
 
 export default function ToggleQuantity({ className }: IToggleQuantity) {
-	const { quantity, setQuantity } = useQuantity();
-
-	function handleIncrement() {
-		setQuantity(quantity + 1);
-	}
-
-	function handleDecrement() {
-		setQuantity(Math.max(quantity - 1, 1));
-	}
+	const { quantity, incrementQuantity, decrementQuantity } = useCart();
 
 	return (
 		<div
@@ -25,14 +17,20 @@ export default function ToggleQuantity({ className }: IToggleQuantity) {
 				className
 			)}
 		>
-			<div className='cursor-pointer w-3/4 h-full flex items-center justify-center rounded-l-full hover:bg-zinc-200 transition-all'>
-				<Minus className='' onClick={handleDecrement} />
+			<div
+				className='cursor-pointer w-3/4 h-full flex items-center justify-center rounded-l-full hover:bg-zinc-200 transition-all'
+				onClick={decrementQuantity}
+			>
+				<Minus />
 			</div>
 
 			<span className='px-2 font-medium'>{quantity}</span>
 
-			<div className='cursor-pointer w-3/4 h-full flex items-center justify-center rounded-r-full hover:bg-zinc-200 transition-all'>
-				<Plus className='' onClick={handleIncrement} />
+			<div
+				className='cursor-pointer w-3/4 h-full flex items-center justify-center rounded-r-full hover:bg-zinc-200 transition-all'
+				onClick={incrementQuantity}
+			>
+				<Plus />
 			</div>
 		</div>
 	);
