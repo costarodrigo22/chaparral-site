@@ -2,8 +2,7 @@
 import api from '@/lib/axiosInstance';
 import Nav from './Nav';
 import { useEffect, useState } from 'react';
-import { ClipLoader } from 'react-spinners';
-import Image from 'next/image';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function Header() {
   const [headerImage, setHeaderImage] = useState('');
@@ -28,12 +27,22 @@ export default function Header() {
     <div className="flex flex-col ">
       <Nav />
       {headerImage && logoImage ? (
-        <div className="w-full mt-[89px] text-white flex h-full flex-col">
-          <Image src={headerImage} width={1600} height={799} alt="" />
-        </div>
+        <div
+          className="w-full mt-[89px] text-white flex h-full flex-col"
+          style={{
+            backgroundImage: `url(${headerImage})`,
+            aspectRatio: 1.9,
+            backgroundSize: '100%',
+            backgroundPosition: 'center 0',
+            backgroundRepeat: 'no-repeat',
+          }}
+        ></div>
       ) : (
-        <div className="mt-48 w-full flex items-center justify-center">
-          <ClipLoader size={40} color="#f00" />
+        <div className="w-full mt-[89px] text-white flex h-full flex-col">
+          <Skeleton className=" bg-slate-300 h-[500px] w-full flex flex-col gap-10 justify-center px-20">
+            <Skeleton className=" bg-slate-400 h-[100px]" />
+            <Skeleton className=" bg-slate-400 h-[100px]" />
+          </Skeleton>
         </div>
       )}
     </div>
