@@ -1,32 +1,31 @@
 'use client';
 import api from '@/lib/axiosInstance';
 import Nav from './Nav';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { Skeleton } from '@/components/ui/skeleton';
 
 export default function Header() {
   const [headerImage, setHeaderImage] = useState('');
-  const [logoImage, setLogoImage] = useState('');
 
-  async function getHeaderData() {
-    const headerImage = await api.get(
-      '/api/without/home_header/display_image/featured_image'
-    );
-    const logoImage = await api.get(
-      '/api/without/home_header/display_image/featured_image'
-    );
-    setHeaderImage(headerImage.data);
-    setLogoImage(logoImage.data);
-  }
+  const getHeaderData = useCallback(async () => {
+    try {
+      const headerImageRes = await api.get(
+        '/api/without/home_header/display_image/featured_image'
+      );
+      setHeaderImage(headerImageRes.data);
+    } catch (error) {
+      console.error('Erro ao buscar dados do header:', error);
+    }
+  }, []);
 
   useEffect(() => {
     getHeaderData();
-  }, []);
+  }, [getHeaderData]);
 
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col">
       <Nav />
-      {headerImage && logoImage ? (
+      {headerImage ? (
         <div
           className="w-full mt-[89px] text-white flex h-full flex-col"
           style={{

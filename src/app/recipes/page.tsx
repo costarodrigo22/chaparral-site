@@ -32,7 +32,6 @@ export default function Recipes() {
         `/api/without/recipes_cards/get_all?page=${page}`
       );
       const data = res.data;
-      console.log(data.data);
 
       setRecipes(data.data);
       setTotalPages(data.last_page);

@@ -2,9 +2,9 @@
 import Button from '@/components/ui/Button/index';
 import api from '@/lib/axiosInstance';
 import { useEffect, useState, useCallback } from 'react';
-import { ClipLoader } from 'react-spinners';
 import DOMPurify from 'dompurify';
 import { getColors } from '@/lib/utils';
+import { Skeleton } from '@/components/ui/skeleton';
 
 interface DataItem {
   id: string;
@@ -22,10 +22,12 @@ interface ApiResponse {
 export default function OwnProduction() {
   const [info, setInfo] = useState<DataItem | undefined>(undefined);
   const [image, setImage] = useState('');
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [titleColor, setTitleColor] = useState('');
 
   const GetOwnProductionData = useCallback(async () => {
     try {
+      setIsLoading(true);
       const infoRes = await api.get<ApiResponse>(
         '/api/without/home_institutional_section/index'
       );
@@ -36,6 +38,8 @@ export default function OwnProduction() {
       setImage(imageRes.data);
     } catch (error) {
       console.log(error);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -47,19 +51,19 @@ export default function OwnProduction() {
     if (info) {
       setTitleColor(getColors(info.title) || 'inherit');
     }
-    console.log(
-      'info:',
-      info,
-      'infoTitle:',
-      info?.title,
-      'retorno',
-      titleColor
-    );
   }, [info]);
 
   return (
     <>
-      {info && image ? (
+      {isLoading ? (
+        <Skeleton className="  flex h-[600px] bg-slate-200 xl:pl-44 pl-6 md:gap-16 mb-8 lg:gap-20 w-full items-center justify-start">
+          <Skeleton className=" p-10 my-10 flex flex-col h-auto w-[320px] md:w-[600px] items-center md:items-start gap-3 md:gap-6 lg:gap-12 mt-0 lg:mt-14 xl:mt-24 bg-slate-300">
+            <Skeleton className=" bg-slate-400 h-16 w-[300px] md:w-[400px]" />
+            <Skeleton className=" bg-slate-400 h-40 w-[300px] md:w-[400px]" />
+            <Skeleton className=" bg-slate-400 h-10 w-[200px]" />
+          </Skeleton>
+        </Skeleton>
+      ) : info && image ? (
         <section
           className="flex xl:pl-44 pl-6 md:gap-16 lg:gap-20 w-full items-center justify-start"
           style={{
@@ -90,7 +94,7 @@ export default function OwnProduction() {
               onClick={() => {
                 window.open('/sobre', '_self');
               }}
-              style={{ color: titleColor }} // Aplica a cor RGB aqui
+              style={{ color: titleColor }}
               text="Saiba mais"
               classNameCustom="bg-[#FFFFFF33] hover:bg-[#FFFFFF20]"
               src="/arrow-right.svg"
@@ -98,9 +102,7 @@ export default function OwnProduction() {
           </div>
         </section>
       ) : (
-        <div className="flex items-center justify-center w-full h-40">
-          <ClipLoader size={40} color="#f00" />
-        </div>
+        <div className=""></div>
       )}
     </>
   );

@@ -1,9 +1,10 @@
 'use client';
-import React, { useEffect } from 'react';
+import React from 'react';
 import ProductCard from './components/ProductCard';
-import api from '@/lib/axiosInstance';
+// import api from '@/lib/axiosInstance';
 
 export default function Products() {
+  // const [image, setImage] = useState('');
   const dataArray = [
     {
       text: '11',
@@ -12,33 +13,20 @@ export default function Products() {
       backgroundImage: '/yellow-products-bg.svg',
       background: '#FBA301',
     },
-    {
-      text: '456',
-      src: '/acai-puro-sombreado.svg',
-      logoSrc: '/iaca-logo-purple.svg',
-      backgroundImage: '/pink-products-bg.svg',
-      background: '#DB0084',
-    },
-    {
-      text: '789',
-      src: '/acai-puro-sombreado.svg',
-      logoSrc: '/iaca-logo-purple.svg',
-      backgroundImage: '/cyan-products-bg.svg',
-      background: '#00DB99',
-    },
   ];
 
-  async function handleGetProducts() {
-    try {
-      const res = await api.get('/api/without/omie/index');
-      console.log(res);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  useEffect(() => {
-    handleGetProducts();
-  });
+  // async function handleGetProducts() {
+  //   try {
+  //     const res = await api.get('/api/without/omie/consult_product/11');
+  //     console.log('to aqui', res.data.imagens[0].url_imagem);
+  //     setImage(res.data.imagens[0].url_imagem);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
+  // useEffect(() => {
+  //   handleGetProducts();
+  // });
 
   const getRoundedClass = (index: number, arrayLength: number) => {
     if (arrayLength === 1) {
