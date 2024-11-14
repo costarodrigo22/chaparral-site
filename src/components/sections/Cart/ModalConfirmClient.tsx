@@ -22,16 +22,20 @@ export default function ModalConfirmClient({
 	onOpenModalCreateAccount,
 }: IModalConfirmClient) {
 	const [cpf, setCpf] = useState('');
+	const [loadingConfirmCpf, setLoadingConfirmCpf] = useState(false);
 
 	const router = useRouter();
 
 	async function handleSearchInfosClient() {
+		setLoadingConfirmCpf(true);
+
 		const body = {
 			cnpj_cpf: cpf,
 		};
 
 		localStorage.removeItem('code_client');
 		localStorage.removeItem('cpf_client');
+		localStorage.removeItem('email_client');
 
 		try {
 			const response = await axios.post(
@@ -39,14 +43,20 @@ export default function ModalConfirmClient({
 				body
 			);
 
+			console.log('client: ', response);
+
 			localStorage.setItem('code_client', response.data.codigo_cliente_omie);
 			localStorage.setItem(
 				'cpf_client',
 				response.data.codigo_cliente_integracao
 			);
+			localStorage.setItem('email_client', response.data.email);
 
 			router.push('/Delivery');
-		} catch (error) {}
+		} catch (error) {
+		} finally {
+			setLoadingConfirmCpf(false);
+		}
 	}
 
 	return (
@@ -94,9 +104,11 @@ export default function ModalConfirmClient({
 						<Button
 							onClick={handleSearchInfosClient}
 							type='button'
+							disabled={loadingConfirmCpf}
 							className='bg-[#2B0036] rounded-full mt-4 w-40 hover:bg-[#421d4b]'
 						>
-							Confirmar
+							{loadingConfirmCpf && 'Buscando...'}
+							{!loadingConfirmCpf && 'Confirmar'}
 						</Button>
 					</form>
 				</DialogContent>

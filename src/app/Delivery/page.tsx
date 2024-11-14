@@ -1,10 +1,9 @@
 import DeliveryOrPickupSelector from '@/components/sections/Delivery/DeliveryOrPickupSelector';
 import DetailsSummary from '@/components/sections/Delivery/DetailsSummary';
-import { Button } from '@/components/ui/Button';
 import { Separator } from '@/components/ui/Separator';
 import CartProvider from '@/contexts/Cart/CartContext';
 import QuantityProvider from '@/contexts/Cart/QuantityContext';
-import { ArrowRight, ChevronRight } from 'lucide-react';
+import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Delivery() {
@@ -38,14 +37,7 @@ export default function Delivery() {
 
 							<Separator className='mt-5' />
 
-							<DetailsSummary />
-
-							<Link href='/Payment'>
-								<Button className='bg-[#2B0036] w-full rounded-full mt-5 hover:bg-[#5a3663]'>
-									Escolher forma de pagamento
-									<ArrowRight />
-								</Button>
-							</Link>
+							<DetailsSummary btnConfirm />
 						</div>
 					</div>
 				</div>
