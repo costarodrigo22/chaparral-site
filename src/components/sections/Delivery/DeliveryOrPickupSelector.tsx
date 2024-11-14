@@ -63,10 +63,18 @@ export default function DeliveryOrPickupSelector() {
 	async function handleSelectLocalPickUpChange(value: string) {
 		setLocalPickUp(value);
 
+		localStorage.setItem('type_receipt', JSON.stringify(value));
+
 		try {
 			const response = await axios.get(
 				`${process.env.NEXT_PUBLIC_BASE_URL}/api/without/pick_up_location/find_by_id/${value}`
 			);
+
+			localStorage.setItem(
+				'local_delivery',
+				JSON.stringify(response.data.data)
+			);
+
 			setSelectedLocalDetails(response.data.data);
 		} catch (error) {
 			console.error('Erro ao buscar detalhes do local de retirada:', error);
@@ -103,8 +111,6 @@ export default function DeliveryOrPickupSelector() {
 				estado: response.data.estado,
 				razao_social: response.data.razao_social,
 			});
-
-			console.log('DeliveryOrPickUpSelector: ', response);
 		} catch (error) {}
 	}, [cpf_client]);
 
@@ -130,7 +136,11 @@ export default function DeliveryOrPickupSelector() {
 						onValueChange={handleSelectDelivery}
 					>
 						<div className='rounded-md border p-5'>
-							<RadioGroupItem value='Entrega' id='option-one' />
+							<RadioGroupItem
+								value='Entrega'
+								id='option-one'
+								onChange={(value) => console.log(value)}
+							/>
 							<Label
 								className='ml-2 text-base font-medium'
 								htmlFor='option-one'
@@ -188,7 +198,7 @@ export default function DeliveryOrPickupSelector() {
 										</Select>
 
 										{!localPickUp && (
-											<div className='mt-5 flex flex-col gap-2'>
+											<div className='mt-5 flex flex-col gap-2 text-sm items-center opacity-70'>
 												<span>Selecione um local de retirada 😉</span>
 											</div>
 										)}

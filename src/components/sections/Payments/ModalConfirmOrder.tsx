@@ -11,6 +11,12 @@ import { House, ThumbsUp } from 'lucide-react';
 import logoPix from '../../../../public/pix.svg';
 import Image from 'next/image';
 import { Button } from '@/components/ui/Button';
+import { usePaymentSelection } from '@/hooks/useSelectionPayment';
+import logoCard from '../../../../public/card.svg';
+import api from '@/lib/axiosInstance';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import ModalPix from './ModalPix';
 
 interface IModalConfirmOrder {
 	open: boolean;
@@ -21,8 +27,87 @@ export default function ModalConfirmOrder({
 	open,
 	onClose,
 }: IModalConfirmOrder) {
+	const [loadingOrder, setLoadingOrder] = useState(false);
+	const [openModalPix, setOpenModalPix] = useState(false);
+
+	const { selection } = usePaymentSelection();
+
+	const pickUpLocation = JSON.parse(
+		localStorage.getItem('local_delivery') || ''
+	);
+
+	const codeClient = JSON.parse(localStorage.getItem('code_client') || '');
+
+	const cartLocal = JSON.parse(localStorage.getItem('cart') || '');
+
+	const emailLocal = localStorage.getItem('email_client');
+
+	async function handleConfirmOrder() {
+		setLoadingOrder(true);
+
+		const total =
+			cartLocal.param[0].itens[0].quantidade *
+			cartLocal.param[0].itens[0].valor_unitario;
+
+		const body = {
+			param: [
+				{
+					codigo_cliente: codeClient,
+					observacoes_entrega: pickUpLocation.name,
+					produto: {
+						codigo_produto: cartLocal.codigoProduto,
+						descricao: cartLocal.nomeProduto,
+						quantidade: cartLocal.param[0].itens[0].quantidade,
+						valor_unitario: cartLocal.param[0].itens[0].valor_unitario,
+					},
+					informacoes_adicionais: {
+						utilizar_emails: emailLocal,
+						meio_pagamento:
+							selection === 'PixSite' || selection === 'PixDelivery'
+								? '17'
+								: selection === 'CardDelivery'
+								? '03'
+								: '15', // cartão de crédito é 3, boleto 15 e pix 17
+					},
+				},
+			],
+		};
+
+		const bodyPix = {
+			param: [
+				{
+					nIdCliente: codeClient,
+					vValor: total,
+				},
+			],
+		};
+
+		try {
+			const response = await api.post('/api/without/omie/insert_sale', body);
+
+			const pixInfos = await api.post('/api/without/omie/create_pix', bodyPix);
+
+			console.log('pixInfos: ', pixInfos);
+
+			if (response.status === 200)
+				toast.success(`${response.data.descricao_status}`);
+
+			if (response.status !== 200)
+				toast.error(`${response.data.descricao_status}`);
+		} catch (error) {
+			toast.error('Algo deu errado!');
+		} finally {
+			setLoadingOrder(false);
+			setOpenModalPix(true);
+		}
+	}
+
+	console.log('selection: ', pickUpLocation);
+
 	return (
 		<>
+			<ModalPix open={openModalPix} onClose={() => setOpenModalPix(false)} />
+
 			<Dialog open={open} onOpenChange={onClose}>
 				<DialogContent className='w-[550px] p-5'>
 					<span>Confirme a retirada do produto</span>
@@ -34,27 +119,47 @@ export default function ModalConfirmOrder({
 
 							<div className='flex flex-col gap-2'>
 								<span className='font-semibold text-sm'>
-									ÍAÇA - Fuji Motors{' '}
+									{pickUpLocation.name}
 								</span>
 								<span className='text-[#898989] text-sm'>
-									BR-010, S/N - Km 1361
+									{pickUpLocation.street}, {pickUpLocation.number} -{' '}
+									{pickUpLocation.neighborhood}
 								</span>
 							</div>
 						</div>
-						<span className='text-[#898989] text-xs'>Retirar em:</span>
+						<span className='text-[#898989] text-xs'>Forma de pagamento:</span>
 						<div className='flex border p-5 items-center rounded-lg gap-4'>
-							<Image src={logoPix} alt='logo pix' />
+							<Image
+								src={
+									selection === 'PixSite' || selection === 'PixDelivery'
+										? logoPix
+										: logoCard
+								}
+								alt='logo'
+							/>
 
 							<div className='flex flex-col gap-2'>
-								<span className='font-semibold text-sm'>Pix</span>
+								<span className='font-semibold text-sm'>
+									{selection === 'PixSite' || selection === 'PixDelivery'
+										? 'Pix'
+										: 'Cartão'}
+								</span>
 								<span className='text-[#898989] text-sm'>
-									Utilize o QR code ou copie e cole o código
+									{selection === 'PixSite' || selection === 'PixDelivery'
+										? 'Utilize o QR code ou copie e cole o código'
+										: 'Utilize seu cartão para pagamento'}
 								</span>
 							</div>
 						</div>
 
-						<Button className='bg-[#2B0036] w-full h-14 rounded-full mt-5 hover:bg-[#5a3663]'>
-							Confirmar e gerar pedido
+						<Button
+							disabled={loadingOrder}
+							onClick={handleConfirmOrder}
+							className='bg-[#2B0036] w-full h-14 rounded-full mt-5 hover:bg-[#5a3663]'
+						>
+							{loadingOrder && 'Gerando pedido...'}
+							{!loadingOrder && 'Confirmar e gerar pedido'}
+
 							<ThumbsUp />
 						</Button>
 					</div>

@@ -1,11 +1,18 @@
 'use client';
 
+import { Button } from '@/components/ui/Button';
 import { Separator } from '@/components/ui/Separator';
 import { useCart } from '@/contexts/Cart/CartContext';
 import { formatCurrency } from '@/lib/utils';
+import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
+import Link from 'next/link';
 
-export default function DetailsSummary() {
+interface IDetailsSummaryProps {
+	btnConfirm?: boolean;
+}
+
+export default function DetailsSummary({ btnConfirm }: IDetailsSummaryProps) {
 	const { total, quantity } = useCart();
 
 	const cartLocalStorage = localStorage.getItem('cart');
@@ -47,6 +54,18 @@ export default function DetailsSummary() {
 				<p className='text-[#1E1E1E] font-medium text-lg'>Total</p>
 				<p className='font-semibold text-lg'>{formatCurrency(total)}</p>
 			</div>
+
+			{btnConfirm && (
+				<Button className='bg-[#2B0036] w-full rounded-full mt-5 hover:bg-[#5a3663]'>
+					<Link
+						href='/Payment'
+						className='flex items-center w-full h-full justify-center'
+					>
+						Escolher forma de pagamento
+						<ArrowRight />
+					</Link>
+				</Button>
+			)}
 		</>
 	);
 }

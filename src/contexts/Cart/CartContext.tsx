@@ -27,7 +27,6 @@ export default function CartProvider({
 	const [total, setTotal] = useState(0);
 
 	useEffect(() => {
-		// Carrega o valor inicial do carrinho do localStorage (caso exista)
 		const cartData = localStorage.getItem('cart');
 		if (cartData) {
 			try {

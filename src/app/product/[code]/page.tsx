@@ -19,6 +19,8 @@ export default async function Product({ params }: IProductProps) {
 		`http://192.168.0.191:7010/api/without/omie/consult_product/${params.code}`
 	);
 
+	console.log('produto: ', product);
+
 	return (
 		<QuantityProvider>
 			<CartProvider>
@@ -66,7 +68,7 @@ export default async function Product({ params }: IProductProps) {
 							<Separator className='mb-5 mt-5' />
 
 							<FooterProducts
-								code={product.data.codigo}
+								code={product.data.codigo_produto}
 								nameProduct={product.data.descricao}
 								urlImage={product.data.imagens[0].url_imagem}
 							/>
