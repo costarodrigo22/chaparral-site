@@ -47,7 +47,7 @@ export default function RecipePage() {
 
   const getRecipeData = useCallback(async () => {
     try {
-      const res = await api.get(`/api/without/recipes/get_recipe/${id}`);
+      const res = await api.get(`/api/without/recipes/get_recipe_page/${id}`);
       const data = res.data.data;
       setRecipeData({
         ...data,
@@ -120,10 +120,10 @@ export default function RecipePage() {
         </section>
       ) : (
         <section className="h-auto pb-12 pt-[90px] w-full">
-          <div className="pl-24 flex flex-col gap-10">
+          <div className=" pl-4 md:pl-24 flex flex-col gap-10">
             <RecipesBreadCrumbs />
           </div>
-          <div className="w-full px-12 mt-12 z-10 relative">
+          <div className="w-full px-3 md:px-12 mt-12 z-10 relative">
             <div className="rounded-[30px] bg-lightGray w-full">
               <Image
                 alt="Imagem da receita"
@@ -172,7 +172,7 @@ export default function RecipePage() {
                 background: recipeData?.preparation_method_background_color,
               }}
             >
-              <div className="flex flex-col gap-4">
+              <div className="flex flex-col gap-4 px-3">
                 <TimerResetIcon
                   stroke={recipeData?.preparation_method_icon_color}
                   size={46}
@@ -200,7 +200,7 @@ export default function RecipePage() {
             </article>
           </div>
           <div className="mt-12 md:px-16 lg:px-28 w-full">
-            <div className="flex justify-between">
+            <div className="flex justify-between px-3 sm:px-0">
               <h3 className="font-semibold text-2xl mb-6 text-center md:text-left">
                 Outras receitas
               </h3>

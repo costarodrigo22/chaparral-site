@@ -1,3 +1,4 @@
+import DOMPurify from 'dompurify';
 import Image from 'next/image';
 
 interface MissionCardProps {
@@ -13,7 +14,12 @@ export default function MissionCard({ src, title, text }: MissionCardProps) {
         <Image alt="Ícone de" src={src} height={52} width={52} />
         <h3 className=" font-semibold text-3xl text-darkGray">{title}</h3>
       </div>
-      <span className="text-lightGray text-base font-medium">{text}</span>
+      <span
+        className="text-lightGray text-base font-medium"
+        dangerouslySetInnerHTML={{
+          __html: DOMPurify.sanitize(text),
+        }}
+      />
     </article>
   );
 }

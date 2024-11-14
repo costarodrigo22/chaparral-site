@@ -1,39 +1,47 @@
 'use client';
 import api from '@/lib/axiosInstance';
 import Nav from './Nav';
-import { useEffect, useState } from 'react';
-import { ClipLoader } from 'react-spinners';
-import Image from 'next/image';
+import { useEffect, useState, useCallback } from 'react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 export default function Header() {
   const [headerImage, setHeaderImage] = useState('');
-  const [logoImage, setLogoImage] = useState('');
 
-  async function getHeaderData() {
-    const headerImage = await api.get(
-      '/api/without/home_header/display_image/featured_image'
-    );
-    const logoImage = await api.get(
-      '/api/without/home_header/display_image/featured_image'
-    );
-    setHeaderImage(headerImage.data);
-    setLogoImage(logoImage.data);
-  }
+  const getHeaderData = useCallback(async () => {
+    try {
+      const headerImageRes = await api.get(
+        '/api/without/home_header/display_image/featured_image'
+      );
+      setHeaderImage(headerImageRes.data);
+    } catch (error) {
+      console.error('Erro ao buscar dados do header:', error);
+    }
+  }, []);
 
   useEffect(() => {
     getHeaderData();
-  }, []);
+  }, [getHeaderData]);
 
   return (
-    <div className="flex flex-col ">
+    <div className="flex flex-col">
       <Nav />
-      {headerImage && logoImage ? (
-        <div className="w-full mt-[89px] text-white flex h-full flex-col">
-          <Image src={headerImage} width={1600} height={799} alt="" />
-        </div>
+      {headerImage ? (
+        <div
+          className="w-full mt-[89px] text-white flex h-full flex-col"
+          style={{
+            backgroundImage: `url(${headerImage})`,
+            aspectRatio: 1.9,
+            backgroundSize: '100%',
+            backgroundPosition: 'center 0',
+            backgroundRepeat: 'no-repeat',
+          }}
+        ></div>
       ) : (
-        <div className="mt-48 w-full flex items-center justify-center">
-          <ClipLoader size={40} color="#f00" />
+        <div className="w-full mt-[89px] text-white flex h-full flex-col">
+          <Skeleton className=" bg-slate-300 h-[500px] w-full flex flex-col gap-10 justify-center px-20">
+            <Skeleton className=" bg-slate-400 h-[100px]" />
+            <Skeleton className=" bg-slate-400 h-[100px]" />
+          </Skeleton>
         </div>
       )}
     </div>
