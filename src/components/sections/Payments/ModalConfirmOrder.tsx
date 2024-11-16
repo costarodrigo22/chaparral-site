@@ -23,12 +23,18 @@ interface IModalConfirmOrder {
 	onClose: () => void;
 }
 
+interface IPixProps {
+	copyPaste: string;
+	qrCode: string;
+}
+
 export default function ModalConfirmOrder({
 	open,
 	onClose,
 }: IModalConfirmOrder) {
 	const [loadingOrder, setLoadingOrder] = useState(false);
 	const [openModalPix, setOpenModalPix] = useState(false);
+	const [infosPix, setInfosPix] = useState<IPixProps>();
 
 	const { selection } = usePaymentSelection();
 
@@ -87,6 +93,11 @@ export default function ModalConfirmOrder({
 
 			const pixInfos = await api.post('/api/without/omie/create_pix', bodyPix);
 
+			setInfosPix({
+				copyPaste: pixInfos.data.cCopiaCola,
+				qrCode: pixInfos.data.cQrCode,
+			});
+
 			console.log('pixInfos: ', pixInfos);
 
 			if (response.status === 200)
@@ -106,7 +117,12 @@ export default function ModalConfirmOrder({
 
 	return (
 		<>
-			<ModalPix open={openModalPix} onClose={() => setOpenModalPix(false)} />
+			<ModalPix
+				open={openModalPix}
+				pix_copy_paste={infosPix?.copyPaste || ''}
+				qd_code={infosPix?.qrCode || ''}
+				onClose={() => setOpenModalPix(false)}
+			/>
 
 			<Dialog open={open} onOpenChange={onClose}>
 				<DialogContent className='w-[550px] p-5'>
