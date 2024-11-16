@@ -2,14 +2,14 @@
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Nunito } from 'next/font/google';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/DropdownMenu';
+// import {
+//   DropdownMenu,
+//   DropdownMenuContent,
+//   DropdownMenuItem,
+//   DropdownMenuLabel,
+//   DropdownMenuSeparator,
+//   DropdownMenuTrigger,
+// } from '@/components/ui/DropdownMenu';
 import { handleScroll } from '@/lib/utils';
 import Link from 'next/link';
 // import SearchInput from './SearchInput';
@@ -26,7 +26,7 @@ export default function Nav() {
   const [logoImage, setLogoImage] = useState('');
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [flag, setFlag] = useState('');
+  // const [flag, setFlag] = useState('');
 
   const pathname = usePathname();
 
@@ -44,25 +44,25 @@ export default function Nav() {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  useEffect(() => {
-    const flag = localStorage.getItem('flag');
-    if (flag) {
-      setFlag(flag);
-      return;
-    } else {
-      localStorage.setItem('flag', 'pt-br');
-    }
-  }, []);
+  // useEffect(() => {
+  //   const flag = localStorage.getItem('flag');
+  //   if (flag) {
+  //     // setFlag(flag);
+  //     return;
+  //   } else {
+  //     localStorage.setItem('flag', 'pt-br');
+  //   }
+  // }, []);
 
-  function setLocalStorageFlag(flag: string) {
-    localStorage.setItem('flag', flag);
-    setFlag(flag);
-  }
-  const flagMap: { [key: string]: string } = {
-    'pt-br': '/brasil-flag.svg',
-    'en-us': '/usa-flag.svg',
-    es: '/es-flag.svg',
-  };
+  // function setLocalStorageFlag(flag: string) {
+  //   localStorage.setItem('flag', flag);
+  //   setFlag(flag);
+  // }
+  // const flagMap: { [key: string]: string } = {
+  //   'pt-br': '/brasil-flag.svg',
+  //   'en-us': '/usa-flag.svg',
+  //   es: '/es-flag.svg',
+  // };
   return (
     <>
       <nav className="w-full h-[90px] fixed flex z-50 bg-gradient-to-r from-[#2B0036] to-[#36133D] text-white">
@@ -118,7 +118,7 @@ export default function Nav() {
           <div className="flex items-center gap-[71px] lg:mr-20 xl:mr-28">
             {/* <SearchInput /> */}
 
-            <DropdownMenu>
+            {/* <DropdownMenu>
               <DropdownMenuTrigger className="outline-none">
                 {flag && flagMap[flag] && (
                   <div className="flex gap-2 mr-20 md:mr-0">
@@ -195,7 +195,7 @@ export default function Nav() {
                   </div>
                 </DropdownMenuItem>
               </DropdownMenuContent>
-            </DropdownMenu>
+            </DropdownMenu> */}
             <Link
               href="/cart"
               className="w-12 h-12 rounded-full fixed md:static right-3 bg-transparent flex items-center justify-center hover:bg-[#3b1344a1] transition-all duration-300 ease-in-out cursor-pointer"

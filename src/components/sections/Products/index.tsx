@@ -15,19 +15,6 @@ export default function Products() {
     },
   ];
 
-  // async function handleGetProducts() {
-  //   try {
-  //     const res = await api.get('/api/without/omie/consult_product/11');
-  //     console.log('to aqui', res.data.imagens[0].url_imagem);
-  //     setImage(res.data.imagens[0].url_imagem);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
-  // useEffect(() => {
-  //   handleGetProducts();
-  // });
-
   const getRoundedClass = (index: number, arrayLength: number) => {
     if (arrayLength === 1) {
       return ' rounded-[30px]';

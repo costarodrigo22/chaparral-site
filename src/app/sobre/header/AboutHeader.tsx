@@ -24,7 +24,6 @@ export default function AboutHeader() {
     try {
       setIsLoading(true);
       const res = await api.get<AboutInfo>('/api/without/about_header/get');
-      console.log(res);
       setAbout(res.data);
     } catch (error) {
       console.log(error);

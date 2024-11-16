@@ -26,7 +26,6 @@ export default function Mission() {
       const res = await api.get<MissionInfo>(
         '/api/without/about_mission_and_values/get'
       );
-      console.log(res);
       setMission(res.data);
     } catch (error) {
       console.log(error);

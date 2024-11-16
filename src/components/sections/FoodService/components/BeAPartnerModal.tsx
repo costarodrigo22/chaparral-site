@@ -32,7 +32,6 @@ export default function BeAPartnerModal({ onClose, open }: IBeAPartnerModal) {
   });
 
   const handleSubmit = form.handleSubmit(async (partnerData) => {
-    console.log(partnerData);
     const body = {
       fantasy_name: partnerData.infosStep.fantasy_name,
       cpf_cnpj: partnerData.infosStep.cpf_cnpj,

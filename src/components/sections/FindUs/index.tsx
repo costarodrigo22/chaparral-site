@@ -27,7 +27,6 @@ export default function FindUs() {
       const res = await api.get<CarrouselInfo>(
         '/api/without/partners/last_five_partners'
       );
-      console.log(res);
       setCarrouselItems(res.data.data);
     } catch (error) {
       console.log(error);
