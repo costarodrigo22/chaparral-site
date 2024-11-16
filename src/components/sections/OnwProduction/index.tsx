@@ -56,7 +56,7 @@ export default function OwnProduction() {
   return (
     <>
       {isLoading ? (
-        <Skeleton className="  flex h-[600px] bg-slate-200 xl:pl-44 pl-6 md:gap-16 mb-8 lg:gap-20 w-full items-center justify-start">
+        <Skeleton className="  flex h-[600px] bg-slate-500 xl:pl-44 pl-6 md:gap-16 mb-8 lg:gap-20 w-full items-center justify-start">
           <Skeleton className=" p-10 my-10 flex flex-col h-auto w-[320px] md:w-[600px] items-center md:items-start gap-3 md:gap-6 lg:gap-12 mt-0 lg:mt-14 xl:mt-24 bg-slate-300">
             <Skeleton className=" bg-slate-400 h-16 w-[300px] md:w-[400px]" />
             <Skeleton className=" bg-slate-400 h-40 w-[300px] md:w-[400px]" />

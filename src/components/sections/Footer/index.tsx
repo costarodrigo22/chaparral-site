@@ -2,15 +2,39 @@
 import Button from '@/components/ui/Button/index';
 import { handleScroll } from '@/lib/utils';
 import Image from 'next/image';
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import BeAPartnerModal from '../FoodService/components/BeAPartnerModal';
+import ModalContacts, { IData } from './components/ModalContacts';
+import api from '@/lib/axiosInstance';
 
 export default function Footer() {
-  const [openModal, setOpenModal] = useState<boolean>(false);
+  const [openBePartnerModal, setOpenBePartnerModal] = useState<boolean>(false);
+  const [openContactsModal, setOpenContactsModal] = useState<boolean>(false);
+  const [footerData, setFooterData] = useState<IData>({} as IData);
+
+  const handleGetFooterData = useCallback(async () => {
+    try {
+      const res = await api.get('/api/without/company_profile/get');
+      setFooterData(res?.data?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+  useEffect(() => {
+    handleGetFooterData();
+  }, [handleGetFooterData]);
 
   return (
     <>
-      <BeAPartnerModal onClose={() => setOpenModal(false)} open={openModal} />
+      <BeAPartnerModal
+        onClose={() => setOpenBePartnerModal(false)}
+        open={openBePartnerModal}
+      />
+      <ModalContacts
+        data={footerData || {}}
+        onClose={() => setOpenContactsModal(false)}
+        open={openContactsModal}
+      />
       <footer className="w-full bg-mediumWhite rounded-t-[30px] md:gap-5 flex flex-col md:flex-row items-center pl-4 md:pl-4 xl:pl-14 pt-12 pb-7 ">
         <div className="flex flex-col gap-[30px] items-center md:items-start">
           <Image
@@ -28,6 +52,7 @@ export default function Footer() {
               src="/arrow-right.svg"
               text="Contato"
               classNameCustom="text-white"
+              onClick={() => setOpenContactsModal(true)}
             />
           </div>
           <span className="text-[#5B5B5B] font-medium text-base">
@@ -38,7 +63,7 @@ export default function Footer() {
               alt="logo instagram"
               src={'/instagram-logo.svg'}
               onClick={() => {
-                window.open('https://www.instagram.com/iacapuro/', '_blank');
+                window.open(footerData.instagram, '_blank');
               }}
               height={25}
               width={27}
@@ -47,6 +72,10 @@ export default function Footer() {
             <Image
               alt="logo facebook"
               src={'/facebook-logo.svg'}
+              onClick={() => {
+                window.open(footerData.facebook, '_blank');
+              }}
+              className="hover:cursor-pointer"
               height={25}
               width={27}
             />
@@ -68,24 +97,26 @@ export default function Footer() {
               >
                 Food Service
               </span>
-              <span className="text-darkPurple text-base font-normal">
+              <span
+                className="text-darkPurple text-base font-normal hover:cursor-pointer"
+                onClick={() => {
+                  window.open('/sobre', '_self');
+                }}
+              >
                 Sustentabilidade
               </span>
             </div>
             <div className="flex flex-col gap-4">
               <h3 className="text-darkPurple font-bold text-xl">Contato</h3>
-              <span className="text-darkPurple text-base font-normal">
-                Fale com a ÍAÇA
-              </span>
               <span
                 className="text-darkPurple text-base font-normal cursor-pointer"
-                onClick={() => setOpenModal(true)}
+                onClick={() => setOpenBePartnerModal(true)}
               >
                 Seja parceiro
               </span>
             </div>
           </div>
-          <div className="flex flex-col gap-4">
+          {/* <div className="flex flex-col gap-4">
             <h3 className="text-darkPurple font-bold text-xl">
               Ética e Privacidade
             </h3>
@@ -95,10 +126,7 @@ export default function Footer() {
             <span className="text-darkPurple text-base font-normal">
               Códigos e Políticas
             </span>
-            <span className="text-darkPurple text-base font-normal">
-              Denuncie Aqui
-            </span>
-          </div>
+          </div> */}
         </div>
       </footer>
     </>

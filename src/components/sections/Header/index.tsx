@@ -6,15 +6,19 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 export default function Header() {
   const [headerImage, setHeaderImage] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
 
   const getHeaderData = useCallback(async () => {
     try {
+      setIsLoading(true);
       const headerImageRes = await api.get(
         '/api/without/home_header/display_image/featured_image'
       );
       setHeaderImage(headerImageRes.data);
     } catch (error) {
       console.error('Erro ao buscar dados do header:', error);
+    } finally {
+      setIsLoading(false);
     }
   }, []);
 
@@ -25,7 +29,7 @@ export default function Header() {
   return (
     <div className="flex flex-col">
       <Nav />
-      {headerImage ? (
+      {!isLoading ? (
         <div
           className="w-full mt-[89px] text-white flex h-full flex-col"
           style={{

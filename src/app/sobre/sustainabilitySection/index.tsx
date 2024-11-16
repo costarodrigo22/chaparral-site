@@ -26,7 +26,6 @@ export default function Sustainability() {
       const res = await api.get<SustaintabilityInfo>(
         '/api/without/about_sub_header/get'
       );
-      console.log(res);
       setSustaintability(res.data);
     } catch (error) {
       console.log(error);
@@ -53,7 +52,10 @@ export default function Sustainability() {
         </>
       ) : sustaintability ? (
         <>
-          <div className="w-full lg:w-[68.08%] bg-[#f1f5f9]">
+          <div
+            className="w-full lg:w-[68.08%] bg-[#f1f5f9]"
+            id="sustaintability"
+          >
             <div className="w-full h-[400px] xl:h-[63.21%]">
               <div className="h-full relative">
                 <Image
