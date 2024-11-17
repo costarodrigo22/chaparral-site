@@ -1,186 +1,203 @@
-'use client';
+"use client";
 
 import {
-	Dialog,
-	DialogContent,
-	// DialogDescription,
-	// DialogHeader,
-	// DialogTitle,
-} from '@/components/ui/Dialog';
-import { House, ThumbsUp } from 'lucide-react';
-import logoPix from '../../../../public/pix.svg';
-import Image from 'next/image';
-import { Button } from '@/components/ui/Button';
-import { usePaymentSelection } from '@/hooks/useSelectionPayment';
-import logoCard from '../../../../public/card.svg';
-import api from '@/lib/axiosInstance';
-import { useState } from 'react';
-import { toast } from 'sonner';
-import ModalPix from './ModalPix';
+  Dialog,
+  DialogContent,
+  // DialogDescription,
+  // DialogHeader,
+  // DialogTitle,
+} from "@/components/ui/Dialog";
+import { House, ThumbsUp } from "lucide-react";
+import logoPix from "../../../../public/pix.svg";
+import Image from "next/image";
+import { Button } from "@/components/ui/Button";
+import { usePaymentSelection } from "@/hooks/useSelectionPayment";
+import logoCard from "../../../../public/card.svg";
+import api from "@/lib/axiosInstance";
+import { useState } from "react";
+import { toast } from "sonner";
+import ModalPix from "./ModalPix";
+import { useRouter } from "next/navigation";
 
 interface IModalConfirmOrder {
-	open: boolean;
-	onClose: () => void;
+  open: boolean;
+  onClose: () => void;
 }
 
 interface IPixProps {
-	copyPaste: string;
-	qrCode: string;
+  copyPaste: string;
+  qrCode: string;
 }
 
 export default function ModalConfirmOrder({
-	open,
-	onClose,
+  open,
+  onClose,
 }: IModalConfirmOrder) {
-	const [loadingOrder, setLoadingOrder] = useState(false);
-	const [openModalPix, setOpenModalPix] = useState(false);
-	const [infosPix, setInfosPix] = useState<IPixProps>();
+  const [loadingOrder, setLoadingOrder] = useState(false);
+  const [openModalPix, setOpenModalPix] = useState(false);
+  const [infosPix, setInfosPix] = useState<IPixProps>();
 
-	const { selection } = usePaymentSelection();
+  const router = useRouter();
 
-	const pickUpLocation = JSON.parse(
-		localStorage.getItem('local_delivery') || ''
-	);
+  const { selection } = usePaymentSelection();
 
-	const codeClient = JSON.parse(localStorage.getItem('code_client') || '');
+  const pickUpLocation = JSON.parse(
+    localStorage.getItem("local_delivery") || ""
+  );
 
-	const cartLocal = JSON.parse(localStorage.getItem('cart') || '');
+  const codeClient = JSON.parse(localStorage.getItem("code_client") || "");
 
-	const emailLocal = localStorage.getItem('email_client');
+  const cartLocal = JSON.parse(localStorage.getItem("cart") || "");
 
-	async function handleConfirmOrder() {
-		setLoadingOrder(true);
+  const emailLocal = localStorage.getItem("email_client");
 
-		const total =
-			cartLocal.param[0].itens[0].quantidade *
-			cartLocal.param[0].itens[0].valor_unitario;
+  async function handleConfirmOrder() {
+    setLoadingOrder(true);
 
-		const body = {
-			param: [
-				{
-					codigo_cliente: codeClient,
-					observacoes_entrega: pickUpLocation.name,
-					produto: {
-						codigo_produto: cartLocal.codigoProduto,
-						descricao: cartLocal.nomeProduto,
-						quantidade: cartLocal.param[0].itens[0].quantidade,
-						valor_unitario: cartLocal.param[0].itens[0].valor_unitario,
-					},
-					informacoes_adicionais: {
-						utilizar_emails: emailLocal,
-						meio_pagamento:
-							selection === 'PixSite' || selection === 'PixDelivery'
-								? '17'
-								: selection === 'CardDelivery'
-								? '03'
-								: '15', // cartão de crédito é 3, boleto 15 e pix 17
-					},
-				},
-			],
-		};
+    localStorage.removeItem("order_number");
 
-		const bodyPix = {
-			param: [
-				{
-					nIdCliente: codeClient,
-					vValor: total,
-				},
-			],
-		};
+    const total =
+      cartLocal.param[0].itens[0].quantidade *
+      cartLocal.param[0].itens[0].valor_unitario;
 
-		try {
-			const response = await api.post('/api/without/omie/insert_sale', body);
+    const body = {
+      param: [
+        {
+          codigo_cliente: codeClient,
+          observacoes_entrega: pickUpLocation.name,
+          produto: {
+            codigo_produto: cartLocal.codigoProduto,
+            descricao: cartLocal.nomeProduto,
+            quantidade: cartLocal.param[0].itens[0].quantidade,
+            valor_unitario: cartLocal.param[0].itens[0].valor_unitario,
+          },
+          informacoes_adicionais: {
+            utilizar_emails: emailLocal,
+            meio_pagamento:
+              selection === "PixSite" || selection === "PixDelivery"
+                ? "17"
+                : selection === "CardDelivery"
+                ? "03"
+                : "15", // cartão de crédito é 3, boleto 15 e pix 17
+          },
+        },
+      ],
+    };
 
-			const pixInfos = await api.post('/api/without/omie/create_pix', bodyPix);
+    const bodyPix = {
+      param: [
+        {
+          nIdCliente: codeClient,
+          vValor: total,
+        },
+      ],
+    };
 
-			setInfosPix({
-				copyPaste: pixInfos.data.cCopiaCola,
-				qrCode: pixInfos.data.cQrCode,
-			});
+    try {
+      const response = await api.post("/api/without/omie/insert_sale", body);
 
-			console.log('pixInfos: ', pixInfos);
+      localStorage.setItem("order_number", response.data.codigo_pedido);
 
-			if (response.status === 200)
-				toast.success(`${response.data.descricao_status}`);
+      if (selection === "PixSite" || selection === "PixDelivery") {
+        const pixInfos = await api.post(
+          "/api/without/omie/create_pix",
+          bodyPix
+        );
 
-			if (response.status !== 200)
-				toast.error(`${response.data.descricao_status}`);
-		} catch (error) {
-			toast.error('Algo deu errado!');
-		} finally {
-			setLoadingOrder(false);
-			setOpenModalPix(true);
-		}
-	}
+        setInfosPix({
+          copyPaste: pixInfos.data.cCopiaCola,
+          qrCode: pixInfos.data.cQrCode,
+        });
+      }
 
-	console.log('selection: ', pickUpLocation);
+      if (response.status === 200)
+        toast.success(`${response.data.descricao_status}`);
 
-	return (
-		<>
-			<ModalPix
-				open={openModalPix}
-				pix_copy_paste={infosPix?.copyPaste || ''}
-				qd_code={infosPix?.qrCode || ''}
-				onClose={() => setOpenModalPix(false)}
-			/>
+      if (response.status !== 200)
+        toast.error(`${response.data.descricao_status}`);
+    } catch (error) {
+      toast.error("Algo deu errado!");
+    } finally {
+      setLoadingOrder(false);
 
-			<Dialog open={open} onOpenChange={onClose}>
-				<DialogContent className='w-[550px] p-5'>
-					<span>Confirme a retirada do produto</span>
+      if (selection === "CardDelivery" || selection === "PixDelivery") {
+        router.push("/TrackOrder");
 
-					<div>
-						<span className='text-[#898989] text-xs'>Retirar em:</span>
-						<div className='flex border p-5 items-center rounded-lg gap-4 mb-4'>
-							<House />
+        // localStorage.removeItem("cart");
+      }
 
-							<div className='flex flex-col gap-2'>
-								<span className='font-semibold text-sm'>
-									{pickUpLocation.name}
-								</span>
-								<span className='text-[#898989] text-sm'>
-									{pickUpLocation.street}, {pickUpLocation.number} -{' '}
-									{pickUpLocation.neighborhood}
-								</span>
-							</div>
-						</div>
-						<span className='text-[#898989] text-xs'>Forma de pagamento:</span>
-						<div className='flex border p-5 items-center rounded-lg gap-4'>
-							<Image
-								src={
-									selection === 'PixSite' || selection === 'PixDelivery'
-										? logoPix
-										: logoCard
-								}
-								alt='logo'
-							/>
+      if (selection === "PixSite") {
+        setOpenModalPix(true);
+      }
+    }
+  }
 
-							<div className='flex flex-col gap-2'>
-								<span className='font-semibold text-sm'>
-									{selection === 'PixSite' || selection === 'PixDelivery'
-										? 'Pix'
-										: 'Cartão'}
-								</span>
-								<span className='text-[#898989] text-sm'>
-									{selection === 'PixSite' || selection === 'PixDelivery'
-										? 'Utilize o QR code ou copie e cole o código'
-										: 'Utilize seu cartão para pagamento'}
-								</span>
-							</div>
-						</div>
+  return (
+    <>
+      <ModalPix
+        open={openModalPix}
+        pix_copy_paste={infosPix?.copyPaste || ""}
+        qd_code={infosPix?.qrCode || ""}
+        onClose={() => setOpenModalPix(false)}
+      />
 
-						<Button
-							disabled={loadingOrder}
-							onClick={handleConfirmOrder}
-							className='bg-[#2B0036] w-full h-14 rounded-full mt-5 hover:bg-[#5a3663]'
-						>
-							{loadingOrder && 'Gerando pedido...'}
-							{!loadingOrder && 'Confirmar e gerar pedido'}
+      <Dialog open={open} onOpenChange={onClose}>
+        <DialogContent className="w-[550px] p-5">
+          <span>Confirme a retirada do produto</span>
 
-							<ThumbsUp />
-						</Button>
-					</div>
-				</DialogContent>
-			</Dialog>
-		</>
-	);
+          <div>
+            <span className="text-[#898989] text-xs">Retirar em:</span>
+            <div className="flex border p-5 items-center rounded-lg gap-4 mb-4">
+              <House />
+
+              <div className="flex flex-col gap-2">
+                <span className="font-semibold text-sm">
+                  {pickUpLocation.name}
+                </span>
+                <span className="text-[#898989] text-sm">
+                  {pickUpLocation.street}, {pickUpLocation.number} -{" "}
+                  {pickUpLocation.neighborhood}
+                </span>
+              </div>
+            </div>
+            <span className="text-[#898989] text-xs">Forma de pagamento:</span>
+            <div className="flex border p-5 items-center rounded-lg gap-4">
+              <Image
+                src={
+                  selection === "PixSite" || selection === "PixDelivery"
+                    ? logoPix
+                    : logoCard
+                }
+                alt="logo"
+              />
+
+              <div className="flex flex-col gap-2">
+                <span className="font-semibold text-sm">
+                  {selection === "PixSite" || selection === "PixDelivery"
+                    ? "Pix"
+                    : "Cartão"}
+                </span>
+                <span className="text-[#898989] text-sm">
+                  {selection === "PixSite" || selection === "PixDelivery"
+                    ? "Utilize o QR code ou copie e cole o código"
+                    : "Utilize seu cartão para pagamento"}
+                </span>
+              </div>
+            </div>
+
+            <Button
+              disabled={loadingOrder}
+              onClick={handleConfirmOrder}
+              className="bg-[#2B0036] w-full h-14 rounded-full mt-5 hover:bg-[#5a3663]"
+            >
+              {loadingOrder && "Gerando pedido..."}
+              {!loadingOrder && "Confirmar e gerar pedido"}
+
+              <ThumbsUp />
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
 }
