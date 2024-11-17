@@ -1,46 +1,46 @@
-'use client';
+"use client";
 
-import { createContext, ReactNode, useState } from 'react';
+import { createContext, ReactNode, useState } from "react";
 
 interface IPaymentSelectionContext {
-	selection: string;
-	openModalConfirmOrder: boolean;
-	setSelection: (value: string) => void;
-	handleOpenModalConfirmOrder: () => void;
-	handleCloseModalConfirmOrder: () => void;
+  selection: string;
+  openModalConfirmOrder: boolean;
+  setSelection: (value: string) => void;
+  handleOpenModalConfirmOrder: () => void;
+  handleCloseModalConfirmOrder: () => void;
 }
 
 export const PaymentSelectionContext = createContext(
-	{} as IPaymentSelectionContext
+  {} as IPaymentSelectionContext
 );
 
 export function PaymentSelectionProvider({
-	children,
+  children,
 }: {
-	children: ReactNode;
+  children: ReactNode;
 }) {
-	const [selection, setSelection] = useState<string>('');
-	const [openModalConfirmOrder, setOpenModalConfirmOrder] = useState(false);
+  const [selection, setSelection] = useState<string>("");
+  const [openModalConfirmOrder, setOpenModalConfirmOrder] = useState(false);
 
-	function handleOpenModalConfirmOrder() {
-		setOpenModalConfirmOrder(true);
-	}
+  function handleOpenModalConfirmOrder() {
+    setOpenModalConfirmOrder(true);
+  }
 
-	function handleCloseModalConfirmOrder() {
-		setOpenModalConfirmOrder(false);
-	}
+  function handleCloseModalConfirmOrder() {
+    setOpenModalConfirmOrder(false);
+  }
 
-	return (
-		<PaymentSelectionContext.Provider
-			value={{
-				selection,
-				openModalConfirmOrder,
-				setSelection,
-				handleOpenModalConfirmOrder,
-				handleCloseModalConfirmOrder,
-			}}
-		>
-			{children}
-		</PaymentSelectionContext.Provider>
-	);
+  return (
+    <PaymentSelectionContext.Provider
+      value={{
+        selection,
+        openModalConfirmOrder,
+        setSelection,
+        handleOpenModalConfirmOrder,
+        handleCloseModalConfirmOrder,
+      }}
+    >
+      {children}
+    </PaymentSelectionContext.Provider>
+  );
 }
