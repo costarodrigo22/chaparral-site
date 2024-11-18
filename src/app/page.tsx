@@ -1,22 +1,25 @@
 import Image from 'next/image';
-import FindUs from './components/FindUs';
-import FoodService from './components/FoodService';
-import Footer from './components/Footer';
-import Header from './components/Header';
-import Others from './components/Others';
-import Products from './components/Products';
-import Recipes from './components/Recipes';
-import ShowProduct from './components/ShowProduct';
-import Button from './global/components/button';
+// import ShowProduct from './components/ShowProduct';
+import Button from '../components/ui/Button/index';
+import Header from '@/components/sections/Header';
+import Details from '@/components/sections/Details';
+import Products from '@/components/sections/Products';
+import OwnProduction from '@/components/sections/OnwProduction';
+import Recipes from '@/components/sections/Recipes';
+import FoodService from '@/components/sections/FoodService';
+import FindUs from '@/components/sections/FindUs';
+import CartProvider from '@/contexts/Cart/CartContext';
+// import Footer from '@/components/sections/Footer';
 
 export default function Home() {
   return (
     <CartProvider>
       <div className="w-full h-full">
         <Header />
-        <Others />
+        <Details />
         <Products />
-        <ShowProduct />
+        <OwnProduction />
+        {/* <ShowProduct /> */}
         <div className="lg:mx-5 xl:mx-10 mb-10" id="receitas">
           <div className=" lg:h-[715px]">
             <Recipes />
@@ -32,9 +35,9 @@ export default function Home() {
         </div>
         <FoodService />
         <FindUs />
-        <div className=" lg:mx-8">
-          <Footer />
-        </div>
+        {/* <div className=' lg:mx-8'>
+					<Footer />
+				</div> */}
         <div className="w-full h-full relative">
           <Image
             className="z-50 hover:cursor-pointer right-1 bottom-[25px] fixed animate-shakeWithPause"
