@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import imgOrder from "../../../../public/img-order.svg";
-import { useEffect } from "react";
+import Image from 'next/image';
+import imgOrder from '../../../../public/img-order.svg';
+import { useEffect } from 'react';
 
 export default function PickUpTime() {
-  const order = Number(localStorage.getItem("order_number"));
+  const order = Number(localStorage.getItem('order_number'));
 
   useEffect(() => {
-    localStorage.removeItem("cart");
+    localStorage.removeItem('cart');
   }, []);
 
   return (
@@ -24,11 +24,12 @@ export default function PickUpTime() {
           </span>
 
           <span className="text-[#898989] text-base">
-            Para a retirada , é necessário informar o código do pedido.{" "}
+            Para a retirada , é necessário informar o código do pedido.{' '}
           </span>
         </div>
 
         <Image
+          className="hidden md:block"
           src={imgOrder}
           alt="Imagem da página de acompanhar o pedido"
           width={143}

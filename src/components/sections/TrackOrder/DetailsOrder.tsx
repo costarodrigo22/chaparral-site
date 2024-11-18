@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import Image from "next/image";
-import logoCard from "../../../../public/card.svg";
-import logoPix from "../../../../public/pix.svg";
-import logoBoleto from "../../../../public/boleto.svg";
-import { useCallback, useEffect, useState } from "react";
-import api from "@/lib/axiosInstance";
-import { Separator } from "@/components/ui/Separator";
-import { formatCurrency } from "@/lib/utils";
+import Image from 'next/image';
+import logoCard from '../../../../public/card.svg';
+import logoPix from '../../../../public/pix.svg';
+import logoBoleto from '../../../../public/boleto.svg';
+import { useCallback, useEffect, useState } from 'react';
+import api from '@/lib/axiosInstance';
+import { Separator } from '@/components/ui/Separator';
+import { formatCurrency } from '@/lib/utils';
 
 interface IDetailsOrderProps {
   pickUpLocal: string;
@@ -20,19 +20,19 @@ export default function DetailsOrder() {
     {} as IDetailsOrderProps
   );
 
-  const order = Number(localStorage.getItem("order_number"));
+  const order = Number(localStorage.getItem('order_number'));
 
   const handleGetDataOrder = useCallback(async () => {
     const response = await api.get(`/api/without/omie/consult_sale/${order}`);
 
     const methodPayment =
       response.data.pedido_venda_produto.lista_parcelas.parcela[0]
-        .meio_pagamento === "17"
-        ? "Pix"
+        .meio_pagamento === '17'
+        ? 'Pix'
         : response.data.pedido_venda_produto.lista_parcelas.parcela[0]
-            .meio_pagamento === "03"
-        ? "Card"
-        : "Boleto";
+            .meio_pagamento === '03'
+        ? 'Card'
+        : 'Boleto';
 
     setInfos({
       pickUpLocal: response.data.pedido_venda_produto.observacoes.obs_venda,
@@ -60,19 +60,19 @@ export default function DetailsOrder() {
 
       <Separator />
 
-      <div className="mt-2 flex gap-1 w-[400px] justify-between">
+      <div className="mt-2 flex gap-1 w-full justify-between">
         <span className="text-base opacity-60">Forma Pagamento</span>
 
-        <div className="flex gap-1 item">
-          {infos.paymentMethod === "Card" && (
+        <div className="flex gap-1 items-center">
+          {infos.paymentMethod === 'Card' && (
             <Image src={logoCard} alt="logo do cartão" width={21} height={14} />
           )}
 
-          {infos.paymentMethod === "Pix" && (
+          {infos.paymentMethod === 'Pix' && (
             <Image src={logoPix} alt="logo do pix" width={21} height={14} />
           )}
 
-          {infos.paymentMethod === "Boleto" && (
+          {infos.paymentMethod === 'Boleto' && (
             <Image
               src={logoBoleto}
               alt="logo do boleto"
@@ -82,11 +82,11 @@ export default function DetailsOrder() {
           )}
 
           <span className="text-[#1E1E1E] font-semibold text-sm">
-            {infos.paymentMethod === "Card"
-              ? "Cartão"
-              : infos.paymentMethod === "Pix"
-              ? "Pix"
-              : "Boleto"}
+            {infos.paymentMethod === 'Card'
+              ? 'Cartão'
+              : infos.paymentMethod === 'Pix'
+              ? 'Pix'
+              : 'Boleto'}
           </span>
         </div>
       </div>

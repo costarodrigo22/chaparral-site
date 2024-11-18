@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import {
   Dialog,
@@ -6,18 +6,18 @@ import {
   // DialogDescription,
   // DialogHeader,
   // DialogTitle,
-} from "@/components/ui/Dialog";
-import { House, ThumbsUp } from "lucide-react";
-import logoPix from "../../../../public/pix.svg";
-import Image from "next/image";
-import { Button } from "@/components/ui/Button";
-import { usePaymentSelection } from "@/hooks/useSelectionPayment";
-import logoCard from "../../../../public/card.svg";
-import api from "@/lib/axiosInstance";
-import { useState } from "react";
-import { toast } from "sonner";
-import ModalPix from "./ModalPix";
-import { useRouter } from "next/navigation";
+} from '@/components/ui/Dialog';
+import { House, ThumbsUp } from 'lucide-react';
+import logoPix from '../../../../public/pix.svg';
+import Image from 'next/image';
+import { Button } from '@/components/ui/Button';
+import { usePaymentSelection } from '@/hooks/useSelectionPayment';
+import logoCard from '../../../../public/card.svg';
+import api from '@/lib/axiosInstance';
+import { useState } from 'react';
+import { toast } from 'sonner';
+import ModalPix from './ModalPix';
+import { useRouter } from 'next/navigation';
 
 interface IModalConfirmOrder {
   open: boolean;
@@ -42,19 +42,19 @@ export default function ModalConfirmOrder({
   const { selection } = usePaymentSelection();
 
   const pickUpLocation = JSON.parse(
-    localStorage.getItem("local_delivery") || ""
+    localStorage.getItem('local_delivery') || ''
   );
 
-  const codeClient = JSON.parse(localStorage.getItem("code_client") || "");
+  const codeClient = JSON.parse(localStorage.getItem('code_client') || '');
 
-  const cartLocal = JSON.parse(localStorage.getItem("cart") || "");
+  const cartLocal = JSON.parse(localStorage.getItem('cart') || '');
 
-  const emailLocal = localStorage.getItem("email_client");
+  const emailLocal = localStorage.getItem('email_client');
 
   async function handleConfirmOrder() {
     setLoadingOrder(true);
 
-    localStorage.removeItem("order_number");
+    localStorage.removeItem('order_number');
 
     const total =
       cartLocal.param[0].itens[0].quantidade *
@@ -74,11 +74,11 @@ export default function ModalConfirmOrder({
           informacoes_adicionais: {
             utilizar_emails: emailLocal,
             meio_pagamento:
-              selection === "PixSite" || selection === "PixDelivery"
-                ? "17"
-                : selection === "CardDelivery"
-                ? "03"
-                : "15", // cartão de crédito é 3, boleto 15 e pix 17
+              selection === 'PixSite' || selection === 'PixDelivery'
+                ? '17'
+                : selection === 'CardDelivery'
+                ? '03'
+                : '15', // cartão de crédito é 3, boleto 15 e pix 17
           },
         },
       ],
@@ -94,13 +94,13 @@ export default function ModalConfirmOrder({
     };
 
     try {
-      const response = await api.post("/api/without/omie/insert_sale", body);
+      const response = await api.post('/api/without/omie/insert_sale', body);
 
-      localStorage.setItem("order_number", response.data.codigo_pedido);
+      localStorage.setItem('order_number', response.data.codigo_pedido);
 
-      if (selection === "PixSite" || selection === "PixDelivery") {
+      if (selection === 'PixSite' || selection === 'PixDelivery') {
         const pixInfos = await api.post(
-          "/api/without/omie/create_pix",
+          '/api/without/omie/create_pix',
           bodyPix
         );
 
@@ -116,17 +116,17 @@ export default function ModalConfirmOrder({
       if (response.status !== 200)
         toast.error(`${response.data.descricao_status}`);
     } catch (error) {
-      toast.error("Algo deu errado!");
+      toast.error('Algo deu errado!');
     } finally {
       setLoadingOrder(false);
 
-      if (selection === "CardDelivery" || selection === "PixDelivery") {
-        router.push("/TrackOrder");
+      if (selection === 'CardDelivery' || selection === 'PixDelivery') {
+        router.push('/TrackOrder');
 
         // localStorage.removeItem("cart");
       }
 
-      if (selection === "PixSite") {
+      if (selection === 'PixSite') {
         setOpenModalPix(true);
       }
     }
@@ -136,13 +136,13 @@ export default function ModalConfirmOrder({
     <>
       <ModalPix
         open={openModalPix}
-        pix_copy_paste={infosPix?.copyPaste || ""}
-        qd_code={infosPix?.qrCode || ""}
+        pix_copy_paste={infosPix?.copyPaste || ''}
+        qd_code={infosPix?.qrCode || ''}
         onClose={() => setOpenModalPix(false)}
       />
 
       <Dialog open={open} onOpenChange={onClose}>
-        <DialogContent className="w-[550px] p-5">
+        <DialogContent className="max-h-[90vh] max-w-[95vw] overflow-y-auto overflow-x-auto p-3">
           <span>Confirme a retirada do produto</span>
 
           <div>
@@ -155,7 +155,7 @@ export default function ModalConfirmOrder({
                   {pickUpLocation.name}
                 </span>
                 <span className="text-[#898989] text-sm">
-                  {pickUpLocation.street}, {pickUpLocation.number} -{" "}
+                  {pickUpLocation.street}, {pickUpLocation.number} -{' '}
                   {pickUpLocation.neighborhood}
                 </span>
               </div>
@@ -164,7 +164,7 @@ export default function ModalConfirmOrder({
             <div className="flex border p-5 items-center rounded-lg gap-4">
               <Image
                 src={
-                  selection === "PixSite" || selection === "PixDelivery"
+                  selection === 'PixSite' || selection === 'PixDelivery'
                     ? logoPix
                     : logoCard
                 }
@@ -173,14 +173,14 @@ export default function ModalConfirmOrder({
 
               <div className="flex flex-col gap-2">
                 <span className="font-semibold text-sm">
-                  {selection === "PixSite" || selection === "PixDelivery"
-                    ? "Pix"
-                    : "Cartão"}
+                  {selection === 'PixSite' || selection === 'PixDelivery'
+                    ? 'Pix'
+                    : 'Cartão'}
                 </span>
                 <span className="text-[#898989] text-sm">
-                  {selection === "PixSite" || selection === "PixDelivery"
-                    ? "Utilize o QR code ou copie e cole o código"
-                    : "Utilize seu cartão para pagamento"}
+                  {selection === 'PixSite' || selection === 'PixDelivery'
+                    ? 'Utilize o QR code ou copie e cole o código'
+                    : 'Utilize seu cartão para pagamento'}
                 </span>
               </div>
             </div>
@@ -190,8 +190,8 @@ export default function ModalConfirmOrder({
               onClick={handleConfirmOrder}
               className="bg-[#2B0036] w-full h-14 rounded-full mt-5 hover:bg-[#5a3663]"
             >
-              {loadingOrder && "Gerando pedido..."}
-              {!loadingOrder && "Confirmar e gerar pedido"}
+              {loadingOrder && 'Gerando pedido...'}
+              {!loadingOrder && 'Confirmar e gerar pedido'}
 
               <ThumbsUp />
             </Button>

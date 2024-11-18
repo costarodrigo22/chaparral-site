@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Nunito } from 'next/font/google';
 import {
@@ -12,6 +12,10 @@ import {
 } from '@/components/ui/DropdownMenu';
 import { handleScroll } from '@/lib/utils';
 import Link from 'next/link';
+import ModalContacts, {
+  IData,
+} from '@/components/sections/Footer/components/ModalContacts';
+import api from '@/lib/axiosInstance';
 // import SearchInput from './SearchInput';
 
 const Nunitofont = Nunito({
@@ -20,12 +24,27 @@ const Nunitofont = Nunito({
 });
 
 export default function AboutNav() {
+  const [openContactsModal, setOpenContactsModal] = useState<boolean>(false);
+  const [company, setCompanyData] = useState<IData>({} as IData);
+
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [flag, setFlag] = useState('');
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  const handleGetCompanyData = useCallback(async () => {
+    try {
+      const res = await api.get('/api/without/company_profile/get');
+      setCompanyData(res?.data?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+  useEffect(() => {
+    handleGetCompanyData();
+  }, [handleGetCompanyData]);
 
   useEffect(() => {
     const flag = localStorage.getItem('flag');
@@ -48,6 +67,11 @@ export default function AboutNav() {
   };
   return (
     <div>
+      <ModalContacts
+        data={company || {}}
+        onClose={() => setOpenContactsModal(false)}
+        open={openContactsModal}
+      />
       <nav className="w-full h-[90px] fixed flex z-50 bg-transparent bg-gradient-to-r from-[#2B0036] to-[#36133D] text-white">
         <div className="flex items-center justify-center w-[15%]">
           <div className="relative hidden md:block max-w-[139px] h-auto mt-5">
@@ -85,7 +109,8 @@ export default function AboutNav() {
               </span>
             </Link>
             <span
-              className={`font-bold text-base ${Nunitofont.className} hidden md:block`}
+              className={`font-bold text-base ${Nunitofont.className} hidden md:block cursor-pointer`}
+              onClick={() => setOpenContactsModal(true)}
             >
               Contato
             </span>
@@ -253,7 +278,11 @@ export default function AboutNav() {
             </Link>
           </li>
           <li>
-            <a href="#" className={`text-base ${Nunitofont.className}`}>
+            <a
+              onClick={() => setOpenContactsModal(true)}
+              href="#"
+              className={`text-base cursor-pointer ${Nunitofont.className}`}
+            >
               Contato
             </a>
           </li>

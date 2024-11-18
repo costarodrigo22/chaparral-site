@@ -9,45 +9,45 @@ import { ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Payment() {
-	return (
-		<PaymentSelectionProvider>
-			<QuantityProvider>
-				<CartProvider>
-					<div className='flex flex-col w-full mb-10'>
-						<div className='flex justify-between items-center w-full mt-28 px-32 mb-10'>
-							<span className='text-2xl font-bold'>
-								Como deseja pagar o produto?
-							</span>
+  return (
+    <PaymentSelectionProvider>
+      <QuantityProvider>
+        <CartProvider>
+          <div className="flex flex-col w-full mb-10">
+            <div className="flex justify-between items-center w-full mt-28 px-0 md:px-10 xl:px-32 mb-10">
+              <span className="text-base md:text-xl lg:text-2xl font-bold">
+                Como deseja pagar o produto?
+              </span>
 
-							<Link
-								href='/'
-								className='text-[#2B0036] text-base font-medium flex hover:underline cursor-pointer'
-							>
-								Voltar ao início
-								<ChevronRight />
-							</Link>
-						</div>
+              <Link
+                href="/"
+                className="text-[#2B0036] items-center text-xs lg:text-base font-medium flex hover:underline cursor-pointer"
+              >
+                <span>Voltar ao início</span>
+                <ChevronRight />
+              </Link>
+            </div>
 
-						<div className='flex px-32 gap-9'>
-							<div className='w-2/3  p-5 flex flex-col'>
-								<DeliveryOrSiteSelector />
-							</div>
+            <div className="flex flex-col lg:flex-row px-0 md:px-10 xl:px-32 gap-9">
+              <div className="w-full p-5 flex flex-col">
+                <DeliveryOrSiteSelector />
+              </div>
 
-							<div className='w-1/3 rounded-md border p-5'>
-								<span className='text-[#1E1E1E] text-2xl font-semibold'>
-									Resumo do Pedido
-								</span>
+              <div className="w-full rounded-md border p-5">
+                <span className="text-[#1E1E1E] text-2xl font-semibold">
+                  Resumo do Pedido
+                </span>
 
-								<Separator className='mt-5' />
+                <Separator className="mt-5" />
 
-								<DetailsSummary />
+                <DetailsSummary />
 
-								<EnableButton />
-							</div>
-						</div>
-					</div>
-				</CartProvider>
-			</QuantityProvider>
-		</PaymentSelectionProvider>
-	);
+                <EnableButton />
+              </div>
+            </div>
+          </div>
+        </CartProvider>
+      </QuantityProvider>
+    </PaymentSelectionProvider>
+  );
 }
