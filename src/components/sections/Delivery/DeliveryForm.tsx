@@ -1,12 +1,12 @@
-"use client";
+'use client';
 
-import { Input } from "@/components/ui/Input";
-import { Label } from "@/components/ui/Label";
-import { StepperFooter, StepperNextButton } from "@/components/ui/Stepper";
-import { useStepper } from "@/hooks/useStepper";
-import { useFormContext } from "react-hook-form";
-import { FormData } from "../Cart/ModalCreateAccount";
-import { formatCpfCnpj, formatPhone } from "@/lib/utils";
+import { Input } from '@/components/ui/Input';
+import { Label } from '@/components/ui/Label';
+import { StepperFooter, StepperNextButton } from '@/components/ui/Stepper';
+import { useStepper } from '@/hooks/useStepper';
+import { useFormContext } from 'react-hook-form';
+import { FormData } from '../Cart/ModalCreateAccount';
+import { formatCpfCnpj, formatPhone } from '@/lib/utils';
 
 export default function DeliveryForm() {
   const form = useFormContext<FormData>();
@@ -14,7 +14,7 @@ export default function DeliveryForm() {
   const { nextStep } = useStepper();
 
   async function handleNextStep() {
-    const isValid = await form.trigger("infosStep");
+    const isValid = await form.trigger('infosStep');
 
     if (isValid) nextStep();
   }
@@ -24,14 +24,14 @@ export default function DeliveryForm() {
   ) {
     const formattedValue = formatCpfCnpj(event.target.value);
 
-    form.setValue("infosStep.cpf_cpnj", formattedValue, {
+    form.setValue('infosStep.cpf_cpnj', formattedValue, {
       shouldValidate: true,
     });
   }
 
   function handlePhoneChange(event: React.ChangeEvent<HTMLInputElement>) {
     const formattedValue = formatPhone(event.target.value);
-    form.setValue("infosStep.phone", formattedValue, { shouldValidate: true });
+    form.setValue('infosStep.phone', formattedValue, { shouldValidate: true });
   }
 
   return (
@@ -42,7 +42,7 @@ export default function DeliveryForm() {
         </Label>
 
         <Input
-          {...form.register("infosStep.name")}
+          {...form.register('infosStep.name')}
           id="fantasyName"
           placeholder="Nome"
         />
@@ -54,14 +54,14 @@ export default function DeliveryForm() {
         )}
       </div>
 
-      <div className="flex gap-5 w-full mt-4">
+      <div className="flex flex-col md:flex-row gap-5 w-full mt-4">
         <div className="w-full">
           <Label htmlFor="cpfCnpj" className="">
             CPF/CNPJ*
           </Label>
 
           <Input
-            {...form.register("infosStep.cpf_cpnj")}
+            {...form.register('infosStep.cpf_cpnj')}
             id="cpfCnpj"
             placeholder="CPF/CNPJ"
             onChange={handleInputCpfOrCnpjChange}
@@ -79,7 +79,7 @@ export default function DeliveryForm() {
           </Label>
 
           <Input
-            {...form.register("infosStep.phone")}
+            {...form.register('infosStep.phone')}
             id="phone"
             placeholder="Telefone"
             onChange={handlePhoneChange}
@@ -99,7 +99,7 @@ export default function DeliveryForm() {
         </Label>
 
         <Input
-          {...form.register("infosStep.email")}
+          {...form.register('infosStep.email')}
           id="email"
           placeholder="E-mail"
         />

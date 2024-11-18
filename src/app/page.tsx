@@ -1,3 +1,4 @@
+'use client';
 import Image from 'next/image';
 // import ShowProduct from './components/ShowProduct';
 import Button from '../components/ui/Button/index';
@@ -9,9 +10,24 @@ import Recipes from '@/components/sections/Recipes';
 import FoodService from '@/components/sections/FoodService';
 import FindUs from '@/components/sections/FindUs';
 import CartProvider from '@/contexts/Cart/CartContext';
+import { useCallback, useEffect, useState } from 'react';
+import api from '@/lib/axiosInstance';
+import { IData } from '@/components/sections/Footer/components/ModalContacts';
 // import Footer from '@/components/sections/Footer';
 
 export default function Home() {
+  const [companyData, setCompanyData] = useState<IData>({} as IData);
+  const getCompanyData = useCallback(async () => {
+    try {
+      const res = await api.get('/api/without/company_profile/get');
+      setCompanyData(res?.data?.data);
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+  useEffect(() => {
+    getCompanyData();
+  }, [getCompanyData]);
   return (
     <CartProvider>
       <div className="w-full h-full">
@@ -43,6 +59,7 @@ export default function Home() {
             className="z-50 hover:cursor-pointer right-1 bottom-[25px] fixed animate-shakeWithPause"
             src="/whatsapp-icon.svg"
             alt="Ícone do whatsapp"
+            onClick={() => window.open(companyData?.whatsapp, '_blank')}
             width={70}
             height={70}
           />

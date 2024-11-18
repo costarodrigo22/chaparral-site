@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useCallback, useEffect, useState } from "react";
-import api from "@/lib/axiosInstance";
+import { useCallback, useEffect, useState } from 'react';
+import api from '@/lib/axiosInstance';
 
 interface IDetailsOrderProps {
   pickUpLocal: string;
@@ -14,19 +14,19 @@ export default function PickUpLocal() {
     {} as IDetailsOrderProps
   );
 
-  const order = Number(localStorage.getItem("order_number"));
+  const order = Number(localStorage.getItem('order_number'));
 
   const handleGetDataOrder = useCallback(async () => {
     const response = await api.get(`/api/without/omie/consult_sale/${order}`);
 
     const methodPayment =
       response.data.pedido_venda_produto.lista_parcelas.parcela[0]
-        .meio_pagamento === "17"
-        ? "Pix"
+        .meio_pagamento === '17'
+        ? 'Pix'
         : response.data.pedido_venda_produto.lista_parcelas.parcela[0]
-            .meio_pagamento === "03"
-        ? "Card"
-        : "Boleto";
+            .meio_pagamento === '03'
+        ? 'Card'
+        : 'Boleto';
 
     setInfos({
       pickUpLocal: response.data.pedido_venda_produto.observacoes.obs_venda,

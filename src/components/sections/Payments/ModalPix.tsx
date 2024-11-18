@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import { Dialog, DialogContent } from "@/components/ui/Dialog";
-import Image from "next/image";
-import headerLogo from "../../../../public/header-pix.svg";
-import { Separator } from "@/components/ui/Separator";
-import { Copy } from "lucide-react";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/Button";
+import { Dialog, DialogContent } from '@/components/ui/Dialog';
+import Image from 'next/image';
+import headerLogo from '../../../../public/header-pix.svg';
+import { Separator } from '@/components/ui/Separator';
+import { Copy } from 'lucide-react';
+import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/Button';
 
 interface IModalPixProps {
   open: boolean;
@@ -28,19 +28,19 @@ export default function ModalPix({
     try {
       await navigator.clipboard.writeText(pix_copy_paste);
 
-      toast.success("Chave pix copiada com sucesso!");
+      toast.success('Chave pix copiada com sucesso!');
     } catch (error) {
-      toast.error("Alto deu errado ao tentar copiar a chave pix!");
+      toast.error('Alto deu errado ao tentar copiar a chave pix!');
     }
   }
 
   function handleNavigation() {
-    router.push("TrackOrder");
+    router.push('TrackOrder');
   }
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="w-[480px] p-5 flex justify-center flex-col items-center">
+      <DialogContent className="max-h-[90vh] max-w-[95vw] overflow-y-auto overflow-x-auto p-5 flex justify-center flex-col items-center">
         <Image src={headerLogo} alt="logo pix" />
         <span className="text-[#2B0036] font-semibold text-sm">
           Aguardando confirmação de pagamento
