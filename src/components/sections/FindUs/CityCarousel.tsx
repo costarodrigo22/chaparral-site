@@ -44,11 +44,11 @@ export default function CityCarousel({ items }: CarouselProps) {
           src="/arrow-left.svg"
           className="absolute top-[20%] left-0 lg:left-6 w-16 h-16 z-30 flex text-3xl items-center justify-center rounded-full transition-colors hover:bg-black/10 cursor-pointer"
         />
-        {items.map((item, index) => (
+        {items?.map((item, index) => (
           <SwiperSlide key={index}>
             <div className="flex flex-col items-center justify-center h-auto text-center">
               <h2 className="text-2xl font-bold text-darkPurple mb-5">
-                {item.name}
+                {item?.name}
               </h2>
               <div className="flex gap-1">
                 <Image
@@ -58,16 +58,16 @@ export default function CityCarousel({ items }: CarouselProps) {
                   src={'/pin-carousel-icon.svg'}
                 />
                 <h3 className="text-sm max-w-[250px] font-normal sm:max-w-[350px] md:max-w-none lg:text-xl mt-1 text-lightGray">
-                  {item.street}, n°{item.number} - {item.neighborhood}
+                  {item?.street}, n°{item?.number} - {item?.neighborhood}
                 </h3>
               </div>
               <p className="text-lg mt-1 text-lightGray font-semibold">
-                {item.city} - {item.uf}
+                {item?.city} - {item?.uf}
               </p>
               <Image
                 className="my-5"
                 alt="Imagem do colaborador"
-                src={item.base64}
+                src={item?.base64}
                 height={300}
                 width={300}
               />

@@ -1,9 +1,11 @@
 'use client';
 import Image from 'next/image';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import RecipeCard from './RecipeCard';
-import api from '@/lib/axiosInstance';
 
+interface RecipeProps {
+  recipes: RecipeCardData[];
+}
 interface RecipeCardData {
   base64: string;
   created_at: string;
@@ -16,25 +18,7 @@ interface RecipeCardData {
   updated_at: string;
 }
 
-export default function Recipes() {
-  const [recipes, setRecipes] = useState<RecipeCardData[]>([]);
-
-  useEffect(() => {
-    const getThreeRecipes = async () => {
-      try {
-        const res = await api.get(
-          '/api/without/recipes_cards/last_three_recipes'
-        );
-        const data = res.data.data;
-        setRecipes(data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
-    getThreeRecipes();
-  }, []);
-
+export default function Recipes({ recipes }: RecipeProps) {
   return (
     <div className="w-full lg:max-h-[361px] bg-mediumWhite rounded-[30px] mt-5 lg:mt-[-30px] bg-[url('/recipe-bg.svg')] bg-no-repeat bg-center bg-cover h-auto pb-10 lg:pb-0 ">
       <div className="flex gap-5">
@@ -54,10 +38,10 @@ export default function Recipes() {
         </div>
       </div>
       <div className="mt-20 flex flex-col lg:flex-row justify-evenly items-center lg:items-start h-auto gap-5">
-        {recipes.length === 0 ? (
+        {recipes?.length === 0 ? (
           <span>Carregando receitas...</span>
         ) : (
-          recipes.map((recipe) => (
+          recipes?.map((recipe) => (
             <RecipeCard
               key={recipe.id}
               endColor={recipe.final_color || '#fff'}

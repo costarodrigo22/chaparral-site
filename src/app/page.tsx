@@ -1,4 +1,3 @@
-// import ShowProduct from './components/ShowProduct';
 import Button from '../components/ui/Button/index';
 import Header from '@/components/sections/Header';
 import Details from '@/components/sections/Details';
@@ -8,23 +7,35 @@ import OwnProduction, {
 } from '@/components/sections/OnwProduction';
 import Recipes from '@/components/sections/Recipes';
 import FoodService from '@/components/sections/FoodService';
-import FindUs from '@/components/sections/FindUs';
+import FindUs, { CarrouselInfo } from '@/components/sections/FindUs';
 import CartProvider from '@/contexts/Cart/CartContext';
 import api from '@/lib/axiosInstance';
 import WhatsAppBtn from '@/components/ui/WhatsAppBtn';
-// import Footer from '@/components/sections/Footer';
 
 export default async function Home() {
-  const res = await api.get('/api/without/company_profile/get');
+  const CompanyInfoRes = await api.get('/api/without/company_profile/get');
   const resImageHeader = await api.get(
     '/api/without/home_header/display_image/featured_image'
   );
   const infoResInstitutional = await api.get<ApiResponse>(
     '/api/without/home_institutional_section/index'
   );
+  const infoFoodServiceResponse = await api.get(
+    '/api/without/home_be_a_partner_section/index'
+  );
+  const imageFoodServiceResponse = await api.get(
+    '/api/without/home_be_a_partner_section/display_image'
+  );
   const imageResInstitutional = await api.get(
     '/api/without/home_institutional_section/display_image'
   );
+  const RecipesRes = await api.get(
+    '/api/without/recipes_cards/last_three_recipes'
+  );
+  const CarrouselInfoRes = await api.get<CarrouselInfo>(
+    '/api/without/partners/last_five_partners'
+  );
+
   return (
     <CartProvider>
       <div className="w-full h-full">
@@ -35,10 +46,9 @@ export default async function Home() {
           info={infoResInstitutional?.data.data[0]}
           image={imageResInstitutional?.data}
         />
-        {/* <ShowProduct /> */}
         <div className="lg:mx-5 xl:mx-10 mb-10" id="receitas">
           <div className=" lg:h-[715px]">
-            <Recipes />
+            <Recipes recipes={RecipesRes?.data?.data} />
           </div>
           <div className="w-full h-auto flex items-center justify-center mt-8">
             <Button
@@ -49,12 +59,12 @@ export default async function Home() {
             />
           </div>
         </div>
-        <FoodService />
-        <FindUs />
-        {/* <div className=' lg:mx-8'>
-					<Footer />
-				</div> */}
-        <WhatsAppBtn link={res?.data?.data?.whatsapp} />
+        <FoodService
+          image={imageFoodServiceResponse.data}
+          info={infoFoodServiceResponse.data.data[0]}
+        />
+        <FindUs data={CarrouselInfoRes.data.data} />
+        <WhatsAppBtn link={CompanyInfoRes?.data?.data?.whatsapp} />
       </div>
     </CartProvider>
   );
