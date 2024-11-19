@@ -1,8 +1,6 @@
 'use client';
 import Image from 'next/image';
-import React, { useCallback, useEffect, useState } from 'react';
 import CityCarousel from './CityCarousel';
-import api from '@/lib/axiosInstance';
 
 interface CarrouselItem {
   id: string;
@@ -16,25 +14,15 @@ interface CarrouselItem {
   telephone_number: string;
   base64: string;
 }
-interface CarrouselInfo {
+export interface CarrouselInfo {
   data: CarrouselItem[];
 }
 
-export default function FindUs() {
-  const [carrouselItems, setCarrouselItems] = useState<CarrouselItem[]>([]);
-  const handleGetCarrouselInfo = useCallback(async () => {
-    try {
-      const res = await api.get<CarrouselInfo>(
-        '/api/without/partners/last_five_partners'
-      );
-      setCarrouselItems(res.data.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-  useEffect(() => {
-    handleGetCarrouselInfo();
-  }, [handleGetCarrouselInfo]);
+// interface findUsProps {
+//   carrouselItems: CarrouselItem[];
+// }
+
+export default function FindUs({ data }: CarrouselInfo) {
   return (
     <div className="mt-[89px]">
       <div className="flex items-center gap-7 justify-center md:justify-start md:pl-12 xl:pl-20">
@@ -49,7 +37,7 @@ export default function FindUs() {
         </span>
       </div>
       <div className="mt-28 flex items-center justify-center mx-0 lg:mx-16 xl:mx-20">
-        <CityCarousel items={carrouselItems} />
+        <CityCarousel items={data} />
       </div>
     </div>
   );
