@@ -4,7 +4,6 @@ import 'swiper/css/navigation';
 import 'swiper/css/autoplay'; // Import the autoplay styles
 
 // Import required modules
-import Image from 'next/image';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Autoplay } from 'swiper/modules'; // Import the Autoplay module
 import ButtonCarousel from './ButtonCarousel';
@@ -51,7 +50,7 @@ export default function CityCarousel({ items }: CarouselProps) {
                 {item?.name}
               </h2>
               <div className="flex gap-1">
-                <Image
+                <img
                   alt="Pin de mapa"
                   height={14}
                   width={17}
@@ -64,7 +63,7 @@ export default function CityCarousel({ items }: CarouselProps) {
               <p className="text-lg mt-1 text-lightGray font-semibold">
                 {item?.city} - {item?.uf}
               </p>
-              <Image
+              <img
                 className="my-5"
                 alt="Imagem do colaborador"
                 src={item?.base64}

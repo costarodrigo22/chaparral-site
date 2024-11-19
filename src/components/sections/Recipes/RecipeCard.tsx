@@ -1,7 +1,6 @@
 'use client';
 import Button from '@/components/ui/Button/index';
 import { cn } from '@/lib/utils';
-import Image from 'next/image';
 import { useState } from 'react';
 import DOMPurify from 'dompurify';
 
@@ -36,7 +35,7 @@ export default function RecipeCard({
       onMouseLeave={() => setIsHovered(false)}
     >
       {src && (
-        <Image src={src} alt="Imagem da receita" height={196} width={352} />
+        <img src={src} alt="Imagem da receita" height={196} width={352} />
       )}
       <div className="flex flex-col items-center px-8 mt-7 gap-20">
         <span

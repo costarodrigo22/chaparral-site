@@ -1,5 +1,4 @@
 'use client';
-import Image from 'next/image';
 
 interface GenericCardProps {
   src: string;
@@ -18,7 +17,7 @@ export default function GenericCard({
   return (
     <div className="max-w-[365px] flex items-start gap-[20px]">
       <div>
-        <Image alt="ícone do card" height={98} width={56} src={src} />
+        <img alt="ícone do card" height={98} width={56} src={src} />
       </div>
       <div className="pt-[5px] flex flex-col gap-[18px]">
         <div className="max-w-[289px] flex flex-col gap-2">

@@ -1,5 +1,4 @@
 'use client';
-import Image from 'next/image';
 import CityCarousel from './CityCarousel';
 
 interface CarrouselItem {
@@ -26,12 +25,7 @@ export default function FindUs({ data }: CarrouselInfo) {
   return (
     <div className="mt-[89px]">
       <div className="flex items-center gap-7 justify-center md:justify-start md:pl-12 xl:pl-20">
-        <Image
-          alt="Ícone de pin"
-          height={65}
-          width={57}
-          src={'/pin-icon.svg'}
-        />
+        <img alt="Ícone de pin" height={65} width={57} src={'/pin-icon.svg'} />
         <span className=" text-black font-semibold text-lg sm:text-2xl">
           Saiba onde nos encontrar
         </span>

@@ -1,7 +1,6 @@
 'use client';
 
 import RecipeCard from '@/components/sections/Recipes/RecipeCard';
-import Link from 'next/link';
 import DOMPurify from 'dompurify';
 
 interface RecipeCardData {
@@ -24,12 +23,12 @@ export default function RelatedRecipes({
         <h3 className="font-semibold text-2xl mb-6 text-center md:text-left">
           Outras receitas
         </h3>
-        <Link
+        <a
           href="/recipes"
           className="text-pastelBlue font-semibold text-base hover:opacity-85 transition-all duration-300"
         >
           Veja mais receitas
-        </Link>
+        </a>
       </div>
       <div className="grid sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 justify-items-center gap-28">
         {recipes?.map((recipe) => (

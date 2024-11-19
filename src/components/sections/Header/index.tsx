@@ -1,10 +1,8 @@
 'use client';
-import Nav from './Nav';
 
 export default function Header({ image }: { image: string }) {
   return (
     <div className="flex flex-col">
-      <Nav />
       <div
         className="w-full mt-[89px] text-white flex h-full flex-col"
         style={{

@@ -11,7 +11,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/DropdownMenu';
 import { handleScroll } from '@/lib/utils';
-import Link from 'next/link';
 import ModalContacts, {
   IData,
 } from '@/components/sections/Footer/components/ModalContacts';
@@ -101,13 +100,13 @@ export default function AboutNav() {
             >
               Produtos
             </span>
-            <Link href={'/recipes'}>
+            <a href={'/recipes'}>
               <span
                 className={` hover:cursor-pointer font-bold text-base ${Nunitofont.className} hidden md:block`}
               >
                 Receitas
               </span>
-            </Link>
+            </a>
             <span
               className={`font-bold text-base ${Nunitofont.className} hidden md:block cursor-pointer`}
               onClick={() => setOpenContactsModal(true)}
@@ -196,7 +195,7 @@ export default function AboutNav() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
-            <Link
+            <a
               href="/cart"
               className="w-12 h-12 rounded-full fixed md:static right-3 bg-transparent flex items-center justify-center hover:bg-[#3b1344a1] transition-all duration-300 ease-in-out cursor-pointer"
             >
@@ -206,7 +205,7 @@ export default function AboutNav() {
                 width={24}
                 src={'/shopping-cart.svg'}
               />
-            </Link>
+            </a>
           </div>
           <div
             className=" fixed cursor-pointer md:hidden left-3"
@@ -271,11 +270,11 @@ export default function AboutNav() {
             </span>
           </li>
           <li className="mb-4">
-            <Link href={'/recipes'}>
+            <a href={'/recipes'}>
               <span className={`text-base ${Nunitofont.className}`}>
                 Receitas
               </span>
-            </Link>
+            </a>
           </li>
           <li>
             <a

@@ -1,5 +1,4 @@
 'use client';
-import Image from 'next/image';
 import React from 'react';
 import RecipeCard from './RecipeCard';
 
@@ -23,7 +22,7 @@ export default function Recipes({ recipes }: RecipeProps) {
     <div className="w-full lg:max-h-[361px] bg-mediumWhite rounded-[30px] mt-5 lg:mt-[-30px] bg-[url('/recipe-bg.svg')] bg-no-repeat bg-center bg-cover h-auto pb-10 lg:pb-0 ">
       <div className="flex gap-5">
         <div className="flex items-center flex-col lg:flex-row gap-7 w-full lg:pl-11 pt-16">
-          <Image
+          <img
             alt="Ícone de xícara de café"
             height={65}
             width={57}
