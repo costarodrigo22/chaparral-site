@@ -1,40 +1,40 @@
-'use client';
-import Image from 'next/image';
 // import ShowProduct from './components/ShowProduct';
 import Button from '../components/ui/Button/index';
 import Header from '@/components/sections/Header';
 import Details from '@/components/sections/Details';
 import Products from '@/components/sections/Products';
-import OwnProduction from '@/components/sections/OnwProduction';
+import OwnProduction, {
+  ApiResponse,
+} from '@/components/sections/OnwProduction';
 import Recipes from '@/components/sections/Recipes';
 import FoodService from '@/components/sections/FoodService';
 import FindUs from '@/components/sections/FindUs';
 import CartProvider from '@/contexts/Cart/CartContext';
-import { useCallback, useEffect, useState } from 'react';
 import api from '@/lib/axiosInstance';
-import { IData } from '@/components/sections/Footer/components/ModalContacts';
+import WhatsAppBtn from '@/components/ui/WhatsAppBtn';
 // import Footer from '@/components/sections/Footer';
 
-export default function Home() {
-  const [companyData, setCompanyData] = useState<IData>({} as IData);
-  const getCompanyData = useCallback(async () => {
-    try {
-      const res = await api.get('/api/without/company_profile/get');
-      setCompanyData(res?.data?.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-  useEffect(() => {
-    getCompanyData();
-  }, [getCompanyData]);
+export default async function Home() {
+  const res = await api.get('/api/without/company_profile/get');
+  const resImageHeader = await api.get(
+    '/api/without/home_header/display_image/featured_image'
+  );
+  const infoResInstitutional = await api.get<ApiResponse>(
+    '/api/without/home_institutional_section/index'
+  );
+  const imageResInstitutional = await api.get(
+    '/api/without/home_institutional_section/display_image'
+  );
   return (
     <CartProvider>
       <div className="w-full h-full">
-        <Header />
+        <Header image={resImageHeader?.data} />
         <Details />
         <Products />
-        <OwnProduction />
+        <OwnProduction
+          info={infoResInstitutional?.data.data[0]}
+          image={imageResInstitutional?.data}
+        />
         {/* <ShowProduct /> */}
         <div className="lg:mx-5 xl:mx-10 mb-10" id="receitas">
           <div className=" lg:h-[715px]">
@@ -54,16 +54,7 @@ export default function Home() {
         {/* <div className=' lg:mx-8'>
 					<Footer />
 				</div> */}
-        <div className="w-full h-full relative">
-          <Image
-            className="z-50 hover:cursor-pointer right-1 bottom-[25px] fixed animate-shakeWithPause"
-            src="/whatsapp-icon.svg"
-            alt="Ícone do whatsapp"
-            onClick={() => window.open(companyData?.whatsapp, '_blank')}
-            width={70}
-            height={70}
-          />
-        </div>
+        <WhatsAppBtn link={res?.data?.data?.whatsapp} />
       </div>
     </CartProvider>
   );
