@@ -1,5 +1,4 @@
 import { ChevronRight } from 'lucide-react';
-import Link from 'next/link';
 import PickUpTime from '@/components/sections/TrackOrder/PickUpTime';
 import DetailsOrder from '@/components/sections/TrackOrder/DetailsOrder';
 import PickUpLocal from '@/components/sections/TrackOrder/PickUpLocal';
@@ -13,13 +12,13 @@ export default async function TrackOrder() {
           Acompanhar pedido
         </span>
 
-        <Link
+        <a
           href="/"
           className="text-[#2B0036] text-xs lg:text-base font-medium flex hover:underline cursor-pointer"
         >
           Voltar ao início
           <ChevronRight />
-        </Link>
+        </a>
       </div>
 
       <div className="flex xl:px-32 gap-9 flex-col">

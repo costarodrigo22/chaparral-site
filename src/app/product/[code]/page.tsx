@@ -1,12 +1,11 @@
-import FooterProducts from "@/components/sections/Products/components/FooterProducts";
-import { Separator } from "@/components/ui/Separator";
-import QuantityProvider from "@/contexts/Cart/QuantityContext";
-import { ChevronRight } from "lucide-react";
-import Link from "next/link";
-import { formatCurrency } from "@/lib/utils";
-import Image from "next/image";
-import CartProvider from "@/contexts/Cart/CartContext";
-import api from "@/lib/axiosInstance";
+import FooterProducts from '@/components/sections/Products/components/FooterProducts';
+import { Separator } from '@/components/ui/Separator';
+import QuantityProvider from '@/contexts/Cart/QuantityContext';
+import { ChevronRight } from 'lucide-react';
+import { formatCurrency } from '@/lib/utils';
+import Image from 'next/image';
+import CartProvider from '@/contexts/Cart/CartContext';
+import api from '@/lib/axiosInstance';
 
 interface IProductProps {
   params: {
@@ -26,13 +25,13 @@ export default async function Product({ params }: IProductProps) {
           <div className="flex justify-between items-center w-full mt-28 px-32 mb-10">
             <span className="text-2xl font-bold">Detalhes do produto</span>
 
-            <Link
+            <a
               href="/"
               className="text-[#2B0036] text-base font-medium flex hover:underline cursor-pointer"
             >
               Voltar ao início
               <ChevronRight />
-            </Link>
+            </a>
           </div>
 
           <div className="flex px-32">

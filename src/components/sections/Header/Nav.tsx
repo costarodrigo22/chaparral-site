@@ -1,6 +1,5 @@
 'use client';
 import { useCallback, useEffect, useState } from 'react';
-import Image from 'next/image';
 import { Nunito } from 'next/font/google';
 // import {
 //   DropdownMenu,
@@ -11,7 +10,6 @@ import { Nunito } from 'next/font/google';
 //   DropdownMenuTrigger,
 // } from '@/components/ui/DropdownMenu';
 import { handleScroll } from '@/lib/utils';
-import Link from 'next/link';
 // import SearchInput from './SearchInput';
 
 import { usePathname } from 'next/navigation';
@@ -86,14 +84,14 @@ export default function Nav() {
       />
       <nav className="w-full h-[90px] fixed flex z-50 bg-gradient-to-r from-[#2B0036] to-[#36133D] text-white">
         <div className="flex items-center justify-center w-[15%]">
-          <Link
+          <a
             href="/"
             className="cursor-pointer relative hidden md:block max-w-[139px] h-auto mt-5"
           >
             {logoImage && (
-              <Image src={logoImage} alt="Logo" width={110} height={80} />
+              <img src={logoImage} alt="Logo" width={110} height={80} />
             )}
-          </Link>
+          </a>
         </div>
         <div className="flex items-center justify-between w-[85%] mt-4">
           <div className="flex items-center md:gap-[65px] lg:gap-[80px] xl:gap-[90px]">
@@ -114,20 +112,20 @@ export default function Nav() {
             )}
 
             {pathname !== '/' && (
-              <Link
+              <a
                 href="/product"
                 className={` hover:cursor-pointer font-bold text-base ${Nunitofont.className} hidden md:block`}
               >
                 Produtos
-              </Link>
+              </a>
             )}
-            <Link href={'/recipes'}>
+            <a href={'/recipes'}>
               <span
                 className={` hover:cursor-pointer font-bold text-base ${Nunitofont.className} hidden md:block`}
               >
                 Receitas
               </span>
-            </Link>
+            </a>
             <span
               className={`font-bold text-base cursor-pointer ${Nunitofont.className} hidden md:block`}
               onClick={() => setOpenContactsModal(true)}
@@ -216,28 +214,23 @@ export default function Nav() {
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu> */}
-            <Link
+            <a
               href="/cart"
               className="w-12 h-12 rounded-full fixed md:static right-3 bg-transparent flex items-center justify-center hover:bg-[#3b1344a1] transition-all duration-300 ease-in-out cursor-pointer"
             >
-              <Image
+              <img
                 alt="Carrinho de compras"
                 height={24}
                 width={24}
                 src={'/shopping-cart.svg'}
               />
-            </Link>
+            </a>
           </div>
           <div
             className=" fixed cursor-pointer md:hidden left-3"
             onClick={toggleMenu}
           >
-            <Image
-              src="/menu-icon.svg"
-              alt="Menu Icon"
-              width={25}
-              height={25}
-            />
+            <img src="/menu-icon.svg" alt="Menu Icon" width={25} height={25} />
           </div>
         </div>
       </nav>
@@ -248,14 +241,16 @@ export default function Nav() {
         } md:hidden`}
       >
         <div className="flex items-center justify-between p-4">
-          <Image
-            alt="Logo iaca"
-            src={'/iaça-logo.svg'}
-            height={60}
-            width={60}
-          />
+          <a href="/">
+            <img
+              alt="Logo iaca"
+              src={'/iaça-logo.svg'}
+              height={60}
+              width={60}
+            />
+          </a>
           <div className="cursor-pointer" onClick={toggleMenu}>
-            <Image
+            <img
               src="/close-icon.svg"
               alt="Close Icon"
               width={30}
@@ -288,11 +283,11 @@ export default function Nav() {
             </span>
           </li>
           <li className="mb-4">
-            <Link href={'/recipes'}>
+            <a href={'/recipes'}>
               <span className={`text-base ${Nunitofont.className}`}>
                 Receitas
               </span>
-            </Link>
+            </a>
           </li>
           <li>
             <a

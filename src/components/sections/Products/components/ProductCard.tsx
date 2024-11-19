@@ -1,7 +1,5 @@
 import Button from '@/components/ui/Button/index';
 import { cn } from '@/lib/utils';
-import Image from 'next/image';
-import Link from 'next/link';
 import React from 'react';
 interface ProductCardProps {
   text: string;
@@ -33,19 +31,19 @@ export default function ProductCard({
         }}
       >
         <div className="w-full h-full flex items-start justify-end pt-5 pr-7">
-          <Image alt="logo do Iaça" height={71} width={123} src={srcLogo} />
+          <img alt="logo do Iaça" height={71} width={123} src={srcLogo} />
         </div>
-        <Link
+        <a
           href={`/product/${text}`}
           className="w-full h-full flex flex-col justify-center items-center gap-4 pb-5"
         >
-          <Image alt="Produto iaça" height={250} width={368} src={src} />
+          <img alt="Produto iaça" height={250} width={368} src={src} />
           <Button
             classNameText="text-white"
             text="Quero o meu"
             src="/arrow-right.svg"
           />
-        </Link>
+        </a>
       </div>
     </div>
   );

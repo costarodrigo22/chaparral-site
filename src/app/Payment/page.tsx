@@ -6,7 +6,6 @@ import CartProvider from '@/contexts/Cart/CartContext';
 import QuantityProvider from '@/contexts/Cart/QuantityContext';
 import { PaymentSelectionProvider } from '@/contexts/Payment/PaymentContext';
 import { ChevronRight } from 'lucide-react';
-import Link from 'next/link';
 
 export default function Payment() {
   return (
@@ -19,13 +18,13 @@ export default function Payment() {
                 Como deseja pagar o produto?
               </span>
 
-              <Link
+              <a
                 href="/"
                 className="text-[#2B0036] items-center text-xs lg:text-base font-medium flex hover:underline cursor-pointer"
               >
                 <span>Voltar ao início</span>
                 <ChevronRight />
-              </Link>
+              </a>
             </div>
 
             <div className="flex flex-col lg:flex-row px-0 md:px-10 xl:px-32 gap-9">
