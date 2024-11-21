@@ -1,7 +1,6 @@
 'use client';
 import Button from '@/components/ui/Button/index';
 import { useCallback, useEffect, useState } from 'react';
-import DOMPurify from 'dompurify';
 import BeAPartnerModal from './components/BeAPartnerModal';
 import api from '@/lib/axiosInstance';
 
@@ -45,14 +44,14 @@ export default function FoodService({ image }: FoodServiceProps) {
 					<h2 className='font-normal text-2xl 2xl:text-4xl sm:text-3xl md:text-4xl'>
 						<span
 							dangerouslySetInnerHTML={{
-								__html: DOMPurify.sanitize(info?.title),
+								__html: info?.title,
 							}}
 						/>
 					</h2>
 					<span className='font-normal text-sm 2xl:text-lg max-w-[630px] text-center lg:text-left'>
 						<span
 							dangerouslySetInnerHTML={{
-								__html: DOMPurify.sanitize(info?.description),
+								__html: info?.description,
 							}}
 						/>
 					</span>

@@ -1,5 +1,4 @@
 'use client';
-import DOMPurify from 'dompurify';
 
 interface IAboutHeaderProps {
 	base64: string;
@@ -29,13 +28,13 @@ export default function AboutHeader({
 					<h1
 						className='font-bold text-xl md:text-2xl xl:text-4xl'
 						dangerouslySetInnerHTML={{
-							__html: DOMPurify.sanitize(title),
+							__html: title,
 						}}
 					></h1>
 					<h2
 						className='max-w-[648px] text-xs md:text-base font-medium xl:text-lg'
 						dangerouslySetInnerHTML={{
-							__html: DOMPurify.sanitize(description),
+							__html: description,
 						}}
 					></h2>
 				</div>
