@@ -2,37 +2,32 @@ import Button from '../components/ui/Button/index';
 import Header from '@/components/sections/Header';
 import Details from '@/components/sections/Details';
 import Products from '@/components/sections/Products';
-import OwnProduction, {
-  ApiResponse,
-} from '@/components/sections/OnwProduction';
+import OwnProduction from '@/components/sections/OnwProduction';
 import Recipes from '@/components/sections/Recipes';
 import FoodService from '@/components/sections/FoodService';
-import FindUs, { CarrouselInfo } from '@/components/sections/FindUs';
+import FindUs from '@/components/sections/FindUs';
 import CartProvider from '@/contexts/Cart/CartContext';
 import api from '@/lib/axiosInstance';
 
 export default async function Home() {
-  const resImageHeader = await api.get(
-    '/api/without/home_header/display_image/featured_image'
-  );
-  const infoResInstitutional = await api.get<ApiResponse>(
-    '/api/without/home_institutional_section/index'
-  );
-  const infoFoodServiceResponse = await api.get(
-    '/api/without/home_be_a_partner_section/index'
-  );
-  const imageFoodServiceResponse = await api.get(
-    '/api/without/home_be_a_partner_section/display_image'
-  );
-  const imageResInstitutional = await api.get(
-    '/api/without/home_institutional_section/display_image'
-  );
-  const RecipesRes = await api.get(
-    '/api/without/recipes_cards/last_three_recipes'
-  );
-  const CarrouselInfoRes = await api.get<CarrouselInfo>(
-    '/api/without/partners/last_five_partners'
-  );
+  const [
+    resImageHeader,
+    infoResInstitutional,
+    infoFoodServiceResponse,
+    imageFoodServiceResponse,
+    imageResInstitutional,
+    RecipesRes,
+    CarrouselInfoRes,
+  ] = await Promise.all([
+    api.get('/api/without/company_profile/get'),
+    api.get('/api/without/home_header/display_image/featured_image'),
+    api.get('/api/without/home_institutional_section/index'),
+    api.get('/api/without/home_be_a_partner_section/index'),
+    api.get('/api/without/home_be_a_partner_section/display_image'),
+    api.get('/api/without/home_institutional_section/display_image'),
+    api.get('/api/without/recipes_cards/last_three_recipes'),
+    api.get('/api/without/partners/last_five_partners'),
+  ]);
 
   return (
     <CartProvider>
