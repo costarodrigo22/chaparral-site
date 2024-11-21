@@ -2,7 +2,8 @@ import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
 	title: 'Entrega',
-	description: '',
+	description: 'ÍAÇA puro',
+	keywords: ['íaça', 'açaí', 'puro', 'delivery', 'sobremesa'],
 };
 
 export default function DeliveryLayout({

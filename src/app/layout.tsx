@@ -8,38 +8,39 @@ import api from '@/lib/axiosInstance';
 import WhatsAppBtn from '@/components/ui/WhatsAppBtn';
 
 const libreFranklin = Libre_Franklin({
-  weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
-  subsets: ['latin'],
+	weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
+	subsets: ['latin'],
 });
 
 export const metadata: Metadata = {
-  title: 'ÍAÇA puro',
-  description: '',
+	title: 'ÍAÇA puro',
+	description: 'ÍAÇA puro',
+	keywords: ['íaça', 'açaí', 'puro', 'delivery', 'sobremesa'],
 };
 
 export default async function RootLayout({
-  children,
+	children,
 }: Readonly<{
-  children: React.ReactNode;
+	children: React.ReactNode;
 }>) {
-  const companyRes = await api.get('/api/without/company_profile/get');
-  const logoImage = await api.get(
-    '/api/without/home_header/display_image/logo'
-  );
-  const CompanyInfoRes = await api.get('/api/without/company_profile/get');
-  return (
-    <html lang="pt-br">
-      <body className={`${libreFranklin.className}`}>
-        <Nav company={companyRes.data.data} logoImage={logoImage.data} />
+	const companyRes = await api.get('/api/without/company_profile/get');
+	const logoImage = await api.get(
+		'/api/without/home_header/display_image/logo'
+	);
+	const CompanyInfoRes = await api.get('/api/without/company_profile/get');
+	return (
+		<html lang='pt-br'>
+			<body className={`${libreFranklin.className}`}>
+				<Nav company={companyRes.data.data} logoImage={logoImage.data} />
 
-        {children}
+				{children}
 
-        <div className=" lg:mx-8">
-          <Footer company={companyRes.data.data} />
-        </div>
-        <WhatsAppBtn link={CompanyInfoRes?.data?.data?.whatsapp} />
-        <Toaster />
-      </body>
-    </html>
-  );
+				<div className=' lg:mx-8'>
+					<Footer company={companyRes.data.data} />
+				</div>
+				<WhatsAppBtn link={CompanyInfoRes?.data?.data?.whatsapp} />
+				<Toaster />
+			</body>
+		</html>
+	);
 }
