@@ -19,7 +19,6 @@ export default async function Home() {
     RecipesRes,
     CarrouselInfoRes,
   ] = await Promise.all([
-    api.get('/api/without/company_profile/get'),
     api.get('/api/without/home_header/display_image/featured_image'),
     api.get('/api/without/home_institutional_section/index'),
     api.get('/api/without/home_be_a_partner_section/index'),
@@ -36,7 +35,7 @@ export default async function Home() {
         <Details />
         <Products />
         <OwnProduction
-          info={infoResInstitutional?.data.data[0]}
+          info={infoResInstitutional?.data?.data[0]}
           image={imageResInstitutional?.data}
         />
         <div className="lg:mx-5 xl:mx-10 mb-10" id="receitas">
