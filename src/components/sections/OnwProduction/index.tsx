@@ -2,7 +2,6 @@
 import Button from '@/components/ui/Button/index';
 import api from '@/lib/axiosInstance';
 import { getColors } from '@/lib/utils';
-import DOMPurify from 'dompurify';
 import { useCallback, useEffect, useState } from 'react';
 
 interface DataItem {
@@ -62,13 +61,13 @@ export default function OwnProduction({ image }: OwnProductionProps) {
 						className='max-w-[400px] text-xl md:text-2xl lg:text-3xl xl:text-4xl font-semibold'
 						style={{ color: getColors(infos?.title || '') }}
 						dangerouslySetInnerHTML={{
-							__html: DOMPurify.sanitize(infos?.title || ''),
+							__html: infos?.title || '',
 						}}
 					/>
 					<h4
 						className='text-white max-w-[400px] xl:max-w-[500px] font-medium text-xs md:text-sm lg:text-base xl:text-xl'
 						dangerouslySetInnerHTML={{
-							__html: DOMPurify.sanitize(infos?.description || ''),
+							__html: infos?.description || '',
 						}}
 					/>
 				</div>

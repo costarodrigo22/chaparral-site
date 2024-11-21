@@ -1,6 +1,5 @@
 'use client';
 import MissionCard from './_components/MissionCard';
-import DOMPurify from 'dompurify';
 
 interface IMissionProps {
 	featuredDescription: string;
@@ -22,7 +21,7 @@ export default function Mission({
 				<h2
 					className='max-w-[879px] font-medium text-base sm:text-lg text-lightGray'
 					dangerouslySetInnerHTML={{
-						__html: DOMPurify.sanitize(featuredDescription),
+						__html: featuredDescription,
 					}}
 				/>
 			</div>

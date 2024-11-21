@@ -1,5 +1,4 @@
 'use client';
-import DOMPurify from 'dompurify';
 import Image from 'next/image';
 
 interface IASustainabilityProps {
@@ -29,13 +28,13 @@ export default function Sustainability({
 							<h1
 								className='z-10 xl:max-w-[484px] font-semibold text-2xl xl:text-4xl text-darkGray '
 								dangerouslySetInnerHTML={{
-									__html: DOMPurify.sanitize(title),
+									__html: title,
 								}}
 							/>
 							<h2
 								className='z-10 max-w-[600px] xl:max-w-[648px] font-medium text-lightGray text-base xl:text-lg'
 								dangerouslySetInnerHTML={{
-									__html: DOMPurify.sanitize(description),
+									__html: description,
 								}}
 							/>
 						</div>

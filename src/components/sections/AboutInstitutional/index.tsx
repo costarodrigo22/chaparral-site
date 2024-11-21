@@ -1,6 +1,5 @@
 'use client';
 import { useEffect, useState } from 'react';
-import DOMPurify from 'dompurify';
 import { getColors } from '@/lib/utils';
 import Image from 'next/image';
 import MediaModal from './components/MediaModal';
@@ -50,13 +49,13 @@ export default function AboutInstitutional({
 							className='max-w-[400px] text-xl md:text-2xl lg:text-3xl xl:text-4xl font-semibold'
 							style={{ color: titleColor }}
 							dangerouslySetInnerHTML={{
-								__html: DOMPurify.sanitize(infos.title),
+								__html: infos.title,
 							}}
 						/>
 						<h4
 							className=' text-white max-w-[400px] xl:max-w-[500px] font-medium text-xs md:text-sm lg:text-base xl:text-xl'
 							dangerouslySetInnerHTML={{
-								__html: DOMPurify.sanitize(infos.description),
+								__html: infos.description,
 							}}
 						/>
 					</div>
