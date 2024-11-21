@@ -2,27 +2,17 @@
 import Button from '@/components/ui/Button/index';
 import { handleScroll } from '@/lib/utils';
 import Image from 'next/image';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import BeAPartnerModal from '../FoodService/components/BeAPartnerModal';
 import ModalContacts, { IData } from './components/ModalContacts';
-import api from '@/lib/axiosInstance';
 
-export default function Footer() {
+interface FooterProps {
+  company: IData;
+}
+
+export default function Footer({ company }: FooterProps) {
   const [openBePartnerModal, setOpenBePartnerModal] = useState<boolean>(false);
   const [openContactsModal, setOpenContactsModal] = useState<boolean>(false);
-  const [footerData, setFooterData] = useState<IData>({} as IData);
-
-  const handleGetFooterData = useCallback(async () => {
-    try {
-      const res = await api.get('/api/without/company_profile/get');
-      setFooterData(res?.data?.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-  useEffect(() => {
-    handleGetFooterData();
-  }, [handleGetFooterData]);
 
   return (
     <>
@@ -31,7 +21,7 @@ export default function Footer() {
         open={openBePartnerModal}
       />
       <ModalContacts
-        data={footerData || {}}
+        data={company || {}}
         onClose={() => setOpenContactsModal(false)}
         open={openContactsModal}
       />
@@ -63,7 +53,7 @@ export default function Footer() {
               alt="logo instagram"
               src={'/instagram-logo.svg'}
               onClick={() => {
-                window.open(footerData.instagram, '_blank');
+                window.open(company.instagram, '_blank');
               }}
               height={25}
               width={27}
@@ -73,7 +63,7 @@ export default function Footer() {
               alt="logo facebook"
               src={'/facebook-logo.svg'}
               onClick={() => {
-                window.open(footerData.facebook, '_blank');
+                window.open(company.facebook, '_blank');
               }}
               className="hover:cursor-pointer"
               height={25}
