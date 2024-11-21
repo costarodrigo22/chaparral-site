@@ -10,10 +10,8 @@ import FoodService from '@/components/sections/FoodService';
 import FindUs, { CarrouselInfo } from '@/components/sections/FindUs';
 import CartProvider from '@/contexts/Cart/CartContext';
 import api from '@/lib/axiosInstance';
-import WhatsAppBtn from '@/components/ui/WhatsAppBtn';
 
 export default async function Home() {
-  const CompanyInfoRes = await api.get('/api/without/company_profile/get');
   const resImageHeader = await api.get(
     '/api/without/home_header/display_image/featured_image'
   );
@@ -64,7 +62,6 @@ export default async function Home() {
           info={infoFoodServiceResponse.data.data[0]}
         />
         <FindUs data={CarrouselInfoRes.data.data} />
-        <WhatsAppBtn link={CompanyInfoRes?.data?.data?.whatsapp} />
       </div>
     </CartProvider>
   );

@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Nunito } from 'next/font/google';
 // import {
 //   DropdownMenu,
@@ -13,7 +13,6 @@ import { handleScroll } from '@/lib/utils';
 // import SearchInput from './SearchInput';
 
 import { usePathname } from 'next/navigation';
-import api from '@/lib/axiosInstance';
 import ModalContacts, { IData } from '../Footer/components/ModalContacts';
 
 const Nunitofont = Nunito({
@@ -21,37 +20,18 @@ const Nunitofont = Nunito({
   subsets: ['latin'],
 });
 
-export default function Nav() {
-  const [logoImage, setLogoImage] = useState('');
+interface NavProps {
+  company: IData;
+  logoImage: string;
+}
+
+export default function Nav({ company, logoImage }: NavProps) {
   const [openContactsModal, setOpenContactsModal] = useState<boolean>(false);
-  const [company, setCompanyData] = useState<IData>({} as IData);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   // const [flag, setFlag] = useState('');
 
   const pathname = usePathname();
 
-  async function getHeaderData() {
-    const logoImage = await api.get(
-      '/api/without/home_header/display_image/logo'
-    );
-    setLogoImage(logoImage.data);
-  }
-
-  const handleGetCompanyData = useCallback(async () => {
-    try {
-      const res = await api.get('/api/without/company_profile/get');
-      setCompanyData(res?.data?.data);
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-  useEffect(() => {
-    handleGetCompanyData();
-  }, [handleGetCompanyData]);
-
-  useEffect(() => {
-    getHeaderData();
-  }, []);
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
@@ -113,7 +93,7 @@ export default function Nav() {
 
             {pathname !== '/' && (
               <a
-                href="/product"
+                href="/product/11"
                 className={` hover:cursor-pointer font-bold text-base ${Nunitofont.className} hidden md:block`}
               >
                 Produtos
