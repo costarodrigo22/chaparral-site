@@ -30,6 +30,8 @@ export default function FoodService({ image }: FoodServiceProps) {
 		console.log(response.data.data[0]);
 	}, []);
 
+	console.log(info);
+
 	useEffect(() => {
 		handleGetInfos();
 	}, [handleGetInfos]);

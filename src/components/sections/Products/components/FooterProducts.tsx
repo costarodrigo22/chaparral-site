@@ -17,9 +17,11 @@ export default function FooterProducts({
 	nameProduct,
 	urlImage,
 }: ICartProps) {
-	const { quantity } = useCart();
+	const { quantity, handleTotalCart } = useCart();
 
 	function handleAddToCart() {
+		console.log(quantity);
+
 		try {
 			const cart = {
 				codigoProduto: code,
@@ -44,6 +46,8 @@ export default function FooterProducts({
 			};
 
 			localStorage.setItem('cart', JSON.stringify(cart));
+
+			handleTotalCart(quantity);
 
 			toast.success(
 				`${quantity} ${quantity > 1 ? 'itens' : 'item'} ${

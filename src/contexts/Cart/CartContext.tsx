@@ -11,9 +11,11 @@ import React, {
 interface CartContextProps {
 	quantity: number;
 	total: number;
+	totalCartNav: number;
 	incrementQuantity: () => void;
 	decrementQuantity: () => void;
 	clearCart: () => void;
+	handleTotalCart: (qtd: number) => void;
 }
 
 export const CartContext = createContext({} as CartContextProps);
@@ -23,8 +25,13 @@ export default function CartProvider({
 }: {
 	children: React.ReactNode;
 }) {
-	const [quantity, setQuantity] = useState(1);
+	const [quantity, setQuantity] = useState(0);
+	const [totalCartNav, setTotalCartNav] = useState(0);
 	const [total, setTotal] = useState(0);
+
+	function handleTotalCart(qtd: number) {
+		setTotalCartNav(qtd);
+	}
 
 	useEffect(() => {
 		const cartData = localStorage.getItem('cart');
@@ -34,6 +41,7 @@ export default function CartProvider({
 				const initialQuantity = product.param[0].itens[0].quantidade;
 				const itemValue = product.param[0].itens[0].valor_unitario;
 				setQuantity(initialQuantity);
+				setTotalCartNav(initialQuantity);
 				setTotal(initialQuantity * itemValue);
 			} catch (error) {
 				console.error('Erro ao fazer parse dos dados do carrinho:', error);
@@ -85,9 +93,11 @@ export default function CartProvider({
 			value={{
 				quantity,
 				total,
+				totalCartNav,
 				incrementQuantity,
 				decrementQuantity,
 				clearCart,
+				handleTotalCart: handleTotalCart,
 			}}
 		>
 			{children}
