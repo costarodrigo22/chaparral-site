@@ -26,11 +26,7 @@ export default function FoodService({ image }: FoodServiceProps) {
 			title: response.data.data[0]?.title,
 			description: response.data.data[0].description,
 		});
-
-		console.log(response.data.data[0]);
 	}, []);
-
-	console.log(info);
 
 	useEffect(() => {
 		handleGetInfos();

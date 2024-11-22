@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { Nunito } from 'next/font/google';
 import { handleScroll } from '@/lib/utils';
 
 import { usePathname } from 'next/navigation';
@@ -9,11 +8,6 @@ import ModalContacts, { IData } from '../Footer/components/ModalContacts';
 import Image from 'next/image';
 import shopCart from '../../../../public/shopping-cart.svg';
 import { useCart } from '@/contexts/Cart/CartContext';
-
-const Nunitofont = Nunito({
-	weight: ['200', '300', '400', '500', '600', '700', '800', '900'],
-	subsets: ['latin'],
-});
 
 interface NavProps {
 	company: IData;
@@ -52,16 +46,13 @@ export default function Nav({ company, logoImage }: NavProps) {
 				</div>
 				<div className='flex items-center justify-between w-[85%] mt-4'>
 					<div className='flex items-center md:gap-[65px] lg:gap-[80px] xl:gap-[90px]'>
-						<a
-							href='/sobre'
-							className={`font-bold text-base ${Nunitofont.className} hidden md:block`}
-						>
+						<a href='/sobre' className='font-bold text-base hidden md:block'>
 							Sobre o ÍAÇA
 						</a>
 
 						{pathname === '/' && (
 							<span
-								className={` hover:cursor-pointer font-bold text-base ${Nunitofont.className} hidden md:block`}
+								className='hover:cursor-pointer font-bold text-base hidden md:block'
 								onClick={() => handleScroll('produtos')}
 							>
 								Produtos
@@ -71,20 +62,18 @@ export default function Nav({ company, logoImage }: NavProps) {
 						{pathname !== '/' && (
 							<a
 								href='/product/11'
-								className={` hover:cursor-pointer font-bold text-base ${Nunitofont.className} hidden md:block`}
+								className='hover:cursor-pointer font-bold text-base hidden md:block'
 							>
 								Produtos
 							</a>
 						)}
 						<a href={'/recipes'}>
-							<span
-								className={` hover:cursor-pointer font-bold text-base ${Nunitofont.className} hidden md:block`}
-							>
+							<span className='hover:cursor-pointer font-bold text-base hidden md:block'>
 								Receitas
 							</span>
 						</a>
 						<span
-							className={`font-bold text-base cursor-pointer ${Nunitofont.className} hidden md:block`}
+							className='font-bold text-base cursor-pointer hidden md:block'
 							onClick={() => setOpenContactsModal(true)}
 						>
 							Contato
@@ -150,38 +139,33 @@ export default function Nav({ company, logoImage }: NavProps) {
 				<ul className='p-4'>
 					<li className='mb-4'>
 						<div className='mb-10'>
-							<a
-								href='#'
-								className={`text-base text-center ${Nunitofont.className}`}
-							>
+							<a href='#' className='text-base text-center'>
 								Menu
 							</a>
 						</div>
 					</li>
 					<li className='mb-4'>
-						<a href='/sobre' className={`text-base ${Nunitofont.className}`}>
+						<a href='/sobre' className='text-base'>
 							Sobre o ÍAÇA
 						</a>
 					</li>
 					<li className='mb-4'>
 						<span
 							onClick={() => handleScroll('produtos')}
-							className={`text-base ${Nunitofont.className}`}
+							className='text-base'
 						>
 							Produtos
 						</span>
 					</li>
 					<li className='mb-4'>
 						<a href={'/recipes'}>
-							<span className={`text-base ${Nunitofont.className}`}>
-								Receitas
-							</span>
+							<span className='text-base'>Receitas</span>
 						</a>
 					</li>
 					<li>
 						<a
 							onClick={() => setOpenContactsModal(true)}
-							className={`text-base cursor-pointer ${Nunitofont.className}`}
+							className='text-base cursor-pointer'
 						>
 							Contato
 						</a>
