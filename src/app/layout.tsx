@@ -6,6 +6,7 @@ import Nav from '@/components/sections/Header/Nav';
 import { Toaster } from '@/components/ui/Sonner';
 import api from '@/lib/axiosInstance';
 import WhatsAppBtn from '@/components/ui/WhatsAppBtn';
+import CartProvider from '@/contexts/Cart/CartContext';
 
 const libreFranklin = Libre_Franklin({
 	weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
@@ -31,15 +32,17 @@ export default async function RootLayout({
 	return (
 		<html lang='pt-br'>
 			<body className={`${libreFranklin.className}`}>
-				<Nav company={companyRes.data.data} logoImage={logoImage.data} />
+				<CartProvider>
+					<Nav company={companyRes.data.data} logoImage={logoImage.data} />
 
-				{children}
+					{children}
 
-				<div className=' lg:mx-8'>
-					<Footer company={companyRes.data.data} />
-				</div>
-				<WhatsAppBtn link={CompanyInfoRes?.data?.data?.whatsapp} />
-				<Toaster />
+					<div className=' lg:mx-8'>
+						<Footer company={companyRes.data.data} />
+					</div>
+					<WhatsAppBtn link={CompanyInfoRes?.data?.data?.whatsapp} />
+					<Toaster />
+				</CartProvider>
 			</body>
 		</html>
 	);
