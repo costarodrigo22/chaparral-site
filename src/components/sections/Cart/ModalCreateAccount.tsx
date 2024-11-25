@@ -117,7 +117,7 @@ export default function ModalCreateAccount({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-h-[90vh] max-w-[95vw] overflow-y-auto overflow-x-auto p-3">
+      <DialogContent className="max-h-[90vh] max-w-[95vw] 2xl:max-w-[1000px] overflow-y-auto overflow-x-auto p-3">
         <FormProvider {...form}>
           <form onSubmit={handleSubmit}>
             <Stepper

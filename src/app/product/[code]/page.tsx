@@ -22,20 +22,22 @@ export default async function Product({ params }: IProductProps) {
     <QuantityProvider>
       <CartProvider>
         <div className="flex flex-col w-full mb-10">
-          <div className="flex justify-between items-center w-full mt-28 px-32 mb-10">
-            <span className="text-2xl font-bold">Detalhes do produto</span>
+          <div className="flex px-2 justify-between items-center w-full mt-28 md:px-16 xl:px-32 mb-10">
+            <span className=" text-lg xl:text-2xl font-bold">
+              Detalhes do produto
+            </span>
 
             <a
               href="/"
-              className="text-[#2B0036] text-base font-medium flex hover:underline cursor-pointer"
+              className="text-[#2B0036] text-sm items-center xl:text-base font-medium flex hover:underline cursor-pointer"
             >
               Voltar ao início
               <ChevronRight />
             </a>
           </div>
 
-          <div className="flex px-32">
-            <div className="w-[380px] h-[380px] rounded-sm">
+          <div className="flex px-5 xl:px-32 lg:flex-row flex-col">
+            <div className="w-full xl:w-auto xl:block rounded-sm flex items-center justify-center my-5">
               <Image
                 width={380}
                 height={380}
@@ -44,20 +46,20 @@ export default async function Product({ params }: IProductProps) {
               />
             </div>
 
-            <div className="ml-10">
-              <h1 className="text-[#2B0036] text-3xl font-semibold mb-3">
+            <div className="md:ml-10">
+              <h1 className="text-[#2B0036] text-xl xl:text-3xl font-semibold mb-3">
                 {product.data.descricao}
               </h1>
-              <h1 className="text-2xl font-semibold">
+              <h1 className="xl:text-2xl text-lg font-semibold">
                 {formatCurrency(product.data.valor_unitario)}
               </h1>
 
-              <div className="mt-5 flex flex-col w-[580px] gap-2">
-                <span className="font-semibold text-lg opacity-60">
+              <div className="mt-5 flex flex-col md:w-[580px] gap-2">
+                <span className="font-semibold xl:text-lg text-base opacity-60">
                   Descrição do produto:
                 </span>
 
-                <span className="text-lg opacity-60">
+                <span className="xl:text-lg text-base opacity-60">
                   {product.data.descr_detalhada}
                 </span>
               </div>
