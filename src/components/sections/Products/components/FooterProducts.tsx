@@ -1,77 +1,85 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/Button';
-import ToggleQuantity from '@/components/ui/ToggleQuantity';
-import { useCart } from '@/contexts/Cart/CartContext';
-import { ShoppingCart } from 'lucide-react';
-import { useRouter } from 'next/navigation';
-import { toast } from 'sonner';
+import { Button } from "@/components/ui/Button";
+import ToggleQuantity from "@/components/ui/ToggleQuantity";
+import { useCart } from "@/contexts/Cart/CartContext";
+import { ShoppingCart } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 interface ICartProps {
-	code: string;
-	nameProduct: string;
-	urlImage: string;
+  code: string;
+  nameProduct: string;
+  urlImage: string;
+  isLogged: boolean;
 }
 
 export default function FooterProducts({
-	code,
-	nameProduct,
-	urlImage,
+  code,
+  nameProduct,
+  urlImage,
+  isLogged,
 }: ICartProps) {
-	const { quantity, handleTotalCart } = useCart();
+  const { quantity, handleTotalCart } = useCart();
 
-	const router = useRouter();
+  const router = useRouter();
 
-	function handleAddToCart() {
-		router.push('/sign-in');
-		// try {
-		// 	const cart = {
-		// 		codigoProduto: code,
-		// 		nomeProduto: nameProduct,
-		// 		urlImage: urlImage,
-		// 		param: [
-		// 			{
-		// 				codigo_cliente: 0,
-		// 				itens: [
-		// 					{
-		// 						codigo_produto: 0,
-		// 						quantidade: quantity,
-		// 						valor_unitario: 23,
-		// 						cfop: '5.101',
-		// 						codigo_cenario_impostos_item: 0,
-		// 						dados_adicionais_item: 'Forma de pagamento',
-		// 						obs_item: 'Texto de valor teste',
-		// 					},
-		// 				],
-		// 			},
-		// 		],
-		// 	};
+  async function handleAddToCart() {
+    if (isLogged) {
+      console.log("chama a função de adicionar ao carrinho: ");
+    }
 
-		// 	localStorage.setItem('cart', JSON.stringify(cart));
+    if (!isLogged) router.push("/sign-in");
 
-		// 	handleTotalCart(quantity);
+    // router.push("/sign-in");
+    // try {
+    // 	const cart = {
+    // 		codigoProduto: code,
+    // 		nomeProduto: nameProduct,
+    // 		urlImage: urlImage,
+    // 		param: [
+    // 			{
+    // 				codigo_cliente: 0,
+    // 				itens: [
+    // 					{
+    // 						codigo_produto: 0,
+    // 						quantidade: quantity,
+    // 						valor_unitario: 23,
+    // 						cfop: '5.101',
+    // 						codigo_cenario_impostos_item: 0,
+    // 						dados_adicionais_item: 'Forma de pagamento',
+    // 						obs_item: 'Texto de valor teste',
+    // 					},
+    // 				],
+    // 			},
+    // 		],
+    // 	};
 
-		// 	toast.success(
-		// 		`${quantity} ${quantity > 1 ? 'itens' : 'item'} ${
-		// 			quantity > 1 ? 'adicionados' : 'adicionado'
-		// 		} ao seu carrinho!`
-		// 	);
-		// } catch (error) {
-		// 	toast.error('Algo deu errado ao tentar adicionar item ao carrinho!');
-		// }
-	}
+    // 	localStorage.setItem('cart', JSON.stringify(cart));
 
-	return (
-		<div className='flex flex-col px-5 md:flex-row justify-between gap-5 items-center w-full'>
-			<ToggleQuantity />
+    // 	handleTotalCart(quantity);
 
-			<Button
-				className='rounded-full w-full md:w-[380px] h-[50px] bg-[#2B0036] hover:bg-[#421d4b]'
-				onClick={handleAddToCart}
-			>
-				Adicionar ao carrino
-				<ShoppingCart />
-			</Button>
-		</div>
-	);
+    // 	toast.success(
+    // 		`${quantity} ${quantity > 1 ? 'itens' : 'item'} ${
+    // 			quantity > 1 ? 'adicionados' : 'adicionado'
+    // 		} ao seu carrinho!`
+    // 	);
+    // } catch (error) {
+    // 	toast.error('Algo deu errado ao tentar adicionar item ao carrinho!');
+    // }
+  }
+
+  return (
+    <div className="flex flex-col px-5 md:flex-row justify-between gap-5 items-center w-full">
+      <ToggleQuantity />
+
+      <Button
+        className="rounded-full w-full md:w-[380px] h-[50px] bg-[#2B0036] hover:bg-[#421d4b]"
+        onClick={handleAddToCart}
+      >
+        Adicionar ao carrino
+        <ShoppingCart />
+      </Button>
+    </div>
+  );
 }

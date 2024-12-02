@@ -1,11 +1,12 @@
-import FooterProducts from '@/components/sections/Products/components/FooterProducts';
-import { Separator } from '@/components/ui/Separator';
-import QuantityProvider from '@/contexts/Cart/QuantityContext';
-import { ChevronRight } from 'lucide-react';
-import { formatCurrency } from '@/lib/utils';
-import Image from 'next/image';
-import CartProvider from '@/contexts/Cart/CartContext';
-import api from '@/lib/axiosInstance';
+import FooterProducts from "@/components/sections/Products/components/FooterProducts";
+import { Separator } from "@/components/ui/Separator";
+import QuantityProvider from "@/contexts/Cart/QuantityContext";
+import { ChevronRight } from "lucide-react";
+import { formatCurrency } from "@/lib/utils";
+import Image from "next/image";
+import CartProvider from "@/contexts/Cart/CartContext";
+import api from "@/lib/axiosInstance";
+import { auth } from "@/lib/auth";
 
 interface IProductProps {
   params: {
@@ -17,6 +18,10 @@ export default async function Product({ params }: IProductProps) {
   const product = await api.get(
     `/api/without/omie/consult_product/${params.code}`
   );
+
+  const session = await auth();
+
+  console.log(session?.user);
 
   return (
     <QuantityProvider>
@@ -70,6 +75,7 @@ export default async function Product({ params }: IProductProps) {
                 code={product.data.codigo_produto}
                 nameProduct={product.data.descricao}
                 urlImage={product.data.imagens[0].url_imagem}
+                isLogged={!!session}
               />
             </div>
           </div>
