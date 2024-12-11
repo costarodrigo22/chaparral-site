@@ -10,6 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { useState } from "react";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 interface ILoginActionProps {
   onLoginAction: (formData: FormData) => Promise<void | { error: string }>;
@@ -36,10 +37,14 @@ export default function LoginForm({ onLoginAction }: ILoginActionProps) {
     resolver: zodResolver(schema),
   });
 
+  const router = useRouter();
+
   const handleSubmit = hookFormHandleSubmit(async (data) => {
     setLoading(true);
 
     const result = await onLoginAction(data);
+
+    router.push("/cart");
 
     if (result?.error) {
       toast.error(result.error);

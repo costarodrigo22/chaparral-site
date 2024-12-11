@@ -8,7 +8,7 @@ const schema = z.object({
   password: z.string().min(8),
 });
 
-export const { signIn, auth } = NextAuth({
+export const { signIn, auth, signOut, handlers } = NextAuth({
   session: {
     strategy: "jwt",
   },
@@ -22,16 +22,16 @@ export const { signIn, auth } = NextAuth({
         const { email, password } = data;
 
         const response = await axios.post(
-          "https://676w95ytfl.execute-api.us-east-1.amazonaws.com/auth/sign-in",
+          "https://464lajpuac.execute-api.us-east-1.amazonaws.com/auth/sign-in",
           { email, password }
         );
 
         if (!response.data) return null;
 
         return {
-          email: response.data.AccessToken,
-          name: response.data.AccessToken,
-          id: response.data.AccessToken,
+          email: response.data.accessToken,
+          name: response.data.accessToken,
+          id: response.data.accessToken,
         };
       },
     }),
