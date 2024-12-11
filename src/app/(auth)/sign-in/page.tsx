@@ -22,6 +22,7 @@ export default function SignIn() {
         email: formData.email,
         password: formData.password,
         redirectTo: "/cart",
+        redirect: false,
       });
     } catch (error) {
       if (error instanceof CredentialsSignin) {
