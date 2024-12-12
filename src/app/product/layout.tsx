@@ -1,3 +1,4 @@
+import CartProvider from '@/contexts/Cart/CartContext';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -11,5 +12,9 @@ export default function ProductLayout({
 }: {
 	children: React.ReactNode;
 }) {
-	return <div>{children}</div>;
+	return (
+		<CartProvider>
+			<div>{children}</div>
+		</CartProvider>
+	);
 }

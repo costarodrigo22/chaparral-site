@@ -24,7 +24,9 @@ export default function Nav({ company, logoImage }: NavProps) {
 		setIsMenuOpen(!isMenuOpen);
 	};
 
-	const { totalCartNav } = useCart();
+	const { quantityItemCart, items } = useCart();
+
+	console.log('tamanho do carrinho no nav: ', quantityItemCart);
 
 	return (
 		<>
@@ -84,10 +86,10 @@ export default function Nav({ company, logoImage }: NavProps) {
 							href='/cart'
 							className='w-12 h-12 rounded-full md:static right-3 bg-transparent flex items-center justify-center hover:bg-[#3b1344a1] transition-all duration-300 ease-in-out cursor-pointer'
 						>
-							{totalCartNav !== 0 && (
+							{items.length > 0 && (
 								<div className='absolute bg-white w-[18px] h-[18px] rounded-full flex items-center justify-center top-0 right-0'>
 									<span className='text-black text-[12px] font-semibold'>
-										{totalCartNav}
+										{items.length}
 									</span>
 								</div>
 							)}

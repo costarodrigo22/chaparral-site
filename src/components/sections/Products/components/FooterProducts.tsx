@@ -1,85 +1,82 @@
-"use client";
+'use client';
 
-import { Button } from "@/components/ui/Button";
-import ToggleQuantity from "@/components/ui/ToggleQuantity";
-import { useCart } from "@/contexts/Cart/CartContext";
-import { ShoppingCart } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+import { Button } from '@/components/ui/Button';
+import ToggleQuantity from '@/components/ui/ToggleQuantity';
+import { useCart } from '@/contexts/Cart/CartContext';
+import { addToCart } from '@/services/cart';
+import { useMutation } from '@tanstack/react-query';
+import { ShoppingCart } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
+import { toast } from 'sonner';
 
 interface ICartProps {
-  code: string;
-  nameProduct: string;
-  urlImage: string;
-  isLogged: boolean;
+	code: string;
+	nameProduct: string;
+	urlImage: string;
+	isLogged: boolean;
+	value: number;
 }
 
 export default function FooterProducts({
-  code,
-  nameProduct,
-  urlImage,
-  isLogged,
+	isLogged,
+	code,
+	nameProduct,
+	urlImage,
+	value,
 }: ICartProps) {
-  const { quantity, handleTotalCart } = useCart();
+	const [quantity, setQuantity] = useState(0);
 
-  const router = useRouter();
+	const router = useRouter();
 
-  async function handleAddToCart() {
-    if (isLogged) {
-      console.log("chama a função de adicionar ao carrinho: ");
-    }
+	const { updatedCart } = useCart();
 
-    if (!isLogged) router.push("/sign-in");
+	const { mutateAsync, isPending } = useMutation({
+		mutationFn: addToCart,
+	});
 
-    // router.push("/sign-in");
-    // try {
-    // 	const cart = {
-    // 		codigoProduto: code,
-    // 		nomeProduto: nameProduct,
-    // 		urlImage: urlImage,
-    // 		param: [
-    // 			{
-    // 				codigo_cliente: 0,
-    // 				itens: [
-    // 					{
-    // 						codigo_produto: 0,
-    // 						quantidade: quantity,
-    // 						valor_unitario: 23,
-    // 						cfop: '5.101',
-    // 						codigo_cenario_impostos_item: 0,
-    // 						dados_adicionais_item: 'Forma de pagamento',
-    // 						obs_item: 'Texto de valor teste',
-    // 					},
-    // 				],
-    // 			},
-    // 		],
-    // 	};
+	async function handleAddToCart() {
+		if (isLogged) {
+			try {
+				await mutateAsync({
+					product_name: nameProduct,
+					product_code: code,
+					product_quantity: quantity,
+					product_url_image: urlImage,
+					product_price: value,
+				});
 
-    // 	localStorage.setItem('cart', JSON.stringify(cart));
+				toast.success('Item adicionado ao carrinho!');
+			} catch (error) {
+				toast.error(
+					`Algo deu errado ao adicionar o item ao carrinho: ${error}`
+				);
+			} finally {
+				await updatedCart();
+			}
+		}
 
-    // 	handleTotalCart(quantity);
+		if (!isLogged) router.push('/sign-in');
+	}
 
-    // 	toast.success(
-    // 		`${quantity} ${quantity > 1 ? 'itens' : 'item'} ${
-    // 			quantity > 1 ? 'adicionados' : 'adicionado'
-    // 		} ao seu carrinho!`
-    // 	);
-    // } catch (error) {
-    // 	toast.error('Algo deu errado ao tentar adicionar item ao carrinho!');
-    // }
-  }
+	return (
+		<div className='flex flex-col px-5 md:flex-row justify-between gap-5 items-center w-full'>
+			<ToggleQuantity
+				initialQuantity={0}
+				onIncrement={(q) => setQuantity(q)}
+				onDecrement={(q) => setQuantity(q)}
+			/>
 
-  return (
-    <div className="flex flex-col px-5 md:flex-row justify-between gap-5 items-center w-full">
-      <ToggleQuantity />
+			<Button
+				className='rounded-full w-full md:w-[380px] h-[50px] bg-[#2B0036] hover:bg-[#421d4b]'
+				disabled={isPending}
+				onClick={handleAddToCart}
+			>
+				{isPending && 'Adicionando...'}
 
-      <Button
-        className="rounded-full w-full md:w-[380px] h-[50px] bg-[#2B0036] hover:bg-[#421d4b]"
-        onClick={handleAddToCart}
-      >
-        Adicionar ao carrino
-        <ShoppingCart />
-      </Button>
-    </div>
-  );
+				{!isPending && 'Adicionar ao carrino'}
+				<ShoppingCart />
+			</Button>
+		</div>
+	);
 }

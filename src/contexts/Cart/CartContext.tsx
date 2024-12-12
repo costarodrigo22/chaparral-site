@@ -1,111 +1,85 @@
-"use client";
+'use client';
 
-import { getCart } from "@/services/cart";
+import { getCart } from '@/services/cart';
 import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useCallback,
-} from "react";
-import { toast } from "sonner";
+	createContext,
+	useContext,
+	useState,
+	useEffect,
+	useCallback,
+	useMemo,
+} from 'react';
+import { toast } from 'sonner';
 
 interface ICartItems {
-  id: string;
-  product_code: string;
-  product_name: string;
-  product_price: number;
-  product_quantity: number;
-  product_url_image: string;
+	id: string;
+	product_code: string;
+	product_name: string;
+	product_price: number;
+	product_quantity: number;
+	product_url_image: string;
 }
 
 interface CartContextProps {
-  quantity: number;
-  total: number;
-  totalCartNav: number;
-  incrementQuantity: () => void;
-  decrementQuantity: () => void;
+	quantityItemCart: number;
+	items: ICartItems[];
+	totalCart: number;
+	updatedCart: () => Promise<void>;
 }
 
 export const CartContext = createContext({} as CartContextProps);
 
 export default function CartProvider({
-  children,
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  const [cartItems, setCartItems] = useState<ICartItems[]>([]);
+	const [cartItems, setCartItems] = useState<ICartItems[]>([]);
+	const [quantityItemCart, setQuantityItemCart] = useState(0);
 
-  const handleGetItemsCart = useCallback(async () => {
-    try {
-      const response = await getCart();
+	console.log('context: ', cartItems);
 
-      setCartItems(response.item.item);
+	const totalCart = useMemo(() => {
+		return cartItems.reduce(
+			(sum, product) => sum + product.product_price * product.product_quantity,
+			0
+		);
+	}, [cartItems]);
 
-      console.log("cart: ", response.item.item);
-    } catch (error) {
-      toast.error(`Algo deu errado ao buscar o carrinho: ${error}`);
-    }
-  }, []);
+	const handleGetItemsCart = useCallback(async () => {
+		try {
+			const response = await getCart();
 
-  useEffect(() => {
-    handleGetItemsCart();
-  }, [handleGetItemsCart]);
+			setCartItems(response.item.item);
 
-  // daqui pra baixo é antigo
+			setQuantityItemCart(response.item.item.length);
+		} catch (error) {
+			toast.error(`Algo deu errado ao buscar o carrinho: ${error}`);
+		}
+	}, []);
 
-  const [quantity, setQuantity] = useState(0);
+	useEffect(() => {
+		handleGetItemsCart();
+	}, [handleGetItemsCart]);
 
-  const updateTotal = useCallback((newQuantity: number) => {
-    const cartData = localStorage.getItem("cart");
-    if (cartData) {
-      try {
-        const product = JSON.parse(cartData);
-
-        // Atualiza o localStorage com a nova quantidade e total
-        product.param[0].itens[0].quantidade = newQuantity;
-        localStorage.setItem("cart", JSON.stringify(product));
-      } catch (error) {
-        console.error("Erro ao fazer parse dos dados do carrinho:", error);
-      }
-    }
-  }, []);
-
-  const incrementQuantity = () => {
-    setQuantity((prevQuantity) => {
-      const newQuantity = prevQuantity + 1;
-      updateTotal(newQuantity);
-      return newQuantity;
-    });
-  };
-
-  const decrementQuantity = () => {
-    setQuantity((prevQuantity) => {
-      const newQuantity = Math.max(prevQuantity - 1, 1);
-      updateTotal(newQuantity);
-      return newQuantity;
-    });
-  };
-
-  return (
-    <CartContext.Provider
-      value={{
-        quantity,
-        total: cartItems.length,
-        totalCartNav: cartItems.length,
-        incrementQuantity,
-        decrementQuantity,
-      }}
-    >
-      {children}
-    </CartContext.Provider>
-  );
+	return (
+		<CartContext.Provider
+			value={{
+				quantityItemCart,
+				items: cartItems,
+				totalCart,
+				updatedCart: handleGetItemsCart,
+			}}
+		>
+			{children}
+		</CartContext.Provider>
+	);
 }
 
 export const useCart = () => {
-  const context = useContext(CartContext);
-  if (!context) {
-    throw new Error("useCart must be used within a CartProvider");
-  }
-  return context;
+	const context = useContext(CartContext);
+	if (!context) {
+		throw new Error('useCart must be used within a CartProvider');
+	}
+	return context;
 };
