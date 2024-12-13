@@ -1,12 +1,20 @@
 'use client';
 
 import { Separator } from '@/components/ui/Separator';
-import BuyModalTrigger from '../Delivery/BuyModalTrigger';
 import { formatCurrency } from '@/lib/utils';
 import { useCart } from '@/contexts/Cart/CartContext';
+import { Button } from '@/components/ui/Button';
+import { ArrowRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 export default function OrderSummary() {
 	const { totalCart } = useCart();
+
+	const router = useRouter();
+
+	function handleNavigateToAddress() {
+		router.push('/Delivery');
+	}
 
 	return (
 		<div className='lg:w-[40%] w-full rounded-md border p-5'>
@@ -26,7 +34,15 @@ export default function OrderSummary() {
 				<p className='font-semibold text-lg'>{formatCurrency(totalCart)}</p>
 			</div>
 
-			<BuyModalTrigger />
+			<Button
+				onClick={handleNavigateToAddress}
+				className='w-full rounded-full mt-5 bg-[#2B0036] hover:bg-[#421d4b]'
+			>
+				Continuar a compra
+				<ArrowRight />
+			</Button>
+
+			{/* <BuyModalTrigger /> */}
 		</div>
 	);
 }

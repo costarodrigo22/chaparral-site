@@ -3,9 +3,20 @@
 import ProductsListCart from './ProductsListCart';
 import OrderSummary from './OrderSummary';
 import { useCart } from '@/contexts/Cart/CartContext';
+import logo from '../../../../public/logo-iaca-purple.svg';
+import Image from 'next/image';
 
 export default function CartCheck() {
-	const { quantityItemCart } = useCart();
+	const { quantityItemCart, loadingCart } = useCart();
+
+	if (loadingCart) {
+		return (
+			<div className='flex flex-col items-center justify-center w-full'>
+				<Image src={logo} alt='Iaça logo' />
+				<span className='text-[#320e3a]'>carregando carrinho Íaça...</span>
+			</div>
+		);
+	}
 
 	return (
 		<div>

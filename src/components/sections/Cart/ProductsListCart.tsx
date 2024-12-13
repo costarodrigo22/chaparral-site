@@ -3,7 +3,7 @@
 import ToggleQuantity from '@/components/ui/ToggleQuantity';
 import { useCart } from '@/contexts/Cart/CartContext';
 import { formatCurrency } from '@/lib/utils';
-import { deleteItemToCart } from '@/services/cart';
+import { deleteItemToCart, updateQuantityItemCart } from '@/services/cart';
 import { useMutation } from '@tanstack/react-query';
 import { Trash2 } from 'lucide-react';
 import Image from 'next/image';
@@ -15,15 +15,19 @@ export default function ProductsListCart() {
 
 	const { items, updatedCart } = useCart();
 
-	const { mutateAsync } = useMutation({
+	const { mutateAsync: mutateAsyncDeleteItem } = useMutation({
 		mutationFn: deleteItemToCart,
+	});
+
+	const { mutateAsync: mutateAsyncUpdateQuantity } = useMutation({
+		mutationFn: updateQuantityItemCart,
 	});
 
 	async function handleDeleteItemToCart(code: string) {
 		setDeletingItemCode(code);
 
 		try {
-			const result = await mutateAsync(code);
+			const result = await mutateAsyncDeleteItem(code);
 
 			toast.success(result.message);
 		} catch (error) {
@@ -31,6 +35,32 @@ export default function ProductsListCart() {
 		} finally {
 			setDeletingItemCode(null);
 
+			await updatedCart();
+		}
+	}
+
+	async function handleUpdateQuantityItemCart(quantity: number, code: string) {
+		try {
+			if (quantity === 0) {
+				const resultDelete = await mutateAsyncDeleteItem(code);
+
+				toast.success(resultDelete.message);
+
+				await updatedCart();
+
+				return;
+			}
+			const result = await mutateAsyncUpdateQuantity({
+				product_quantity: quantity,
+				product_code: code,
+			});
+
+			console.log(result);
+		} catch (error) {
+			toast.error(
+				`Algo deu errado ao atualizar a quantidade do item: ${error}`
+			);
+		} finally {
 			await updatedCart();
 		}
 	}
@@ -66,6 +96,12 @@ export default function ProductsListCart() {
 						<ToggleQuantity
 							className='w-[120px] h-[40px]'
 							initialQuantity={item.product_quantity}
+							onIncrement={(quantity) =>
+								handleUpdateQuantityItemCart(quantity, item.product_code)
+							}
+							onDecrement={(quantity) =>
+								handleUpdateQuantityItemCart(quantity, item.product_code)
+							}
 						/>
 
 						{deletingItemCode === item.product_code ? (

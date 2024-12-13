@@ -24,6 +24,7 @@ interface CartContextProps {
 	quantityItemCart: number;
 	items: ICartItems[];
 	totalCart: number;
+	loadingCart: boolean;
 	updatedCart: () => Promise<void>;
 }
 
@@ -36,8 +37,7 @@ export default function CartProvider({
 }) {
 	const [cartItems, setCartItems] = useState<ICartItems[]>([]);
 	const [quantityItemCart, setQuantityItemCart] = useState(0);
-
-	console.log('context: ', cartItems);
+	const [loadingCart, setLoadingCart] = useState(true);
 
 	const totalCart = useMemo(() => {
 		return cartItems.reduce(
@@ -52,9 +52,16 @@ export default function CartProvider({
 
 			setCartItems(response.item.item);
 
-			setQuantityItemCart(response.item.item.length);
+			const totalItemsCart = response.item.item.reduce(
+				(sum: number, product: ICartItems) => sum + product.product_quantity,
+				0
+			);
+
+			setQuantityItemCart(totalItemsCart);
 		} catch (error) {
 			toast.error(`Algo deu errado ao buscar o carrinho: ${error}`);
+		} finally {
+			setLoadingCart(false);
 		}
 	}, []);
 
@@ -68,6 +75,7 @@ export default function CartProvider({
 				quantityItemCart,
 				items: cartItems,
 				totalCart,
+				loadingCart,
 				updatedCart: handleGetItemsCart,
 			}}
 		>

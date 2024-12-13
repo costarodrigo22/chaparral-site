@@ -10,7 +10,8 @@ import { SessionProvider } from 'next-auth/react';
 import { auth } from '@/lib/auth';
 import { AuthProvider } from '@/contexts/AuthContext';
 // import CartProvider from '@/contexts/Cart/CartContext';
-import NavWithContext from '@/components/sections/Header/NavWithContext';
+import Nav from '@/components/sections/Header/Nav';
+import CartProvider from '@/contexts/Cart/CartContext';
 
 const libreFranklin = Libre_Franklin({
 	weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
@@ -47,17 +48,15 @@ export default async function RootLayout({
 		<html lang='pt-br'>
 			<body className={`${libreFranklin.className}`}>
 				<AuthProvider user={{ user: userValue }}>
-					<NavWithContext
-						company={companyRes.data.data}
-						logoImage={logoImage.data}
-					>
+					<CartProvider>
+						<Nav company={companyRes.data.data} logoImage={logoImage.data} />
 						<SessionProvider session={session}>{children}</SessionProvider>
 						<div className=' lg:mx-8'>
 							<Footer company={companyRes.data.data} />
 						</div>
 						<WhatsAppBtn link={CompanyInfoRes?.data?.data?.whatsapp} />
 						<Toaster />
-					</NavWithContext>
+					</CartProvider>
 				</AuthProvider>
 			</body>
 		</html>

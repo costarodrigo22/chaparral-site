@@ -8,6 +8,11 @@ interface IAddToCart {
 	product_url_image: string;
 }
 
+interface IUpdateQuantityItemsCart {
+	product_quantity: number;
+	product_code: string;
+}
+
 export async function getCart() {
 	const { data } = await httpClient.get('/user/cart');
 
@@ -22,6 +27,12 @@ export async function addToCart(item: IAddToCart) {
 
 export async function deleteItemToCart(code: string) {
 	const { data } = await httpClient.delete(`/user/cart/${code}`);
+
+	return data;
+}
+
+export async function updateQuantityItemCart(body: IUpdateQuantityItemsCart) {
+	const { data } = await httpClient.put('/user/cart', body);
 
 	return data;
 }

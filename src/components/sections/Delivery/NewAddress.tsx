@@ -7,14 +7,14 @@ import { Dialog, DialogContent } from '@/components/ui/Dialog';
 import { Label } from '@/components/ui/Label';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
-import { formatCPF } from '@/lib/utils';
 import axios from 'axios';
+import { toast } from 'sonner';
+import { addAddress } from '@/services/address';
+import { useMutation } from '@tanstack/react-query';
 
 interface IModalUpdateAddress {
 	open: boolean;
-	razao_social: string;
 	onClose: () => void;
-	onUpdateAddress: () => void;
 }
 
 const schema = z.object({
@@ -33,15 +33,47 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-export default function UpdateAddress({
-	open,
-	razao_social,
-	onClose,
-	onUpdateAddress,
-}: IModalUpdateAddress) {
+export default function NewAddress({ open, onClose }: IModalUpdateAddress) {
 	const form = useForm<FormData>({
 		resolver: zodResolver(schema),
+		defaultValues: {
+			addressStep: {
+				cep: '',
+				country: 'Brasil',
+				street: '',
+				number: '',
+				neighborhood: '',
+				complement: '',
+				city: '',
+				state: '',
+				reference: '',
+			},
+		},
 	});
+
+	const { mutateAsync, isPending } = useMutation({
+		mutationFn: addAddress,
+	});
+
+	async function handleGetAdressByCep(cep: string) {
+		try {
+			const response = await axios.get(`https://viacep.com.br/ws/${cep}/json/`);
+
+			if (!response.data) {
+				toast.error('Ops! Edereço não localizado.');
+
+				return;
+			}
+
+			form.setValue('addressStep.street', response.data.logradouro || '');
+			form.setValue('addressStep.neighborhood', response.data.bairro || '');
+			form.setValue('addressStep.city', response.data.localidade || '');
+			form.setValue('addressStep.state', response.data.uf || '');
+			form.setValue('addressStep.complement', response.data.complemento || '');
+		} catch (error) {
+			toast.error(`Erro ao buscar Cep. Tente novamente: ${error}`);
+		}
+	}
 
 	function handleCloseModal() {
 		onClose();
@@ -50,41 +82,28 @@ export default function UpdateAddress({
 	}
 
 	const handleSubmit = form.handleSubmit(async (formData) => {
-		const code = localStorage.getItem('cpf_client');
-
-		const body = {
-			param: [
-				{
-					codigo_cliente_integracao: formatCPF(code || ''),
-					razao_social: razao_social,
-					cep: formData.addressStep.cep,
-					endereco: formData.addressStep.street,
-					endereco_numero: formData.addressStep.number,
-					bairro: formData.addressStep.neighborhood,
-					cidade: formData.addressStep.city,
-					estado: formData.addressStep.state,
-				},
-			],
-		};
+		const { addressStep } = formData;
 
 		try {
-			localStorage.removeItem('code_client');
-			localStorage.removeItem('cpf_client');
+			await mutateAsync({
+				cep: addressStep.cep,
+				city: addressStep.city,
+				complement: addressStep.complement,
+				country: addressStep.country,
+				neighborhood: addressStep.neighborhood,
+				number: addressStep.number,
+				reference: addressStep.reference,
+				state: addressStep.state,
+				street: addressStep.street,
+				uf: addressStep.state,
+				selected: false,
+			});
 
-			const response = await axios.post(
-				`${process.env.NEXT_PUBLIC_BASE_URL}/api/without/omie/update_client`,
-				body
-			);
+			toast.success('Endereço cadastrado.');
 
-			localStorage.setItem('code_client', response.data.codigo_cliente_omie);
-			localStorage.setItem(
-				'cpf_client',
-				response.data.codigo_cliente_integracao
-			);
-		} catch (error) {
-		} finally {
 			handleCloseModal();
-			onUpdateAddress();
+		} catch (error) {
+			toast.error(`Algo deu errado ao cadastrar seu endereço: ${error}`);
 		}
 	});
 
@@ -92,7 +111,7 @@ export default function UpdateAddress({
 		<Dialog open={open} onOpenChange={handleCloseModal}>
 			<DialogContent className='w-[900px]'>
 				<div className='w-full flex flex-col'>
-					<strong className='text-base'>Atualizar endereço</strong>
+					<strong className='text-base'>Novo endereço</strong>
 				</div>
 
 				<form onSubmit={handleSubmit}>
@@ -103,9 +122,21 @@ export default function UpdateAddress({
 							</Label>
 
 							<Input
-								{...form.register('addressStep.cep')}
+								{...(form.register('addressStep.cep'),
+								{
+									onChange: (event) => {
+										const cep = event.target.value.replace(/\D/g, '');
+
+										form.setValue('addressStep.cep', cep);
+
+										if (cep.length === 8) {
+											handleGetAdressByCep(cep);
+										}
+									},
+								})}
 								id='cep'
 								placeholder='CEP'
+								maxLength={8}
 							/>
 
 							{form.formState.errors.addressStep?.cep?.message && (
@@ -195,7 +226,7 @@ export default function UpdateAddress({
 						<Input
 							{...form.register('addressStep.complement')}
 							id='complement'
-							placeholder='Rua'
+							placeholder='Complemento'
 						/>
 
 						{form.formState.errors.addressStep?.complement?.message && (
@@ -250,7 +281,7 @@ export default function UpdateAddress({
 						<Input
 							{...form.register('addressStep.reference')}
 							id='reference'
-							placeholder='Rua'
+							placeholder='Referência'
 						/>
 
 						{form.formState.errors.addressStep?.reference?.message && (
@@ -262,11 +293,12 @@ export default function UpdateAddress({
 
 					<div className='flex items-end mt-4 justify-end'>
 						<Button
-							disabled={form.formState.isSubmitting}
+							disabled={isPending}
 							type='submit'
 							className='bg-[#2B0036] rounded-full w-40 text-white text-base py-2 flex items-center justify-center hover:bg-[#5a3663]'
 						>
-							Atualizar
+							{isPending && 'Cadastrando...'}
+							{!isPending && 'Cadastrar'}
 						</Button>
 					</div>
 				</form>
