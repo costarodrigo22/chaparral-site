@@ -21,16 +21,7 @@ import {
   selectAddress,
 } from "@/services/address";
 import { toast } from "sonner";
-
-interface IDataClientProps {
-  razao_social: string;
-  endereco: string;
-  endereco_numero: string;
-  bairro: string;
-  estado: string;
-  cidade: string;
-  complemento: string;
-}
+import { httpClient } from "@/lib/httpClient";
 
 interface ILocalPickup {
   id: string;
@@ -43,16 +34,12 @@ interface ILocalPickup {
 export default function DeliveryOrPickupSelector() {
   const [selection, setSelection] = useState("");
   const [localPickUp, setLocalPickUp] = useState("");
-  const [localDelivery, setLocalDelivery] = useState();
   const [openModalUpdateAddress, setOpenModalUpdateAddress] = useState(false);
-  const [dataClient, setDataClient] = useState<IDataClientProps>();
   const [localPickupOptions, setLocalPickupOptions] = useState<ILocalPickup[]>(
     []
   );
   const [selectedLocalDetails, setSelectedLocalDetails] =
     useState<ILocalPickup>({} as ILocalPickup);
-
-  const cpf_client = localStorage.getItem("cpf_client");
 
   const queryClient = useQueryClient();
 
@@ -69,8 +56,6 @@ export default function DeliveryOrPickupSelector() {
   const { mutateAsync: mutateAsyncSelectAddress } = useMutation({
     mutationFn: selectAddress,
     onSuccess: () => {
-      queryClient.refetchQueries({ queryKey: ["getAddressSelected"] });
-
       toast.success("Endereço selecionado com sucesso.");
     },
   });
@@ -88,17 +73,23 @@ export default function DeliveryOrPickupSelector() {
       localStorage.removeItem("type_receipt");
 
       localStorage.removeItem("local_delivery");
+
+      queryClient.setQueryData(["getAddressSelected"], null);
     }
 
     setSelection(value);
 
     setLocalPickUp("");
+
+    queryClient.invalidateQueries({ queryKey: ["getAddressSelected"] });
   }
 
   async function handleSelectLocalPickUpChange(value: string) {
     setLocalPickUp(value);
 
     localStorage.setItem("type_receipt", JSON.stringify(value));
+
+    await httpClient.get("/user/address/deselectAllAddresses");
 
     try {
       const response = await axios.get(
@@ -111,8 +102,14 @@ export default function DeliveryOrPickupSelector() {
       );
 
       setSelectedLocalDetails(response.data.data);
+
+      await queryClient.invalidateQueries({ queryKey: ["getAddressSelected"] });
     } catch (error) {
       console.error("Erro ao buscar detalhes do local de retirada:", error);
+    } finally {
+      // await queryClient.refetchQueries({ queryKey: ["getAddressSelected"] });
+
+      await queryClient.invalidateQueries({ queryKey: ["getAddressSelected"] });
     }
   }
 
@@ -122,11 +119,17 @@ export default function DeliveryOrPickupSelector() {
     } catch (error) {
       toast.error(`Algo deu errado ao selecionar o endereço: ${error}`);
     } finally {
-      queryClient.invalidateQueries({ queryKey: ["getAddressSelected"] });
+      await queryClient.invalidateQueries({ queryKey: ["getAddressSelected"] });
+
+      if (selection === "Entrega") {
+        localStorage.removeItem("type_receipt");
+
+        localStorage.removeItem("local_delivery");
+      }
     }
   }
 
-  async function handleLocalPickUpOptions() {
+  const handleLocalPickUpOptions = useCallback(async () => {
     try {
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/without/pick_up_location/get_all`
@@ -136,34 +139,13 @@ export default function DeliveryOrPickupSelector() {
     } catch (error) {
       console.error("Erro ao buscar opções de locais de retirada:", error);
     }
-  }
-
-  const handleGetDataClient = useCallback(async () => {
-    try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/without/omie/filter_client`,
-        {
-          cnpj_cpf: cpf_client,
-        }
-      );
-
-      setDataClient({
-        bairro: response.data.bairro,
-        cidade: response.data.cidade,
-        complemento: response.data.complemento,
-        endereco: response.data.endereco,
-        endereco_numero: response.data.endereco_numero,
-        estado: response.data.estado,
-        razao_social: response.data.razao_social,
-      });
-    } catch (error) {}
-  }, [cpf_client]);
+  }, []);
 
   useEffect(() => {
     handleLocalPickUpOptions();
 
-    handleGetDataClient();
-  }, [handleGetDataClient]);
+    // handleGetDataClient();
+  }, [handleLocalPickUpOptions]);
 
   return (
     <>
@@ -191,10 +173,7 @@ export default function DeliveryOrPickupSelector() {
                   <Label className="text-base font-medium">
                     Selecione um dos seus endereços*
                   </Label>
-                  <Select
-                    value={localDelivery}
-                    onValueChange={handleSelectAddress}
-                  >
+                  <Select onValueChange={handleSelectAddress}>
                     <SelectTrigger className="" id="type-profile">
                       <SelectValue placeholder="Selecione" />
                     </SelectTrigger>
@@ -213,7 +192,7 @@ export default function DeliveryOrPickupSelector() {
                     </div>
                   )}
 
-                  {dataAddressSelected && (
+                  {selection === "Entrega" && dataAddressSelected && (
                     <div className="mt-5 flex flex-col gap-2">
                       <div className="flex items-center gap-2">
                         <House size={22} />
