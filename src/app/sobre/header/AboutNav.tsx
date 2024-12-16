@@ -15,6 +15,8 @@ import ModalContacts, {
 } from '@/components/sections/Footer/components/ModalContacts';
 import api from '@/lib/axiosInstance';
 // import SearchInput from './SearchInput';
+import { useSession } from 'next-auth/react';
+import { useCart } from '@/contexts/Cart/CartContext';
 
 export default function AboutNav() {
 	const [openContactsModal, setOpenContactsModal] = useState<boolean>(false);
@@ -23,9 +25,13 @@ export default function AboutNav() {
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [flag, setFlag] = useState('');
 
+	const { data: session } = useSession();
+
 	const toggleMenu = () => {
 		setIsMenuOpen(!isMenuOpen);
 	};
+
+	const { quantityItemCart } = useCart();
 
 	const handleGetCompanyData = useCallback(async () => {
 		try {
@@ -35,6 +41,7 @@ export default function AboutNav() {
 			console.log(error);
 		}
 	}, []);
+
 	useEffect(() => {
 		handleGetCompanyData();
 	}, [handleGetCompanyData]);
@@ -176,7 +183,26 @@ export default function AboutNav() {
 								</DropdownMenuItem>
 							</DropdownMenuContent>
 						</DropdownMenu>
+
 						<a
+							href='/cart'
+							className='w-12 h-12 rounded-full md:static right-3 bg-transparent flex items-center justify-center hover:bg-[#3b1344a1] transition-all duration-300 ease-in-out cursor-pointer'
+						>
+							{quantityItemCart > 0 && (
+								<div className='absolute bg-white w-[18px] h-[18px] rounded-full flex items-center justify-center top-0 right-0'>
+									<span className='text-black text-[12px] font-semibold'>
+										{quantityItemCart}
+									</span>
+								</div>
+							)}
+							<Image
+								alt='Carrinho de compras'
+								height={24}
+								width={24}
+								src={'/shopping-cart.svg'}
+							/>
+						</a>
+						{/* <a
 							href='/cart'
 							className='w-12 h-12 rounded-full fixed md:static right-3 bg-transparent flex items-center justify-center hover:bg-[#3b1344a1] transition-all duration-300 ease-in-out cursor-pointer'
 						>
@@ -186,7 +212,7 @@ export default function AboutNav() {
 								width={24}
 								src={'/shopping-cart.svg'}
 							/>
-						</a>
+						</a> */}
 					</div>
 					<div
 						className=' fixed cursor-pointer md:hidden left-3'

@@ -5,9 +5,14 @@ import OrderSummary from './OrderSummary';
 import { useCart } from '@/contexts/Cart/CartContext';
 import logo from '../../../../public/logo-iaca-purple.svg';
 import Image from 'next/image';
+import { useEffect } from 'react';
 
 export default function CartCheck() {
-	const { quantityItemCart, loadingCart } = useCart();
+	const { quantityItemCart, loadingCart, updatedCart } = useCart();
+
+	useEffect(() => {
+		updatedCart();
+	}, [updatedCart]);
 
 	if (loadingCart) {
 		return (

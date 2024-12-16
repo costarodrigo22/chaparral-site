@@ -1,11 +1,11 @@
 'use client';
 
 import {
-  Dialog,
-  DialogContent,
-  // DialogDescription,
-  // DialogHeader,
-  // DialogTitle,
+	Dialog,
+	DialogContent,
+	// DialogDescription,
+	// DialogHeader,
+	// DialogTitle,
 } from '@/components/ui/Dialog';
 import { House, ThumbsUp } from 'lucide-react';
 import logoPix from '../../../../public/pix.svg';
@@ -18,186 +18,194 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import ModalPix from './ModalPix';
 import { useRouter } from 'next/navigation';
+import { useQuery } from '@tanstack/react-query';
+import { getAddressSelected } from '@/services/address';
 
 interface IModalConfirmOrder {
-  open: boolean;
-  onClose: () => void;
+	open: boolean;
+	onClose: () => void;
 }
 
 interface IPixProps {
-  copyPaste: string;
-  qrCode: string;
+	copyPaste: string;
+	qrCode: string;
 }
 
 export default function ModalConfirmOrder({
-  open,
-  onClose,
+	open,
+	onClose,
 }: IModalConfirmOrder) {
-  const [loadingOrder, setLoadingOrder] = useState(false);
-  const [openModalPix, setOpenModalPix] = useState(false);
-  const [infosPix, setInfosPix] = useState<IPixProps>();
+	const [loadingOrder, setLoadingOrder] = useState(false);
+	const [openModalPix, setOpenModalPix] = useState(false);
+	const [infosPix, setInfosPix] = useState<IPixProps>();
 
-  const router = useRouter();
+	const router = useRouter();
 
-  const { selection } = usePaymentSelection();
+	const { selection } = usePaymentSelection();
 
-  const pickUpLocation = JSON.parse(
-    localStorage.getItem('local_delivery') || ''
-  );
+	const { data: dataAddressSelected } = useQuery({
+		queryKey: ['getAddressSelectedPaymentModal'],
+		queryFn: getAddressSelected,
+	});
 
-  const codeClient = JSON.parse(localStorage.getItem('code_client') || '');
+	// const pickUpLocation = JSON.parse(
+	//   localStorage.getItem('local_delivery') || ''
+	// );
 
-  const cartLocal = JSON.parse(localStorage.getItem('cart') || '');
+	// const codeClient = JSON.parse(localStorage.getItem('code_client') || '');
 
-  const emailLocal = localStorage.getItem('email_client');
+	// const cartLocal = JSON.parse(localStorage.getItem('cart') || '');
 
-  async function handleConfirmOrder() {
-    setLoadingOrder(true);
+	// const emailLocal = localStorage.getItem('email_client');
 
-    localStorage.removeItem('order_number');
+	async function handleConfirmOrder() {
+		setLoadingOrder(true);
 
-    const total =
-      cartLocal.param[0].itens[0].quantidade *
-      cartLocal.param[0].itens[0].valor_unitario;
+		localStorage.removeItem('order_number');
 
-    const body = {
-      param: [
-        {
-          codigo_cliente: codeClient,
-          observacoes_entrega: pickUpLocation.name,
-          produto: {
-            codigo_produto: cartLocal.codigoProduto,
-            descricao: cartLocal.nomeProduto,
-            quantidade: cartLocal.param[0].itens[0].quantidade,
-            valor_unitario: cartLocal.param[0].itens[0].valor_unitario,
-          },
-          informacoes_adicionais: {
-            utilizar_emails: emailLocal,
-            meio_pagamento:
-              selection === 'PixSite' || selection === 'PixDelivery'
-                ? '17'
-                : selection === 'CardDelivery'
-                ? '03'
-                : '15', // cartão de crédito é 3, boleto 15 e pix 17
-          },
-        },
-      ],
-    };
+		// const total =
+		//   cartLocal.param[0].itens[0].quantidade *
+		//   cartLocal.param[0].itens[0].valor_unitario;
 
-    const bodyPix = {
-      param: [
-        {
-          nIdCliente: codeClient,
-          vValor: total,
-        },
-      ],
-    };
+		// const body = {
+		//   param: [
+		//     {
+		//       codigo_cliente: codeClient,
+		//       observacoes_entrega: pickUpLocation.name,
+		//       produto: {
+		//         codigo_produto: cartLocal.codigoProduto,
+		//         descricao: cartLocal.nomeProduto,
+		//         quantidade: cartLocal.param[0].itens[0].quantidade,
+		//         valor_unitario: cartLocal.param[0].itens[0].valor_unitario,
+		//       },
+		//       informacoes_adicionais: {
+		//         utilizar_emails: emailLocal,
+		//         meio_pagamento:
+		//           selection === 'PixSite' || selection === 'PixDelivery'
+		//             ? '17'
+		//             : selection === 'CardDelivery'
+		//             ? '03'
+		//             : '15', // cartão de crédito é 3, boleto 15 e pix 17
+		//       },
+		//     },
+		//   ],
+		// };
 
-    try {
-      const response = await api.post('/api/without/omie/insert_sale', body);
+		// const bodyPix = {
+		//   param: [
+		//     {
+		//       nIdCliente: codeClient,
+		//       vValor: total,
+		//     },
+		//   ],
+		// };
 
-      localStorage.setItem('order_number', response.data.codigo_pedido);
+		// try {
+		//   const response = await api.post('/api/without/omie/insert_sale', body);
 
-      if (selection === 'PixSite' || selection === 'PixDelivery') {
-        const pixInfos = await api.post(
-          '/api/without/omie/create_pix',
-          bodyPix
-        );
+		//   localStorage.setItem('order_number', response.data.codigo_pedido);
 
-        setInfosPix({
-          copyPaste: pixInfos.data.cCopiaCola,
-          qrCode: pixInfos.data.cQrCode,
-        });
-      }
+		//   if (selection === 'PixSite' || selection === 'PixDelivery') {
+		//     const pixInfos = await api.post(
+		//       '/api/without/omie/create_pix',
+		//       bodyPix
+		//     );
 
-      if (response.status === 200)
-        toast.success(`${response.data.descricao_status}`);
+		//     setInfosPix({
+		//       copyPaste: pixInfos.data.cCopiaCola,
+		//       qrCode: pixInfos.data.cQrCode,
+		//     });
+		//   }
 
-      if (response.status !== 200)
-        toast.error(`${response.data.descricao_status}`);
-    } catch (error) {
-      toast.error('Algo deu errado!');
-    } finally {
-      setLoadingOrder(false);
+		//   if (response.status === 200)
+		//     toast.success(`${response.data.descricao_status}`);
 
-      if (selection === 'CardDelivery' || selection === 'PixDelivery') {
-        router.push('/TrackOrder');
+		//   if (response.status !== 200)
+		//     toast.error(`${response.data.descricao_status}`);
+		// } catch (error) {
+		//   toast.error('Algo deu errado!');
+		// } finally {
+		//   setLoadingOrder(false);
 
-        // localStorage.removeItem("cart");
-      }
+		//   if (selection === 'CardDelivery' || selection === 'PixDelivery') {
+		//     router.push('/TrackOrder');
 
-      if (selection === 'PixSite') {
-        setOpenModalPix(true);
-      }
-    }
-  }
+		//     // localStorage.removeItem("cart");
+		//   }
 
-  return (
-    <>
-      <ModalPix
-        open={openModalPix}
-        pix_copy_paste={infosPix?.copyPaste || ''}
-        qd_code={infosPix?.qrCode || ''}
-        onClose={() => setOpenModalPix(false)}
-      />
+		//   if (selection === 'PixSite') {
+		//     setOpenModalPix(true);
+		//   }
+		// }
+	}
 
-      <Dialog open={open} onOpenChange={onClose}>
-        <DialogContent className="max-h-[90vh] max-w-[95vw] overflow-y-auto overflow-x-auto p-3">
-          <span>Confirme a retirada do produto</span>
+	return (
+		<>
+			<ModalPix
+				open={openModalPix}
+				pix_copy_paste={infosPix?.copyPaste || ''}
+				qd_code={infosPix?.qrCode || ''}
+				onClose={() => setOpenModalPix(false)}
+			/>
 
-          <div>
-            <span className="text-[#898989] text-xs">Retirar em:</span>
-            <div className="flex border p-5 items-center rounded-lg gap-4 mb-4">
-              <House />
+			<Dialog open={open} onOpenChange={onClose}>
+				<DialogContent className='max-h-[90vh] max-w-[550px] w-full overflow-y-auto overflow-x-auto p-3'>
+					<span>Confirme a retirada do produto</span>
 
-              <div className="flex flex-col gap-2">
-                <span className="font-semibold text-sm">
-                  {pickUpLocation.name}
-                </span>
-                <span className="text-[#898989] text-sm">
-                  {pickUpLocation.street}, {pickUpLocation.number} -{' '}
-                  {pickUpLocation.neighborhood}
-                </span>
-              </div>
-            </div>
-            <span className="text-[#898989] text-xs">Forma de pagamento:</span>
-            <div className="flex border p-5 items-center rounded-lg gap-4">
-              <Image
-                src={
-                  selection === 'PixSite' || selection === 'PixDelivery'
-                    ? logoPix
-                    : logoCard
-                }
-                alt="logo"
-              />
+					<div>
+						<span className='text-[#898989] text-xs'>Retirar em:</span>
+						<div className='flex border p-5 items-center rounded-lg gap-4 mb-4'>
+							<House />
 
-              <div className="flex flex-col gap-2">
-                <span className="font-semibold text-sm">
-                  {selection === 'PixSite' || selection === 'PixDelivery'
-                    ? 'Pix'
-                    : 'Cartão'}
-                </span>
-                <span className="text-[#898989] text-sm">
-                  {selection === 'PixSite' || selection === 'PixDelivery'
-                    ? 'Utilize o QR code ou copie e cole o código'
-                    : 'Utilize seu cartão para pagamento'}
-                </span>
-              </div>
-            </div>
+							<div className='flex flex-col gap-2'>
+								<span className='font-semibold text-sm'>
+									{dataAddressSelected?.street}
+								</span>
+								<span className='text-[#898989] text-sm'>
+									{dataAddressSelected?.neighborhood},{' '}
+									{dataAddressSelected?.number} -{' '}
+									{dataAddressSelected?.complement}
+								</span>
+							</div>
+						</div>
+						<span className='text-[#898989] text-xs'>Forma de pagamento:</span>
+						<div className='flex border p-5 items-center rounded-lg gap-4'>
+							<Image
+								src={
+									selection === 'PixSite' || selection === 'PixDelivery'
+										? logoPix
+										: logoCard
+								}
+								alt='logo'
+							/>
 
-            <Button
-              disabled={loadingOrder}
-              onClick={handleConfirmOrder}
-              className="bg-[#2B0036] w-full h-14 rounded-full mt-5 hover:bg-[#5a3663]"
-            >
-              {loadingOrder && 'Gerando pedido...'}
-              {!loadingOrder && 'Confirmar e gerar pedido'}
+							<div className='flex flex-col gap-2'>
+								<span className='font-semibold text-sm'>
+									{selection === 'PixSite' || selection === 'PixDelivery'
+										? 'Pix'
+										: 'Cartão'}
+								</span>
+								<span className='text-[#898989] text-sm'>
+									{selection === 'PixSite' || selection === 'PixDelivery'
+										? 'Utilize o QR code ou copie e cole o código'
+										: 'Utilize seu cartão para pagamento'}
+								</span>
+							</div>
+						</div>
 
-              <ThumbsUp />
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-    </>
-  );
+						<Button
+							disabled={loadingOrder}
+							onClick={handleConfirmOrder}
+							className='bg-[#2B0036] w-full h-14 rounded-full mt-5 hover:bg-[#5a3663]'
+						>
+							{loadingOrder && 'Gerando pedido...'}
+							{!loadingOrder && 'Confirmar e gerar pedido'}
+
+							<ThumbsUp />
+						</Button>
+					</div>
+				</DialogContent>
+			</Dialog>
+		</>
+	);
 }

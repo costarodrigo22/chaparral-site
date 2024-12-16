@@ -1,22 +1,14 @@
 import type { Metadata } from 'next';
-import { Libre_Franklin } from 'next/font/google';
 import './globals.css';
 import Footer from '@/components/sections/Footer';
-// import Nav from '@/components/sections/Header/Nav';
 import { Toaster } from '@/components/ui/Sonner';
 import api from '@/lib/axiosInstance';
 import WhatsAppBtn from '@/components/ui/WhatsAppBtn';
 import { SessionProvider } from 'next-auth/react';
-import { auth } from '@/lib/auth';
+import { auth, signOut } from '@/lib/auth';
 import { AuthProvider } from '@/contexts/AuthContext';
-// import CartProvider from '@/contexts/Cart/CartContext';
 import Nav from '@/components/sections/Header/Nav';
 import CartProvider from '@/contexts/Cart/CartContext';
-
-const libreFranklin = Libre_Franklin({
-	weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'],
-	subsets: ['latin'],
-});
 
 export const metadata: Metadata = {
 	title: 'ÍAÇA puro',
@@ -37,6 +29,8 @@ export default async function RootLayout({
 
 	const session = await auth();
 
+	const isAuthenticated = Boolean(session?.user?.token);
+
 	const userValue = {
 		email: session?.user?.email || '',
 		id: session?.user?.id || '',
@@ -44,18 +38,36 @@ export default async function RootLayout({
 		token: session?.user?.token || '',
 	};
 
+	async function handleLogOut() {
+		'use server';
+
+		await signOut({
+			redirectTo: '/',
+		});
+	}
+
 	return (
 		<html lang='pt-br'>
-			<body className={`${libreFranklin.className}`}>
+			<body>
 				<AuthProvider user={{ user: userValue }}>
-					<CartProvider>
-						<Nav company={companyRes.data.data} logoImage={logoImage.data} />
-						<SessionProvider session={session}>{children}</SessionProvider>
-						<div className=' lg:mx-8'>
-							<Footer company={companyRes.data.data} />
-						</div>
-						<WhatsAppBtn link={CompanyInfoRes?.data?.data?.whatsapp} />
-						<Toaster />
+					<CartProvider
+						isAuthenticated={isAuthenticated}
+						token={session?.user?.token}
+					>
+						<SessionProvider session={session}>
+							<Nav
+								company={companyRes.data.data}
+								logoImage={logoImage.data}
+								session={userValue}
+								onLogOut={handleLogOut}
+							/>
+							{children}
+							<div className='lg:mx-8'>
+								<Footer company={companyRes.data.data} />
+							</div>
+							<WhatsAppBtn link={CompanyInfoRes?.data?.data?.whatsapp} />
+							<Toaster />
+						</SessionProvider>
 					</CartProvider>
 				</AuthProvider>
 			</body>

@@ -11,6 +11,15 @@ import React, {
 } from 'react';
 import { toast } from 'sonner';
 
+// interface ISessionValue {
+// 	user: {
+// 		email: string;
+// 		id: string;
+// 		name: string;
+// 		token: string;
+// 	};
+// }
+
 interface ICartItems {
 	id: string;
 	product_code: string;
@@ -26,15 +35,22 @@ interface CartContextProps {
 	totalCart: number;
 	loadingCart: boolean;
 	updatedCart: () => Promise<void>;
+	resetCart: () => void;
+}
+
+interface IAuthProviderCart {
+	children: React.ReactNode;
+	isAuthenticated: boolean;
+	token?: string;
 }
 
 export const CartContext = createContext({} as CartContextProps);
 
 export default function CartProvider({
 	children,
-}: {
-	children: React.ReactNode;
-}) {
+	isAuthenticated,
+	token,
+}: IAuthProviderCart) {
 	const [cartItems, setCartItems] = useState<ICartItems[]>([]);
 	const [quantityItemCart, setQuantityItemCart] = useState(0);
 	const [loadingCart, setLoadingCart] = useState(true);
@@ -46,8 +62,18 @@ export default function CartProvider({
 		);
 	}, [cartItems]);
 
+	function handleResetCart() {
+		setCartItems([]);
+
+		setQuantityItemCart(0);
+	}
+
 	const handleGetItemsCart = useCallback(async () => {
 		try {
+			if (!isAuthenticated || !token) {
+				return;
+			}
+
 			const response = await getCart();
 
 			setCartItems(response.item.item);
@@ -63,11 +89,15 @@ export default function CartProvider({
 		} finally {
 			setLoadingCart(false);
 		}
-	}, []);
+	}, [isAuthenticated, token]);
 
 	useEffect(() => {
+		if (isAuthenticated) {
+			handleGetItemsCart();
+		}
+
 		handleGetItemsCart();
-	}, [handleGetItemsCart]);
+	}, [isAuthenticated, handleGetItemsCart]);
 
 	return (
 		<CartContext.Provider
@@ -77,6 +107,7 @@ export default function CartProvider({
 				totalCart,
 				loadingCart,
 				updatedCart: handleGetItemsCart,
+				resetCart: handleResetCart,
 			}}
 		>
 			{children}

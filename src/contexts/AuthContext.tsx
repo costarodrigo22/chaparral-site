@@ -31,6 +31,10 @@ export function AuthProvider({ children, user }: IAuthProviderProps) {
 	});
 
 	useEffect(() => {
+		if (!user.user.token) {
+			return;
+		}
+
 		localStorage.setItem(localStorageKeys.ACCESS_TOKEN, user.user.token);
 	}, [user]);
 

@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { handleScroll } from '@/lib/utils';
 
 import { usePathname } from 'next/navigation';
@@ -8,13 +8,36 @@ import ModalContacts, { IData } from '../Footer/components/ModalContacts';
 import Image from 'next/image';
 import shopCart from '../../../../public/shopping-cart.svg';
 import { useCart } from '@/contexts/Cart/CartContext';
+import { Avatar, AvatarFallback, AvatarImage } from '../../ui/Avatar';
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from '@/components/ui/DropdownMenu';
+import { LogOut, UserPen } from 'lucide-react';
+import { localStorageKeys } from '@/config/localStorageKeys';
 
 interface NavProps {
 	company: IData;
 	logoImage: string;
+	session: {
+		email: string;
+		id: string;
+		name: string;
+		token: string;
+	};
+	onLogOut: () => Promise<void>;
 }
 
-export default function Nav({ company, logoImage }: NavProps) {
+export default function Nav({
+	company,
+	logoImage,
+	session,
+	onLogOut,
+}: NavProps) {
 	const [openContactsModal, setOpenContactsModal] = useState<boolean>(false);
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -24,7 +47,21 @@ export default function Nav({ company, logoImage }: NavProps) {
 		setIsMenuOpen(!isMenuOpen);
 	};
 
-	const { quantityItemCart } = useCart();
+	const { quantityItemCart, updatedCart, resetCart } = useCart();
+
+	async function handleLogOut() {
+		localStorage.removeItem(localStorageKeys.ACCESS_TOKEN);
+		localStorage.removeItem('local_delivery');
+		localStorage.removeItem('type_receipt');
+
+		resetCart();
+
+		await onLogOut();
+	}
+
+	useEffect(() => {
+		updatedCart();
+	}, [updatedCart]);
 
 	return (
 		<>
@@ -79,36 +116,65 @@ export default function Nav({ company, logoImage }: NavProps) {
 							Contato
 						</span>
 					</div>
-					<div className='relative flex items-center gap-[71px] lg:mr-20 xl:mr-28'>
-						<a
-							href='/cart'
-							className='w-12 h-12 rounded-full md:static right-3 bg-transparent flex items-center justify-center hover:bg-[#3b1344a1] transition-all duration-300 ease-in-out cursor-pointer'
+
+					<div className='flex items-center justify-center mr-14'>
+						<div className='relative flex items-center gap-[71px] lg:mr-2 xl:mr-2'>
+							<a
+								href='/cart'
+								className='w-12 h-12 rounded-full md:static right-3 bg-transparent flex items-center justify-center hover:bg-[#3b1344a1] transition-all duration-300 ease-in-out cursor-pointer'
+							>
+								{quantityItemCart > 0 && (
+									<div className='absolute bg-white w-[18px] h-[18px] rounded-full flex items-center justify-center top-0 right-0'>
+										<span className='text-black text-[12px] font-semibold'>
+											{quantityItemCart}
+										</span>
+									</div>
+								)}
+								<Image
+									alt='Carrinho de compras'
+									height={24}
+									width={24}
+									src={shopCart}
+								/>
+							</a>
+						</div>
+						<div
+							className='fixed cursor-pointer md:hidden left-3'
+							onClick={toggleMenu}
 						>
-							{quantityItemCart > 0 && (
-								<div className='absolute bg-white w-[18px] h-[18px] rounded-full flex items-center justify-center top-0 right-0'>
-									<span className='text-black text-[12px] font-semibold'>
-										{quantityItemCart}
-									</span>
-								</div>
-							)}
 							<Image
-								alt='Carrinho de compras'
-								height={24}
-								width={24}
-								src={shopCart}
+								src='/menu-icon.svg'
+								alt='Menu Icon'
+								width={25}
+								height={25}
 							/>
-						</a>
-					</div>
-					<div
-						className='fixed cursor-pointer md:hidden left-3'
-						onClick={toggleMenu}
-					>
-						<Image
-							src='/menu-icon.svg'
-							alt='Menu Icon'
-							width={25}
-							height={25}
-						/>
+						</div>
+
+						{session?.token && (
+							<DropdownMenu>
+								<DropdownMenuTrigger className='outline-none'>
+									<Avatar className='ml-6'>
+										<AvatarImage src='https://github.com/shadcn.png' />
+										<AvatarFallback>CN</AvatarFallback>
+									</Avatar>
+								</DropdownMenuTrigger>
+								<DropdownMenuContent>
+									<DropdownMenuLabel>Minha conta</DropdownMenuLabel>
+									<DropdownMenuSeparator />
+									<DropdownMenuItem className='cursor-pointer hover:bg-slate-100 transition-all'>
+										<UserPen width={16} className='mr-2' />
+										Perfil
+									</DropdownMenuItem>
+									<DropdownMenuItem
+										className='cursor-pointer hover:bg-slate-100 transition-all'
+										onClick={() => handleLogOut()}
+									>
+										<LogOut width={16} className='mr-2' />
+										Sair
+									</DropdownMenuItem>
+								</DropdownMenuContent>
+							</DropdownMenu>
+						)}
 					</div>
 				</div>
 			</nav>
