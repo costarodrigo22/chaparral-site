@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/DropdownMenu';
 import { LogOut, UserPen } from 'lucide-react';
 import { localStorageKeys } from '@/config/localStorageKeys';
+import { useRouter } from 'next/navigation';
 
 interface NavProps {
 	company: IData;
@@ -43,6 +44,8 @@ export default function Nav({
 
 	const pathname = usePathname();
 
+	const route = useRouter();
+
 	const toggleMenu = () => {
 		setIsMenuOpen(!isMenuOpen);
 	};
@@ -53,6 +56,7 @@ export default function Nav({
 		localStorage.removeItem(localStorageKeys.ACCESS_TOKEN);
 		localStorage.removeItem('local_delivery');
 		localStorage.removeItem('type_receipt');
+		localStorage.removeItem('freight');
 
 		resetCart();
 
@@ -161,7 +165,10 @@ export default function Nav({
 								<DropdownMenuContent>
 									<DropdownMenuLabel>Minha conta</DropdownMenuLabel>
 									<DropdownMenuSeparator />
-									<DropdownMenuItem className='cursor-pointer hover:bg-slate-100 transition-all'>
+									<DropdownMenuItem
+										onClick={() => route.push('/profile')}
+										className='cursor-pointer hover:bg-slate-100 transition-all'
+									>
 										<UserPen width={16} className='mr-2' />
 										Perfil
 									</DropdownMenuItem>

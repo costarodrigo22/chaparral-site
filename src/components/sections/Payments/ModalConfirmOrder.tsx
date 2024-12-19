@@ -20,6 +20,16 @@ import ModalPix from './ModalPix';
 import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { getAddressSelected } from '@/services/address';
+import { httpClient } from '@/lib/httpClient';
+
+interface ICartItem {
+	id: string;
+	product_name: string;
+	product_quantity: number;
+	product_price: number;
+	product_code: number;
+	product_url_image: string;
+}
 
 interface IModalConfirmOrder {
 	open: boolean;
@@ -48,9 +58,9 @@ export default function ModalConfirmOrder({
 		queryFn: getAddressSelected,
 	});
 
-	// const pickUpLocation = JSON.parse(
-	//   localStorage.getItem('local_delivery') || ''
-	// );
+	const pickUpLocation = localStorage.getItem('local_delivery')
+		? JSON?.parse(localStorage.getItem('local_delivery') || '')
+		: '';
 
 	// const codeClient = JSON.parse(localStorage.getItem('code_client') || '');
 
@@ -61,7 +71,141 @@ export default function ModalConfirmOrder({
 	async function handleConfirmOrder() {
 		setLoadingOrder(true);
 
-		localStorage.removeItem('order_number');
+		const userLogged = await httpClient.get('/user/profile');
+
+		const deliveryOrPickUp = localStorage.getItem('local_delivery')
+			? 'RETIRADA'
+			: 'ENTREGA';
+
+		let address = '';
+		let addressOrder;
+
+		if (deliveryOrPickUp === 'RETIRADA') {
+			const pickUpAddress = localStorage.getItem('local_delivery');
+
+			address = JSON.parse(pickUpAddress || '').name;
+
+			const addressOrderParsed = JSON.parse(pickUpAddress || '');
+
+			addressOrder = {
+				id: addressOrderParsed.id,
+				cep: addressOrderParsed.cep,
+				country: 'Brasil',
+				street: addressOrderParsed.street,
+				number: addressOrderParsed.number,
+				neighborhood: addressOrderParsed.neighborhood,
+				complement: addressOrderParsed.operational_time,
+				city: addressOrderParsed.city,
+				state: addressOrderParsed.uf,
+				uf: addressOrderParsed.uf,
+				reference: '',
+				selected: false,
+			};
+		}
+
+		if (deliveryOrPickUp === 'ENTREGA') {
+			const addressSelected = await httpClient.get('/user/address/select');
+
+			address = `Rua: ${addressSelected.data.item.street}, Bairro: ${addressSelected.data.item.neighborhood}, Número: ${addressSelected.data.item.number}, Complemento: ${addressSelected.data.item.complement}`;
+
+			addressOrder = {
+				id: addressSelected.data.item.id,
+				cep: addressSelected.data.item.cep,
+				country: addressSelected.data.item.country,
+				street: addressSelected.data.item.street,
+				number: addressSelected.data.item.number,
+				neighborhood: addressSelected.data.item.neighborhood,
+				complement: addressSelected.data.item.complement,
+				city: addressSelected.data.item.city,
+				state: addressSelected.data.item.state,
+				uf: addressSelected.data.item.uf,
+				reference: addressSelected.data.item.reference,
+				selected: addressSelected.data.item.selected,
+			};
+		}
+
+		const cartItems = await httpClient.get('/user/cart');
+
+		const cartMapped = cartItems.data.item.item.map((item: ICartItem) => ({
+			codigo_produto: item.product_code,
+			descricao: item.product_name,
+			quantidade: item.product_quantity,
+			valor_unitario: item.product_price,
+		}));
+
+		const totalCart = cartItems.data.item.item.reduce(
+			(sum: number, product: ICartItem) =>
+				sum + product.product_price * product.product_quantity,
+			0
+		);
+
+		const freight = JSON.parse(localStorage.getItem('freight') || '');
+
+		const bodyOmie = {
+			param: [
+				{
+					codigo_cliente: userLogged.data.item.item.code_omie,
+					observacoes_entrega: `${deliveryOrPickUp} - ${address}`, //concatenar {ENTREGA - endereço selecionado} se não {RETIRADA - local da retirada}
+					produto: cartMapped,
+					informacoes_adicionais: {
+						utilizar_emails: userLogged.data.item.item.email,
+						meio_pagamento:
+							selection === 'PixSite' || selection === 'PixDelivery'
+								? '17'
+								: selection === 'CardDelivery'
+								? '03'
+								: '15', // cartão de crédito é 3, boleto 15 e pix 17
+					},
+				},
+			],
+		};
+
+		const bodyPix = {
+			param: [
+				{
+					nIdCliente: userLogged.data.item.item.code_omie,
+					vValor: totalCart,
+				},
+			],
+		};
+
+		try {
+			await api.post('/api/without/omie/insert_sale', bodyOmie);
+
+			const bodyOrder = {
+				address: addressOrder,
+				products: cartItems.data.item.item,
+				total: totalCart + Number(freight),
+				payment_form: selection,
+				delivery_form: deliveryOrPickUp,
+			};
+
+			await httpClient.post('/user/order', bodyOrder);
+
+			if (selection === 'PixSite' || selection === 'PixDelivery') {
+				const pixInfos = await api.post(
+					'/api/without/omie/create_pix',
+					bodyPix
+				);
+
+				setInfosPix({
+					copyPaste: pixInfos.data.cCopiaCola,
+					qrCode: pixInfos.data.cQrCode,
+				});
+			}
+
+			toast.success('Pedido gerado com sucesso.');
+		} catch (error) {
+			toast.error(`Algo deu errado ao gerar seu pedido: ${error}`);
+		} finally {
+			setLoadingOrder(false);
+		}
+
+		console.log({ bodyOmie });
+
+		// setLoadingOrder(true);
+
+		// localStorage.removeItem('order_number');
 
 		// const total =
 		//   cartLocal.param[0].itens[0].quantidade *
@@ -157,16 +301,30 @@ export default function ModalConfirmOrder({
 						<div className='flex border p-5 items-center rounded-lg gap-4 mb-4'>
 							<House />
 
-							<div className='flex flex-col gap-2'>
-								<span className='font-semibold text-sm'>
-									{dataAddressSelected?.street}
-								</span>
-								<span className='text-[#898989] text-sm'>
-									{dataAddressSelected?.neighborhood},{' '}
-									{dataAddressSelected?.number} -{' '}
-									{dataAddressSelected?.complement}
-								</span>
-							</div>
+							{dataAddressSelected?.id && (
+								<div className='flex flex-col gap-2'>
+									<span className='font-semibold text-sm'>
+										{dataAddressSelected?.street}
+									</span>
+									<span className='text-[#898989] text-sm'>
+										{dataAddressSelected?.neighborhood},{' '}
+										{dataAddressSelected?.number} -{' '}
+										{dataAddressSelected?.complement}
+									</span>
+								</div>
+							)}
+
+							{pickUpLocation?.id && (
+								<div className='flex flex-col gap-2'>
+									<span className='font-semibold text-sm'>
+										{pickUpLocation?.name}
+									</span>
+									<span className='text-[#898989] text-sm'>
+										{pickUpLocation?.street}, {pickUpLocation?.neighborhood} -{' '}
+										{pickUpLocation?.number}
+									</span>
+								</div>
+							)}
 						</div>
 						<span className='text-[#898989] text-xs'>Forma de pagamento:</span>
 						<div className='flex border p-5 items-center rounded-lg gap-4'>

@@ -50,12 +50,10 @@ export default function ProductsListCart() {
 
 				return;
 			}
-			const result = await mutateAsyncUpdateQuantity({
+			await mutateAsyncUpdateQuantity({
 				product_quantity: quantity,
 				product_code: code,
 			});
-
-			console.log(result);
 		} catch (error) {
 			toast.error(
 				`Algo deu errado ao atualizar a quantidade do item: ${error}`

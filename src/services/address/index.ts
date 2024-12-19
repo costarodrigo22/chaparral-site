@@ -1,6 +1,7 @@
+import { IAddressSelected } from '@/contexts/Cart/DeliveryContext';
 import { httpClient } from '@/lib/httpClient';
 
-interface IAddAddress {
+export interface IAddAddress {
 	cep: string;
 	country: string;
 	street: string;
@@ -12,6 +13,7 @@ interface IAddAddress {
 	uf: string;
 	reference: string;
 	selected: boolean;
+	isDefault: boolean;
 }
 
 export async function getAddress() {
@@ -38,4 +40,27 @@ export async function getAddressSelected() {
 	const { data } = await httpClient.get('/user/address/select');
 
 	return data.item;
+}
+
+export async function calcFreight(address: IAddressSelected) {
+	const body = {
+		origin: {
+			street: 'BR-010',
+			neighborhood: 'Maranhão Novo',
+			city: 'Imperatriz',
+			state: 'Maranhão',
+			country: 'Brasil',
+		},
+		destination: {
+			street: address?.street,
+			neighborhood: address?.neighborhood,
+			city: address?.city,
+			state: address?.state,
+			country: address?.country,
+		},
+	};
+
+	const { data } = await httpClient.post('/user/route', body);
+
+	return data;
 }

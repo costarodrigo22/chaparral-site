@@ -1,4 +1,4 @@
-import SignUpForm from '@/components/sections/SignUp/SignUpForm';
+import ResetPassword from '@/components/sections/ResetPassword';
 
 export default function SignUp() {
 	return (
@@ -13,7 +13,7 @@ export default function SignUp() {
 				}}
 				className='w-full h-[340px] relative'
 			></div>
-			<SignUpForm />
+			<ResetPassword />
 		</div>
 	);
 }

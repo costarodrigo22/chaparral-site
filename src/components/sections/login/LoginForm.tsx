@@ -10,6 +10,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { useState } from 'react';
 import { toast } from 'sonner';
+import { useRouter } from 'next/navigation';
+import ModalForgotPassword from '@/components/ui/ModalForgotPassword';
 
 interface ILoginActionProps {
 	onLoginAction: (formData: FormData) => Promise<void | { error: string }>;
@@ -27,6 +29,9 @@ type FormData = z.infer<typeof schema>;
 
 export default function LoginForm({ onLoginAction }: ILoginActionProps) {
 	const [loading, setLoading] = useState(false);
+	const [openModalForgotPassword, setOpenModalForgotPassword] = useState(false);
+
+	const router = useRouter();
 
 	const {
 		register,
@@ -35,6 +40,10 @@ export default function LoginForm({ onLoginAction }: ILoginActionProps) {
 	} = useForm<FormData>({
 		resolver: zodResolver(schema),
 	});
+
+	function handleNavigate() {
+		router.push('/sign-up');
+	}
 
 	const handleSubmit = hookFormHandleSubmit(async (data) => {
 		setLoading(true);
@@ -52,57 +61,84 @@ export default function LoginForm({ onLoginAction }: ILoginActionProps) {
 	});
 
 	return (
-		<form
-			onSubmit={handleSubmit}
-			className='bg-white rounded-md px-8 py-8 flex items-center justify-center flex-col absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] shadow-md'
-		>
-			<Image src={logoIaca} alt='Logo IAÇA' width={70} height={60} />
+		<>
+			<ModalForgotPassword
+				open={openModalForgotPassword}
+				onClose={() => setOpenModalForgotPassword(false)}
+			/>
 
-			<span className='font-medium text-sm'>
-				Olá para continuar, faça seu login
-			</span>
-
-			<div className='grid w-full items-center gap-1.5 mt-4 mb-4'>
-				<Label className='text-xs' htmlFor='email'>
-					E-mail
-				</Label>
-				<Input {...register('email')} id='email' placeholder='E-mail' />
-
-				{errors.email && (
-					<span className='text-red-400 text-xs'>{errors.email.message}</span>
-				)}
-			</div>
-
-			<div className='grid w-full items-center gap-1.5'>
-				<Label className='text-xs' htmlFor='password'>
-					Senha
-				</Label>
-				<Input
-					{...register('password')}
-					id='password'
-					placeholder='Senha'
-					type='password'
-				/>
-				{errors.password && (
-					<span className='text-red-400 text-xs'>
-						{errors.password.message}
-					</span>
-				)}
-			</div>
-
-			<div className='w-full flex justify-end'>
-				<span className='text-[#16A6FF] text-xs underline cursor-pointer mt-4'>
-					Criar meu cadastro
-				</span>
-			</div>
-
-			<Button
-				type='submit'
-				className='bg-[#2B0036] rounded-full mt-4 w-full hover:bg-[#421d4b]'
+			<form
+				onSubmit={handleSubmit}
+				className='bg-white rounded-md px-8 py-8 flex items-center justify-center flex-col absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] shadow-md'
 			>
-				{loading && 'Entrando...'}
-				{!loading && 'Login'}
-			</Button>
-		</form>
+				<Image src={logoIaca} alt='Logo IAÇA' width={70} height={60} />
+
+				<span className='font-medium text-sm'>
+					Olá para continuar, faça seu login
+				</span>
+
+				<div className='grid w-full items-center gap-1.5 mt-4 mb-4'>
+					<Label className='text-xs' htmlFor='email'>
+						E-mail
+					</Label>
+					<Input {...register('email')} id='email' placeholder='E-mail' />
+
+					{errors.email && (
+						<span className='text-red-400 text-xs'>{errors.email.message}</span>
+					)}
+				</div>
+
+				<div className='grid w-full items-center gap-1.5'>
+					<Label className='text-xs' htmlFor='password'>
+						Senha
+					</Label>
+					<Input
+						{...register('password')}
+						id='password'
+						placeholder='Senha'
+						type='password'
+					/>
+					{errors.password && (
+						<span className='text-red-400 text-xs'>
+							{errors.password.message}
+						</span>
+					)}
+				</div>
+
+				<div className='w-full flex justify-end items-center'>
+					<span
+						onClick={() => setOpenModalForgotPassword(true)}
+						className='text-[#16A6FF] text-xs underline cursor-pointer mt-3'
+					>
+						Esqueci minha senha.
+					</span>
+					{/* <span
+						onClick={handleNavigate}
+						className='text-[#16A6FF] text-xs underline cursor-pointer mt-4'
+					>
+						Criar meu cadastro
+					</span> */}
+				</div>
+
+				<Button
+					type='submit'
+					className='bg-[#2B0036] rounded-full mt-4 w-full hover:bg-[#421d4b]'
+				>
+					{loading && 'Entrando...'}
+					{!loading && 'Login'}
+				</Button>
+
+				<span className='text-xs font-medium mt-3'>Ou</span>
+
+				<div className='w-full flex flex-col justify-center items-center'>
+					<span
+						onClick={handleNavigate}
+						className='text-[#16A6FF] text-xs underline cursor-pointer mt-4'
+					>
+						Criar meu cadastro
+					</span>
+				</div>
+			</form>
+		</>
 	);
 }

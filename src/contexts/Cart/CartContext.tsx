@@ -95,9 +95,9 @@ export default function CartProvider({
 		if (isAuthenticated) {
 			handleGetItemsCart();
 		}
-
-		handleGetItemsCart();
 	}, [isAuthenticated, handleGetItemsCart]);
+
+	console.log('CartProvider');
 
 	return (
 		<CartContext.Provider

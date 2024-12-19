@@ -8,6 +8,7 @@ import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import logo from '../../../../public/logo-iaca-purple.svg';
 import React from 'react';
+import { useDelivery } from '@/contexts/Cart/DeliveryContext';
 
 interface IDetailsSummaryProps {
 	btnConfirm?: boolean;
@@ -15,6 +16,8 @@ interface IDetailsSummaryProps {
 
 export default function DetailsSummary({ btnConfirm }: IDetailsSummaryProps) {
 	const { totalCart, items, loadingCart } = useCart();
+
+	const { freight } = useDelivery();
 
 	if (loadingCart) {
 		return (
@@ -52,16 +55,24 @@ export default function DetailsSummary({ btnConfirm }: IDetailsSummaryProps) {
 					</div>
 				</React.Fragment>
 			))}
+
 			<div className='flex justify-between items-center mt-5'>
 				<p className='opacity-60 font-medium text-base'>Subtotal</p>
 				<p className='font-medium text-base'>{formatCurrency(totalCart)}</p>
+			</div>
+
+			<div className='flex justify-between items-center mt-5'>
+				<p className='opacity-60 font-medium text-base'>Taxa de entrega</p>
+				<p className='font-medium text-base'>{formatCurrency(freight)}</p>
 			</div>
 
 			<Separator className='mt-5' />
 
 			<div className='flex justify-between items-center mt-5'>
 				<p className='text-[#1E1E1E] font-medium text-lg'>Total</p>
-				<p className='font-semibold text-lg'>{formatCurrency(totalCart)}</p>
+				<p className='font-semibold text-lg'>
+					{formatCurrency(totalCart + freight)}
+				</p>
 			</div>
 
 			{btnConfirm && (
