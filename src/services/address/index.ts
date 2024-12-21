@@ -28,6 +28,12 @@ export async function addAddress(address: IAddAddress) {
 	return data;
 }
 
+export async function updateAddress(address: IAddAddress & { id: string }) {
+	const { data } = await httpClient.put('/user/address', address);
+
+	return data;
+}
+
 export async function selectAddress(id: string) {
 	const { data } = await httpClient.post('/user/address/select', {
 		addressId: id,

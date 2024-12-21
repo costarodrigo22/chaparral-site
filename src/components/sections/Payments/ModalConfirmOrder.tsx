@@ -17,7 +17,7 @@ import api from '@/lib/axiosInstance';
 import { useState } from 'react';
 import { toast } from 'sonner';
 import ModalPix from './ModalPix';
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
 import { getAddressSelected } from '@/services/address';
 import { httpClient } from '@/lib/httpClient';
@@ -49,7 +49,7 @@ export default function ModalConfirmOrder({
 	const [openModalPix, setOpenModalPix] = useState(false);
 	const [infosPix, setInfosPix] = useState<IPixProps>();
 
-	const router = useRouter();
+	// const router = useRouter();
 
 	const { selection } = usePaymentSelection();
 
@@ -146,6 +146,7 @@ export default function ModalConfirmOrder({
 				{
 					codigo_cliente: userLogged.data.item.item.code_omie,
 					observacoes_entrega: `${deliveryOrPickUp} - ${address}`, //concatenar {ENTREGA - endereço selecionado} se não {RETIRADA - local da retirada}
+					valor_frete: Number(freight),
 					produto: cartMapped,
 					informacoes_adicionais: {
 						utilizar_emails: userLogged.data.item.item.email,
@@ -164,14 +165,17 @@ export default function ModalConfirmOrder({
 			param: [
 				{
 					nIdCliente: userLogged.data.item.item.code_omie,
-					vValor: totalCart,
+					vValor:
+						deliveryOrPickUp === 'ENTREGA'
+							? totalCart + Number(freight)
+							: totalCart,
 				},
 			],
 		};
 
 		try {
 			await api.post('/api/without/omie/insert_sale', bodyOmie);
-
+			// pegar do retorno da Omie o número do pedido e adicionar no DynamoDB com a chave order_number_omie
 			const bodyOrder = {
 				address: addressOrder,
 				products: cartItems.data.item.item,
@@ -195,13 +199,15 @@ export default function ModalConfirmOrder({
 			}
 
 			toast.success('Pedido gerado com sucesso.');
+
+			if (selection === 'PixSite') {
+				setOpenModalPix(true);
+			}
 		} catch (error) {
 			toast.error(`Algo deu errado ao gerar seu pedido: ${error}`);
 		} finally {
 			setLoadingOrder(false);
 		}
-
-		console.log({ bodyOmie });
 
 		// setLoadingOrder(true);
 
@@ -301,7 +307,7 @@ export default function ModalConfirmOrder({
 						<div className='flex border p-5 items-center rounded-lg gap-4 mb-4'>
 							<House />
 
-							{dataAddressSelected?.id && (
+							{dataAddressSelected?.id && !pickUpLocation?.id && (
 								<div className='flex flex-col gap-2'>
 									<span className='font-semibold text-sm'>
 										{dataAddressSelected?.street}

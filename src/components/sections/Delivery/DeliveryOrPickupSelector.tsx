@@ -14,17 +14,15 @@ import {
 } from '@/components/ui/Select';
 import { House, MapPin, Phone, Timer } from 'lucide-react';
 import axios from 'axios';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import {
 	calcFreight,
 	getAddress,
 	getAddressSelected,
-	IAddAddress,
-	selectAddress,
 } from '@/services/address';
-import { toast } from 'sonner';
-import { httpClient } from '@/lib/httpClient';
 import { IAddressSelected, useDelivery } from '@/contexts/Cart/DeliveryContext';
+import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
 
 interface ILocalPickup {
 	id: string;
@@ -35,7 +33,8 @@ interface ILocalPickup {
 }
 
 export default function DeliveryOrPickupSelector() {
-	const [selection, setSelection] = useState('');
+	const [selection, setSelection] = useState('Entrega');
+	const [loading, setLoading] = useState(false);
 	const [localPickUp, setLocalPickUp] = useState('');
 	const [openModalUpdateAddress, setOpenModalUpdateAddress] = useState(false);
 	const [localPickupOptions, setLocalPickupOptions] = useState<ILocalPickup[]>(
@@ -46,38 +45,62 @@ export default function DeliveryOrPickupSelector() {
 
 	const queryClient = useQueryClient();
 
+	const route = useRouter();
+
 	const { addressSelected, setAddressSelected, setFreight } = useDelivery();
 
-	const { data } = useQuery({
+	const { data: listAddress } = useQuery({
 		queryKey: ['userListAddress'],
 		queryFn: getAddress,
-	});
-
-	const { mutateAsync: mutateAsyncSelectAddress, isPending } = useMutation({
-		mutationFn: selectAddress,
-		onSuccess: () => {
-			toast.success('Endereço selecionado com sucesso.');
-		},
 	});
 
 	function handleCloseModalUpdateAddress() {
 		setOpenModalUpdateAddress(false);
 	}
 
-	function handleOpenModalUpdateAddress() {
-		setOpenModalUpdateAddress(true);
+	function handleChoiceOfAction() {
+		if (listAddress.length === 0) {
+			setOpenModalUpdateAddress(true);
+
+			return;
+		}
+
+		route.push('/choice-address');
 	}
 
-	function handleSelectDelivery(value: string) {
+	async function handleSelectDelivery(value: string) {
+		console.log('handleSelectDelivery: ', value);
 		if (value === 'Entrega') {
+			setSelection('Entrega');
+
 			localStorage.removeItem('type_receipt');
 
 			localStorage.removeItem('local_delivery');
 
 			queryClient.setQueryData(['getAddressSelected'], null);
+
+			console.log('addressSelected: ', addressSelected);
+
+			try {
+				const address = await getAddressSelected();
+
+				console.log(address);
+
+				if (address.id) {
+					setAddressSelected(address);
+
+					const valueFreight = await calcFreight(address);
+
+					setFreight(valueFreight.freightValue);
+				}
+			} catch (error) {
+				toast.error(`Algo deu errado ao calcular o frete: ${error}`);
+			}
+
+			return;
 		}
 
-		setSelection(value);
+		setSelection('Retirada');
 
 		setLocalPickUp('');
 
@@ -92,8 +115,6 @@ export default function DeliveryOrPickupSelector() {
 		localStorage.removeItem('freight-value');
 
 		localStorage.setItem('type_receipt', JSON.stringify(value));
-
-		await httpClient.get('/user/address/deselectAllAddresses');
 
 		try {
 			const response = await axios.get(
@@ -117,28 +138,6 @@ export default function DeliveryOrPickupSelector() {
 		}
 	}
 
-	async function handleSelectAddress(id: string) {
-		try {
-			const result = await mutateAsyncSelectAddress(id);
-
-			setAddressSelected(result.item.item);
-
-			const valueFreight = await calcFreight(result.item.item);
-
-			setFreight(valueFreight.freightValue);
-		} catch (error) {
-			toast.error(`Algo deu errado ao selecionar o endereço: ${error}`);
-		} finally {
-			await queryClient.invalidateQueries({ queryKey: ['getAddressSelected'] });
-
-			if (selection === 'Entrega') {
-				localStorage.removeItem('type_receipt');
-
-				localStorage.removeItem('local_delivery');
-			}
-		}
-	}
-
 	const handleLocalPickUpOptions = useCallback(async () => {
 		try {
 			const response = await axios.get(
@@ -155,21 +154,28 @@ export default function DeliveryOrPickupSelector() {
 		handleLocalPickUpOptions();
 
 		async function fetchAddressSelected() {
+			setLoading(true);
 			try {
 				const addressSelected = await getAddressSelected();
 
 				if (addressSelected) {
-					setAddressSelected(addressSelected.item);
+					setAddressSelected(addressSelected);
+
+					const valueFreight = await calcFreight(addressSelected);
+
+					setFreight(valueFreight.freightValue);
+
+					localStorage.removeItem('local_delivery');
 				}
 			} catch (error) {
 				console.error('Erro ao buscar endereço selecionado:', error);
+			} finally {
+				setLoading(false);
 			}
 		}
 
 		fetchAddressSelected();
-
-		// handleGetDataClient();
-	}, [handleLocalPickUpOptions, setAddressSelected]);
+	}, [handleLocalPickUpOptions, setAddressSelected, setFreight]);
 
 	return (
 		<>
@@ -183,6 +189,7 @@ export default function DeliveryOrPickupSelector() {
 					<RadioGroup
 						className='flex flex-col space-y-1'
 						onValueChange={handleSelectDelivery}
+						value={selection}
 					>
 						<div className='rounded-md border p-5'>
 							<RadioGroupItem value='Entrega' id='option-one' />
@@ -194,43 +201,27 @@ export default function DeliveryOrPickupSelector() {
 							</Label>
 							{selection === 'Entrega' && (
 								<div className='w-full py-4'>
-									<Label className='text-base font-medium'>
-										Selecione um dos seus endereços*
-									</Label>
-									<Select onValueChange={handleSelectAddress}>
-										<SelectTrigger className='' id='type-profile'>
-											<SelectValue placeholder='Selecione' />
-										</SelectTrigger>
-										<SelectContent>
-											{data?.map((address: IAddAddress & { id: string }) => (
-												<SelectItem key={address.id} value={address.id}>
-													{address.street}
-												</SelectItem>
-											))}
-										</SelectContent>
-									</Select>
-
 									{selection === 'Entrega' &&
-										!addressSelected?.id &&
-										!isPending && (
+										!addressSelected.id &&
+										!loading && (
 											<div className='mt-5 flex flex-col gap-2 text-sm items-center opacity-70'>
 												<span>Selecione um local de entrega 😉</span>
 											</div>
 										)}
 
-									{isPending && (
+									{loading && (
 										<div className='mt-5 flex flex-col gap-2 text-sm items-center opacity-70'>
 											<span>carregando... 😉</span>
 										</div>
 									)}
 
-									{addressSelected?.id && (
+									{!loading && addressSelected.id && (
 										<div className='mt-5 flex flex-col gap-2'>
 											<div className='flex items-center gap-2'>
 												<House size={22} />
 
 												<span className='text-base font-medium'>
-													{addressSelected.street}
+													{addressSelected?.street}
 												</span>
 											</div>
 
@@ -238,7 +229,7 @@ export default function DeliveryOrPickupSelector() {
 												<MapPin color='#898989' size={22} />
 
 												<span className='text-[12px] text-[#898989]'>
-													{addressSelected.street}, {addressSelected.number}
+													{addressSelected?.street}, {addressSelected?.number}
 												</span>
 											</div>
 										</div>
@@ -247,10 +238,16 @@ export default function DeliveryOrPickupSelector() {
 									<Separator className='my-4' />
 
 									<span
-										onClick={handleOpenModalUpdateAddress}
+										onClick={handleChoiceOfAction}
 										className='text-[#16A6FF] text-base cursor-pointer hover:underline transition-all'
 									>
-										Novo endereço
+										{listAddress?.length === 0 && 'Novo endereço'}
+										{listAddress?.length > 0 &&
+											addressSelected.id &&
+											'Escolher outro endereço'}
+										{listAddress?.length > 0 &&
+											!addressSelected.id &&
+											'Escolher endereço'}
 									</span>
 								</div>
 							)}

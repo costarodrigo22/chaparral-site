@@ -9,17 +9,33 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import axios from 'axios';
 import { toast } from 'sonner';
-import { addAddress } from '@/services/address';
+import { updateAddress } from '@/services/address';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Home } from 'lucide-react';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/RadioGroup';
 import { httpClient } from '@/lib/httpClient';
 import api from '@/lib/axiosInstance';
-import { unformatCPF } from '@/lib/utils';
+
+interface IUpdateAddress {
+	id: string;
+	cep: string;
+	country: string;
+	street: string;
+	number: number;
+	neighborhood: string;
+	complement: string;
+	city: string;
+	state: string;
+	uf: string;
+	reference: string;
+	selected: boolean;
+	is_default: boolean;
+}
 
 interface IModalUpdateAddress {
 	open: boolean;
+	address: IUpdateAddress;
 	onClose: () => void;
 }
 
@@ -40,23 +56,31 @@ const schema = z.object({
 
 type FormData = z.infer<typeof schema>;
 
-export default function NewAddress({ open, onClose }: IModalUpdateAddress) {
-	const [addressDefaut, setAddressDefault] = useState('');
+export default function UpdateAddress({
+	open,
+	address,
+	onClose,
+}: IModalUpdateAddress) {
+	const [addressDefaut, setAddressDefault] = useState(() => {
+		const value = address.is_default ? 'Sim' : 'Não';
+
+		return value;
+	});
 
 	const form = useForm<FormData>({
 		resolver: zodResolver(schema),
 		defaultValues: {
 			addressStep: {
-				cep: '',
+				cep: String(address.cep),
 				country: 'Brasil',
-				street: '',
-				number: '',
-				neighborhood: '',
-				complement: '',
-				city: '',
-				uf: '',
-				state: '',
-				reference: '',
+				street: address.street,
+				number: String(address.number),
+				neighborhood: address.neighborhood,
+				complement: address.complement,
+				city: address.city,
+				uf: address.uf,
+				state: address.state,
+				reference: address.reference,
 			},
 		},
 	});
@@ -64,7 +88,7 @@ export default function NewAddress({ open, onClose }: IModalUpdateAddress) {
 	const queryClient = useQueryClient();
 
 	const { mutateAsync, isPending } = useMutation({
-		mutationFn: addAddress,
+		mutationFn: updateAddress,
 		onSuccess: () => {
 			queryClient.refetchQueries({ queryKey: ['userListAddress'] });
 
@@ -104,6 +128,7 @@ export default function NewAddress({ open, onClose }: IModalUpdateAddress) {
 
 		try {
 			const addressCreated = await mutateAsync({
+				id: address.id,
 				cep: addressStep.cep,
 				city: addressStep.city,
 				complement: addressStep.complement,
@@ -125,17 +150,12 @@ export default function NewAddress({ open, onClose }: IModalUpdateAddress) {
 
 				const userLogged = await httpClient.get('/user/profile');
 
-				console.log(userLogged);
-
 				const bodyOmieUpdateAddress = {
 					param: [
 						{
-							codigo_cliente_integracao: unformatCPF(
-								userLogged.data.item.item.document
-							),
+							codigo_cliente_integracao: userLogged.data.item.item.document,
 							cnpj_cpf: userLogged.data.item.item.document,
 							razao_social: userLogged.data.item.item.name,
-							email: userLogged.data.item.item.email,
 							cep: addressStep.cep,
 							endereco: addressStep.street,
 							endereco_numero: addressStep.number,
@@ -161,6 +181,27 @@ export default function NewAddress({ open, onClose }: IModalUpdateAddress) {
 			queryClient.invalidateQueries({ queryKey: ['listAddress'] });
 		}
 	});
+
+	useEffect(() => {
+		form.reset({
+			addressStep: {
+				cep: String(address.cep),
+				country: 'Brasil',
+				street: address.street,
+				number: String(address.number),
+				neighborhood: address.neighborhood,
+				complement: address.complement,
+				city: address.city,
+				uf: address.uf,
+				state: address.state,
+				reference: address.reference,
+			},
+		});
+
+		const value = address.is_default ? 'Sim' : 'Não';
+
+		setAddressDefault(value);
+	}, [address, form]);
 
 	return (
 		<Dialog open={open} onOpenChange={handleCloseModal}>
@@ -392,8 +433,8 @@ export default function NewAddress({ open, onClose }: IModalUpdateAddress) {
 							type='submit'
 							className='bg-[#2B0036] rounded-full w-40 text-white text-base py-2 flex items-center justify-center hover:bg-[#5a3663]'
 						>
-							{isPending && 'Cadastrando...'}
-							{!isPending && 'Cadastrar'}
+							{isPending && 'Salvando...'}
+							{!isPending && 'Salvar'}
 						</Button>
 					</div>
 				</form>
