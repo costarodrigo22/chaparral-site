@@ -14,8 +14,6 @@ import ModalContacts, {
 	IData,
 } from '@/components/sections/Footer/components/ModalContacts';
 import api from '@/lib/axiosInstance';
-// import SearchInput from './SearchInput';
-import { useSession } from 'next-auth/react';
 import { useCart } from '@/contexts/Cart/CartContext';
 
 export default function AboutNav() {
@@ -24,8 +22,6 @@ export default function AboutNav() {
 
 	const [isMenuOpen, setIsMenuOpen] = useState(false);
 	const [flag, setFlag] = useState('');
-
-	const { data: session } = useSession();
 
 	const toggleMenu = () => {
 		setIsMenuOpen(!isMenuOpen);
@@ -202,17 +198,6 @@ export default function AboutNav() {
 								src={'/shopping-cart.svg'}
 							/>
 						</a>
-						{/* <a
-							href='/cart'
-							className='w-12 h-12 rounded-full fixed md:static right-3 bg-transparent flex items-center justify-center hover:bg-[#3b1344a1] transition-all duration-300 ease-in-out cursor-pointer'
-						>
-							<Image
-								alt='Carrinho de compras'
-								height={24}
-								width={24}
-								src={'/shopping-cart.svg'}
-							/>
-						</a> */}
 					</div>
 					<div
 						className=' fixed cursor-pointer md:hidden left-3'

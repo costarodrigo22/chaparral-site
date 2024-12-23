@@ -13,6 +13,8 @@ interface IModalPixProps {
 	open: boolean;
 	pix_copy_paste: string;
 	qd_code: string;
+	order_number: string;
+	codigo_pedido: number;
 	onClose: () => void;
 }
 
@@ -20,6 +22,8 @@ export default function ModalPix({
 	open,
 	pix_copy_paste,
 	qd_code,
+	order_number,
+	codigo_pedido,
 	onClose,
 }: IModalPixProps) {
 	const router = useRouter();
@@ -35,7 +39,7 @@ export default function ModalPix({
 	}
 
 	function handleNavigation() {
-		router.push('/TrackOrder');
+		router.push(`/TrackOrder/${order_number}/${codigo_pedido}`);
 	}
 
 	return (
@@ -67,7 +71,7 @@ export default function ModalPix({
 				</div>
 				<span className='text-[#1E1E1E] text-[11px] text-center'>
 					Se preferir, copie o código abaixo e utilize a opção copie e cola no
-					aplicativo du seu banco para concluir o pagamento.
+					aplicativo do seu banco para concluir o pagamento.
 				</span>
 				<div className='w-full py-4 bg-[#F7F7F7] flex flex-col items-center justify-center rounded-sm px-4'>
 					<div className='bg-white w-full p-3 rounded-md flex'>

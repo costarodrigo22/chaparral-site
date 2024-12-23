@@ -97,8 +97,6 @@ export default function CartProvider({
 		}
 	}, [isAuthenticated, handleGetItemsCart]);
 
-	console.log('CartProvider');
-
 	return (
 		<CartContext.Provider
 			value={{

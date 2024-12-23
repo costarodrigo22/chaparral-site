@@ -36,3 +36,9 @@ export async function updateQuantityItemCart(body: IUpdateQuantityItemsCart) {
 
 	return data;
 }
+
+export async function clearCart() {
+	const { data } = await httpClient.delete('/user/cart/clearCart');
+
+	return data;
+}

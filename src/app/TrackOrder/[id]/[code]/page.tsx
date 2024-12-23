@@ -4,6 +4,7 @@ import WrapperOrder from '@/components/sections/TrackOrder/WrapperOrder';
 interface ITrackOrderProps {
 	params: {
 		id: string;
+		code: string;
 	};
 }
 
@@ -24,7 +25,7 @@ export default async function TrackOrder({ params }: ITrackOrderProps) {
 				</a>
 			</div>
 
-			<WrapperOrder id={params.id} />
+			<WrapperOrder id={params.id} code={Number(params.code)} />
 		</div>
 	);
 }

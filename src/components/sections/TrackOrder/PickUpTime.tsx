@@ -4,7 +4,13 @@ import Image from 'next/image';
 import imgOrder from '../../../../public/img-order.svg';
 // import { useEffect } from 'react';
 
-export default function PickUpTime({ orderNumber }: { orderNumber: string }) {
+export default function PickUpTime({
+	orderNumber,
+	delivery_form,
+}: {
+	orderNumber: string;
+	delivery_form: string;
+}) {
 	// const order = Number(localStorage.getItem('order_number'));
 
 	// useEffect(() => {
@@ -14,7 +20,10 @@ export default function PickUpTime({ orderNumber }: { orderNumber: string }) {
 	return (
 		<div className='w-full px-6 py-6 shadow-md rounded-md'>
 			<li className='text-base'>
-				O seu pedido esta sendo preparado e em breve saíra pra entrega
+				O seu pedido esta sendo preparado e em breve{' '}
+				{delivery_form === 'ENTREGA'
+					? 'saíra pra entrega'
+					: 'poderá ser retirado'}
 			</li>
 
 			<div className='flex items-center justify-between'>
@@ -24,7 +33,8 @@ export default function PickUpTime({ orderNumber }: { orderNumber: string }) {
 					</span>
 
 					<span className='text-[#898989] text-base'>
-						Para a retirada , é necessário informar o código do pedido.{' '}
+						Para {delivery_form === 'ENTREGA' ? 'o recebimento' : 'a retirada'},
+						é necessário informar o código do pedido.{' '}
 					</span>
 				</div>
 
