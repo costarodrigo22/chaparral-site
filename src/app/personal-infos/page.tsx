@@ -1,8 +1,8 @@
-import CardAddress from '@/components/sections/Address/CardAddress';
+import ProfileInfos from '@/components/sections/profile/ProfileInfos';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import Link from 'next/link';
 
-export default async function Address() {
+export default function PersonalInfos() {
 	return (
 		<div className='flex flex-col w-full mb-10'>
 			<div className='flex items-center w-full mt-28 px-0 md:px-10 xl:px-32 mb-8'>
@@ -15,9 +15,8 @@ export default async function Address() {
 					opacity={60}
 				/>
 
-				<span className='text-black font-medium'>Perfil</span>
+				<span className='text-black font-medium'>Endereços</span>
 			</div>
-
 			<div className='flex items-center px-0 md:px-10 xl:px-32 mb-8'>
 				<ChevronLeft size={20} className='' color='#2B0036' />
 
@@ -27,12 +26,11 @@ export default async function Address() {
 					</span>
 				</Link>
 			</div>
-
 			<div className='flex items-center w-full px-0 md:px-10 xl:px-32'>
-				<span className='text-[#1E1E1E] text-[30px] font-bold'>Endereços</span>
+				<span className='text-[#1E1E1E] text-[30px] font-bold'>Perfil</span>
 			</div>
 
-			<CardAddress />
+			<ProfileInfos />
 		</div>
 	);
 }

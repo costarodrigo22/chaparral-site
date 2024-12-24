@@ -37,7 +37,9 @@ export default function Profile() {
 							</span>
 						</div>
 
-						<Eye className='cursor-pointer' />
+						<Link href='/personal-infos'>
+							<Eye className='cursor-pointer' />
+						</Link>
 					</div>
 				</div>
 
