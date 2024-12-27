@@ -8,7 +8,7 @@ const schema = z.object({
     .string()
     .min(1, 'E-mail é obrigatório')
     .email('Informe um e-mail válido'),
-  password: z.string().min(1, 'Senha é obrigatório'),
+  password: z.string().min(8, 'Senha é obrigatório'),
 });
 
 type FormData = z.infer<typeof schema>;
