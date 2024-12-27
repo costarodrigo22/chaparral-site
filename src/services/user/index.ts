@@ -16,10 +16,19 @@ export async function getPresignedURL(fileName: string) {
 	return data.signedUrl;
 }
 
-export async function uploadFileAvatar(url: string, file: File) {
+export async function uploadFileAvatar(
+	url: string,
+	file: File,
+	onProgress?: (progress: number) => void
+) {
 	await axios.put(url, file, {
 		headers: {
 			'Content-Type': file.type,
+		},
+		onUploadProgress: ({ total, loaded }) => {
+			const percentage = Math.round((loaded * 100) / (total ?? 0));
+
+			onProgress?.(percentage);
 		},
 	});
 }
