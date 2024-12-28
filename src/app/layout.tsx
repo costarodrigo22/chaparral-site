@@ -4,13 +4,11 @@ import Footer from '@/components/sections/Footer';
 import { Toaster } from '@/components/ui/Sonner';
 import api from '@/lib/axiosInstance';
 import WhatsAppBtn from '@/components/ui/WhatsAppBtn';
-// import { SessionProvider } from 'next-auth/react';
 import { auth, signOut } from '@/lib/auth';
-// import { AuthProvider } from '@/contexts/AuthContext';
 import Nav from '@/components/sections/Header/Nav';
-// import CartProvider from '@/contexts/Cart/CartContext';
 import ClientLayout from '@/components/sections/Cart/ClientLayout';
 import DeliveryProvider from '@/contexts/Cart/DeliveryContext';
+import { AuthProvider } from '@/contexts/AuthContext';
 
 export const metadata: Metadata = {
 	title: 'ÍAÇA puro',
@@ -55,29 +53,9 @@ export default async function RootLayout({
 					session={session}
 					isAuthenticated={isAuthenticated}
 					token={session?.user?.token}
-					userValue={userValue}
 				>
-					<DeliveryProvider>
-						<Nav
-							company={companyRes.data.data}
-							logoImage={logoImage.data}
-							session={userValue}
-							onLogOut={handleLogOut}
-						/>
-						{children}
-						<div className='lg:mx-8'>
-							<Footer company={companyRes.data.data} />
-						</div>
-						<WhatsAppBtn link={CompanyInfoRes?.data?.data?.whatsapp} />
-						<Toaster />
-					</DeliveryProvider>
-				</ClientLayout>
-				{/* <AuthProvider user={{ user: userValue }}>
-					<CartProvider
-						isAuthenticated={isAuthenticated}
-						token={session?.user?.token}
-					>
-						<SessionProvider session={session}>
+					<AuthProvider user={userValue}>
+						<DeliveryProvider>
 							<Nav
 								company={companyRes.data.data}
 								logoImage={logoImage.data}
@@ -90,9 +68,9 @@ export default async function RootLayout({
 							</div>
 							<WhatsAppBtn link={CompanyInfoRes?.data?.data?.whatsapp} />
 							<Toaster />
-						</SessionProvider>
-					</CartProvider>
-				</AuthProvider> */}
+						</DeliveryProvider>
+					</AuthProvider>
+				</ClientLayout>
 			</body>
 		</html>
 	);

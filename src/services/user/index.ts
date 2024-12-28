@@ -1,11 +1,10 @@
-import api from '@/lib/axiosInstance';
 import { httpClient } from '@/lib/httpClient';
 import axios from 'axios';
 
 export async function userLogged() {
-	const { data } = await api.get('/user/profile');
+	const { data } = await httpClient.get('/user/profile');
 
-	return data;
+	return data.item.item;
 }
 
 export async function getPresignedURL(fileName: string) {
@@ -31,4 +30,8 @@ export async function uploadFileAvatar(
 			onProgress?.(percentage);
 		},
 	});
+}
+
+export async function deleteAvatar() {
+	await httpClient.delete('/user/avatar/deleteItemBucket');
 }
