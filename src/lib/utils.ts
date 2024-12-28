@@ -96,3 +96,16 @@ export function getInitials(fullName: string) {
 
 	return firstNameInitial + lastNameInitial;
 }
+export function getJustNumbers(value: string): string {
+	return value.replace(/\D/g, '');
+}
+export function formatCEP(cep: string) {
+	// Remove todos os caracteres não numéricos
+	const cepNumerico = cep.replace(/\D/g, '');
+
+	if (getJustNumbers(cepNumerico).length >= 6) {
+		return cepNumerico.replace(/(\d{5})(\d{0,3})/, '$1-$2');
+	} else {
+		return cepNumerico;
+	}
+}
