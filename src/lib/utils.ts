@@ -82,8 +82,22 @@ export function formatPhone(value: string): string {
 	}
 }
 
+export function getInitials(fullName: string) {
+	if (!fullName) return '';
+
+	const names = fullName.trim().split(' ');
+
+	if (names.length === 1) {
+		return names[0][0].toUpperCase();
+	}
+
+	const firstNameInitial = names[0][0].toUpperCase();
+	const lastNameInitial = names[names.length - 1][0].toUpperCase();
+
+	return firstNameInitial + lastNameInitial;
+}
 export function getJustNumbers(value: string): string {
-  return value.replace(/\D/g, ''); 
+	return value.replace(/\D/g, '');
 }
 export function formatCEP(cep: string) {
 	// Remove todos os caracteres não numéricos
