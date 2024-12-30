@@ -6,7 +6,6 @@ import { useForm, Controller } from 'react-hook-form';
 import { z } from 'zod';
 import logoIaca from '../../../../public/logo-iaca-purple.svg';
 import { Label } from '@/components/ui/Label';
-import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { useState } from 'react';
 import {
@@ -17,13 +16,9 @@ import {
 } from '@/components/ui/InputOTP';
 import { httpClient } from '@/lib/httpClient';
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const schema = z.object({
-	email: z
-		.string()
-		.min(1, 'E-mail é obrigatório.')
-		.email('Informe um e-mail válido.'),
 	code: z.string().min(6, 'Código de verificação é obrigatório.'),
 });
 
@@ -33,9 +28,10 @@ export default function ConfirmAccount() {
 	const [loading, setLoading] = useState(false);
 
 	const router = useRouter();
+	const searchParams = useSearchParams();
+	const email = searchParams.get('email');
 
 	const {
-		register,
 		control,
 		formState: { errors },
 		handleSubmit: hookFormHandleSubmit,
@@ -48,7 +44,7 @@ export default function ConfirmAccount() {
 		setLoading(true);
 
 		const bodyConfirmation = {
-			email: data.email,
+			email: email,
 			code: data.code,
 		};
 
@@ -73,27 +69,13 @@ export default function ConfirmAccount() {
 			<Image src={logoIaca} alt='Logo IAÇA' width={70} height={60} />
 
 			<span className='font-medium text-sm'>
-				Faça seu cadastro em nossa plataforma!
+				Confirme seu cadastro em nossa plataforma!
 			</span>
 
-			<div className='grid w-full items-center gap-1.5 mt-4 mb-4'>
-				<Label className='text-xs' htmlFor='name'>
-					E-mail
-				</Label>
-				<Input id='email' placeholder='E-mail' {...register('email')} />
-
-				{errors.email && (
-					<span className='text-red-400 text-xs h-4'>
-						{errors.email.message}
-					</span>
-				)}
-			</div>
-
-			<div className='grid w-full items-center gap-1.5 mb-4'>
+			<div className='grid w-full items-center gap-1.5 mb-4 mt-2'>
 				<Label className='text-xs' htmlFor='name'>
 					Código
 				</Label>
-				{/* <Input id='code' placeholder='Código' {...register('code')} /> */}
 				<Controller
 					control={control}
 					name='code'

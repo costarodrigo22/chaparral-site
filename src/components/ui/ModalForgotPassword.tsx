@@ -15,8 +15,6 @@ import { useState } from 'react';
 import { httpClient } from '@/lib/httpClient';
 import { toast } from 'sonner';
 
-import { useRouter } from 'next/navigation';
-
 interface IModalForgotPassword {
 	open: boolean;
 	onClose: () => void;
@@ -29,8 +27,6 @@ export default function ModalForgotPassword({
 	const [email, setEmail] = useState('');
 	const [loading, setLoading] = useState(false);
 
-	const route = useRouter();
-
 	async function handleSendNewCodeToResetPassword() {
 		setLoading(true);
 
@@ -38,8 +34,6 @@ export default function ModalForgotPassword({
 			await httpClient.post('/auth/forgot-password', { email });
 
 			toast.success('Código enviado. Verifique seu e-mail');
-
-			route.push('/reset-password');
 		} catch (error: any) {
 			toast.error(
 				`Algo deu errado ao enviar seu código: ${error.response.data.error}`
