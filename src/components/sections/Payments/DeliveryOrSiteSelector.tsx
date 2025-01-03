@@ -9,7 +9,7 @@ import logoPix from '../../../../public/pix.svg';
 import logoCard from '../../../../public/card.svg';
 import { cn } from '@/lib/utils';
 import { usePaymentSelection } from '@/hooks/useSelectionPayment';
-import ModalConfirmOrder from './ModalConfirmOrder';
+import ModalConfirmOrder from './ModalConfirmOrder/ModalConfirmOrder';
 
 export default function DeliveryOrSiteSelector() {
   const [selection, setSelection] = useState('');
