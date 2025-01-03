@@ -1,14 +1,14 @@
-"use client";
+'use client';
 
-import { useState } from "react";
-import { getInitials, handleScroll } from "@/lib/utils";
+import { useState } from 'react';
+import { getInitials, handleScroll } from '@/lib/utils';
 
-import { usePathname } from "next/navigation";
-import ModalContacts, { IData } from "../Footer/components/ModalContacts";
-import Image from "next/image";
-import shopCart from "../../../../public/shopping-cart.svg";
-import { useCart } from "@/contexts/Cart/CartContext";
-import { Avatar, AvatarFallback, AvatarImage } from "../../ui/Avatar";
+import { usePathname } from 'next/navigation';
+import ModalContacts, { IData } from '../Footer/components/ModalContacts';
+import Image from 'next/image';
+import shopCart from '../../../../public/shopping-cart.svg';
+import { useCart } from '@/contexts/Cart/CartContext';
+import { Avatar, AvatarFallback, AvatarImage } from '../../ui/Avatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -16,11 +16,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/DropdownMenu";
-import { LogOut, ShoppingBag, UserPen } from "lucide-react";
-import { localStorageKeys } from "@/config/localStorageKeys";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/useAuth";
+} from '@/components/ui/DropdownMenu';
+import { LogOut, ShoppingBag, UserPen } from 'lucide-react';
+import { localStorageKeys } from '@/config/localStorageKeys';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/hooks/useAuth';
 
 interface NavProps {
   company: IData;
@@ -57,9 +57,9 @@ export default function Nav({
 
   async function handleLogOut() {
     localStorage.removeItem(localStorageKeys.ACCESS_TOKEN);
-    localStorage.removeItem("local_delivery");
-    localStorage.removeItem("type_receipt");
-    localStorage.removeItem("freight");
+    localStorage.removeItem('local_delivery');
+    localStorage.removeItem('type_receipt');
+    localStorage.removeItem('freight');
 
     resetCart();
 
@@ -90,16 +90,16 @@ export default function Nav({
               Sobre o ÍAÇA
             </a>
 
-            {pathname === "/" && (
+            {pathname === '/' && (
               <span
                 className="hover:cursor-pointer font-bold text-base hidden md:block"
-                onClick={() => handleScroll("produtos")}
+                onClick={() => handleScroll('produtos')}
               >
                 Produtos
               </span>
             )}
 
-            {pathname !== "/" && (
+            {pathname !== '/' && (
               <a
                 href="/product/11"
                 className="hover:cursor-pointer font-bold text-base hidden md:block"
@@ -107,7 +107,7 @@ export default function Nav({
                 Produtos
               </a>
             )}
-            <a href={"/recipes"}>
+            <a href={'/recipes'}>
               <span className="hover:cursor-pointer font-bold text-base hidden md:block">
                 Receitas
               </span>
@@ -123,10 +123,10 @@ export default function Nav({
           <div className="flex items-center justify-center mr-14">
             {!session?.token && (
               <span
-                onClick={() => route.push("/sign-in")}
+                onClick={() => route.push('/sign-in')}
                 className="font-bold text-base cursor-pointer hidden md:block hover:underline transition-all"
               >
-                Fazer login
+                Entrar
               </span>
             )}
             <div className="relative flex items-center gap-[71px] lg:mr-2 xl:mr-2">
@@ -170,12 +170,12 @@ export default function Nav({
                     </AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
-                <span className="ml-2">{userLogged.name}</span>
+                <span className="ml-2 hidden lg:block">{userLogged.name}</span>
                 <DropdownMenuContent>
                   <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem
-                    onClick={() => route.push("/profile")}
+                    onClick={() => route.push('/profile')}
                     className="cursor-pointer hover:bg-slate-100 transition-all"
                   >
                     <UserPen width={16} className="mr-2" />
@@ -203,14 +203,14 @@ export default function Nav({
 
       <div
         className={`fixed top-0 left-0 w-[250px] h-full bg-[#2B0036] text-white transition-transform duration-300 z-50 ${
-          isMenuOpen ? "translate-x-0" : "translate-x-[-110%]"
+          isMenuOpen ? 'translate-x-0' : 'translate-x-[-110%]'
         } md:hidden`}
       >
         <div className="flex items-center justify-between p-4">
           <a href="/">
             <Image
               alt="Logo iaca"
-              src={"/iaça-logo.svg"}
+              src={'/iaça-logo.svg'}
               height={60}
               width={60}
             />
@@ -239,24 +239,34 @@ export default function Nav({
           </li>
           <li className="mb-4">
             <span
-              onClick={() => handleScroll("produtos")}
+              onClick={() => handleScroll('produtos')}
               className="text-base"
             >
               Produtos
             </span>
           </li>
           <li className="mb-4">
-            <a href={"/recipes"}>
+            <a href={'/recipes'}>
               <span className="text-base">Receitas</span>
             </a>
           </li>
-          <li>
+          <li className="mb-4">
             <a
               onClick={() => setOpenContactsModal(true)}
               className="text-base cursor-pointer"
             >
               Contato
             </a>
+          </li>
+          <li>
+            {!session?.token && (
+              <span
+                onClick={() => route.push('/sign-in')}
+                className="font-bold text-base cursor-pointer hover:underline transition-all"
+              >
+                Entrar
+              </span>
+            )}
           </li>
         </ul>
       </div>
