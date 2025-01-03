@@ -1,28 +1,15 @@
-'use client';
-
-import {
-  Dialog,
-  DialogContent,
-  // DialogDescription,
-  // DialogHeader,
-  // DialogTitle,
-} from '@/components/ui/Dialog';
-import { House, ThumbsUp } from 'lucide-react';
-import logoPix from '../../../../public/pix.svg';
-import Image from 'next/image';
-import { Button } from '@/components/ui/Button';
-import { usePaymentSelection } from '@/hooks/useSelectionPayment';
-import logoCard from '../../../../public/card.svg';
-import api from '@/lib/axiosInstance';
-import { useState } from 'react';
-import { toast } from 'sonner';
-// import ModalPix from './ModalPix';
-import { useRouter } from 'next/navigation';
-import { useQuery } from '@tanstack/react-query';
-import { getAddressSelected } from '@/services/address';
-import { httpClient } from '@/lib/httpClient';
-import { clearCart } from '@/services/cart';
-import { useCart } from '@/contexts/Cart/CartContext';
+import { localStorageKeys } from "@/config/localStorageKeys";
+import { useCart } from "@/contexts/Cart/CartContext";
+import { usePaymentSelection } from "@/hooks/useSelectionPayment";
+import api from "@/lib/axiosInstance";
+import { httpClient } from "@/lib/httpClient";
+import { getAddressSelected } from "@/services/address";
+import { clearCart } from "@/services/cart";
+import { useQuery } from "@tanstack/react-query";
+import { jwtDecode } from "jwt-decode";
+import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime";
+import { useState } from "react";
+import { toast } from "sonner";
 
 interface ICartItem {
   id: string;
@@ -33,26 +20,13 @@ interface ICartItem {
   product_url_image: string;
 }
 
-interface IModalConfirmOrder {
-  open: boolean;
-  onClose: () => void;
-}
+export default function useModalConfirmOrder(router:AppRouterInstance) {
 
-// interface IPixProps {
-//   copyPaste: string;
-//   qrCode: string;
-// }
-
-export default function ModalConfirmOrder({
-  open,
-  onClose,
-}: IModalConfirmOrder) {
   const [loadingOrder, setLoadingOrder] = useState(false);
   // const [openModalPix, setOpenModalPix] = useState(false);
   // const [orderNumber, setOrderNumber] = useState('');
   // const [codeOrderOmie, setCodeOrderOmie] = useState(0);
 
-  const router = useRouter();
 
   const { selection } = usePaymentSelection();
 
@@ -160,18 +134,6 @@ export default function ModalConfirmOrder({
       ],
     };
 
-    const bodyPix = {
-      param: [
-        {
-          nIdCliente: userLogged.data.item.item.code_omie,
-          vValor:
-            deliveryOrPickUp === 'ENTREGA'
-              ? totalCart + Number(freight)
-              : totalCart,
-        },
-      ],
-    };
-
     try {
       const responseOmieCreateOrder = await api.post(
         '/api/without/omie/insert_sale',
@@ -186,9 +148,24 @@ export default function ModalConfirmOrder({
         delivery_form: deliveryOrPickUp,
         order_number_omie: responseOmieCreateOrder.data.numero_pedido,
       };
-
+      const jwtToken = localStorage.getItem(localStorageKeys.ACCESS_TOKEN);
+      const decodedJwt = jwtDecode(jwtToken || '');
       await httpClient.post('/user/order', bodyOrder);
       let pixIdlet = '';
+      console.log('RESPONSE DA OMIE', responseOmieCreateOrder);
+      
+      const bodyPix = {
+        param: [
+          {
+            cUrlNotif: `${process.env.NEXT_PUBLIC_C_URL_NOTIF_URL}/${responseOmieCreateOrder.data.numero_pedido}/${decodedJwt.sub}/${userLogged.data.item.item.email}/${userLogged.data.item.item.name}/${responseOmieCreateOrder.data.codigo_pedido}`,
+            nIdCliente: userLogged.data.item.item.code_omie,
+            vValor:
+              deliveryOrPickUp === 'ENTREGA'
+                ? totalCart + Number(freight)
+                : totalCart,
+          },
+        ],
+      };
       if (selection === 'PixSite' || selection === 'PixDelivery') {
         const pixInfos = await api.post(
           '/api/without/omie/create_pix',
@@ -204,6 +181,11 @@ export default function ModalConfirmOrder({
       await clearCart();
 
       resetCart();
+
+      await httpClient.post('/send', {
+        email: userLogged.data.item.item.email,
+        name: userLogged.data.item.item.name,
+      });
 
       if (selection === 'PixSite') {
         // setOrderNumber(responseOmieCreateOrder.data.numero_pedido);
@@ -225,90 +207,6 @@ export default function ModalConfirmOrder({
       setLoadingOrder(false);
     }
   }
-
-  return (
-    <>
-      {/* <ModalPix
-        open={openModalPix}
-        pix_copy_paste={infosPix?.copyPaste || ''}
-        qd_code={infosPix?.qrCode || ''}
-        order_number={orderNumber}
-        codigo_pedido={codeOrderOmie}
-        onClose={() => setOpenModalPix(false)}
-      /> */}
-
-      <Dialog open={open} onOpenChange={onClose}>
-        <DialogContent className="max-h-[90vh] max-w-[550px] w-full overflow-y-auto overflow-x-auto p-3">
-          <span>Confirme a retirada do produto</span>
-
-          <div>
-            <span className="text-[#898989] text-xs">Retirar em:</span>
-            <div className="flex border p-5 items-center rounded-lg gap-4 mb-4">
-              <House />
-
-              {dataAddressSelected?.id && !pickUpLocation?.id && (
-                <div className="flex flex-col gap-2">
-                  <span className="font-semibold text-sm">
-                    {dataAddressSelected?.street}
-                  </span>
-                  <span className="text-[#898989] text-sm">
-                    {dataAddressSelected?.neighborhood},{' '}
-                    {dataAddressSelected?.number} -{' '}
-                    {dataAddressSelected?.complement}
-                  </span>
-                </div>
-              )}
-
-              {pickUpLocation?.id && (
-                <div className="flex flex-col gap-2">
-                  <span className="font-semibold text-sm">
-                    {pickUpLocation?.name}
-                  </span>
-                  <span className="text-[#898989] text-sm">
-                    {pickUpLocation?.street}, {pickUpLocation?.neighborhood} -{' '}
-                    {pickUpLocation?.number}
-                  </span>
-                </div>
-              )}
-            </div>
-            <span className="text-[#898989] text-xs">Forma de pagamento:</span>
-            <div className="flex border p-5 items-center rounded-lg gap-4">
-              <Image
-                src={
-                  selection === 'PixSite' || selection === 'PixDelivery'
-                    ? logoPix
-                    : logoCard
-                }
-                alt="logo"
-              />
-
-              <div className="flex flex-col gap-2">
-                <span className="font-semibold text-sm">
-                  {selection === 'PixSite' || selection === 'PixDelivery'
-                    ? 'Pix'
-                    : 'Cartão'}
-                </span>
-                <span className="text-[#898989] text-sm">
-                  {selection === 'PixSite' || selection === 'PixDelivery'
-                    ? 'Utilize o QR code ou copie e cole o código'
-                    : 'Utilize seu cartão para pagamento'}
-                </span>
-              </div>
-            </div>
-
-            <Button
-              disabled={loadingOrder}
-              onClick={handleConfirmOrder}
-              className="bg-[#2B0036] w-full h-14 rounded-full mt-5 hover:bg-[#5a3663]"
-            >
-              {loadingOrder && 'Gerando pedido...'}
-              {!loadingOrder && 'Confirmar e gerar pedido'}
-
-              <ThumbsUp />
-            </Button>
-          </div>
-        </DialogContent>
-      </Dialog>
-    </>
-  );
+  
+  return { loadingOrder, handleConfirmOrder, dataAddressSelected, pickUpLocation, selection };
 }
