@@ -93,9 +93,9 @@ export default function Nav({
             {pathname === '/' && (
               <span
                 className="hover:cursor-pointer font-bold text-base hidden md:block"
-                onClick={() => handleScroll('produtos')}
+                onClick={() => handleScroll('Quero comprar')}
               >
-                Produtos
+                Quero comprar
               </span>
             )}
 
@@ -104,7 +104,7 @@ export default function Nav({
                 href="/product/11"
                 className="hover:cursor-pointer font-bold text-base hidden md:block"
               >
-                Produtos
+                Quero comprar
               </a>
             )}
             <a href={'/recipes'}>
@@ -182,7 +182,10 @@ export default function Nav({
                     Perfil
                   </DropdownMenuItem>
 
-                  <DropdownMenuItem className="cursor-pointer hover:bg-slate-100 transition-all">
+                  <DropdownMenuItem
+                    className="cursor-pointer hover:bg-slate-100 transition-all"
+                    onClick={() => route.push('/orders')}
+                  >
                     <ShoppingBag width={16} className="mr-2" />
                     Meus pedidos
                   </DropdownMenuItem>
@@ -239,10 +242,10 @@ export default function Nav({
           </li>
           <li className="mb-4">
             <span
-              onClick={() => handleScroll('produtos')}
+              onClick={() => handleScroll('Quero comprar')}
               className="text-base"
             >
-              Produtos
+              Quero comprar
             </span>
           </li>
           <li className="mb-4">
