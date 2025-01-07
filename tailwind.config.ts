@@ -22,6 +22,7 @@ const config: Config = {
 				pastelYellow: '#FBA301',
 				pastelGreen: '#00DB99',
 				radiantGreen: '#02EA11',
+				jadeGreen: '#11A147',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				card: {

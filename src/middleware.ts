@@ -23,6 +23,7 @@ export default auth((request) => {
 export const config = {
 	matcher: [
 		'/sign-in',
+		'/sign-up',
 		'/cart',
 		'/Delivery',
 		'/Payment',
