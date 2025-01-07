@@ -35,6 +35,7 @@ export interface Order {
   id_pix_omie: string;
   products: Product[];
   total: number;
+  freight: number;
 }
 
 export interface OrderResponse {

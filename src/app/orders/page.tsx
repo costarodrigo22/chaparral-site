@@ -57,11 +57,12 @@ export default function PersonalInfos() {
       <div className="mt-6 flex min-h-[400px] items-center flex-col gap-5 w-full px-0 md:px-6 xl:px-32">
         <>
           {orders &&
-            orders.map((order) => (
+            orders?.map((order) => (
               <OrderCard
                 key={order.id}
+                fullOrder={order}
                 order_number_omie={order.order_number_omie}
-                order_code_omie={order.order_number}
+                order_code_omie={order.order_code_omie}
                 createdAt={order.createdAt}
                 total={order.total}
                 status={order.orderStatus}

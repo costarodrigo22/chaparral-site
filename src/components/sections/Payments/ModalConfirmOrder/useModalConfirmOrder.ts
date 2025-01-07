@@ -172,6 +172,7 @@ export default function useModalConfirmOrder(router:AppRouterInstance) {
         address: addressOrder,
         products: cartItems.data.item.item,
         total: totalCart + Number(freight),
+        freight: Number(freight),
         payment_form: selection,
         delivery_form: deliveryOrPickUp,
         order_number_omie: responseOmieCreateOrder.data.numero_pedido,
