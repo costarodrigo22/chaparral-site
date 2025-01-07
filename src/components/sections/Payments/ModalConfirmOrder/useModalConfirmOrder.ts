@@ -140,24 +140,17 @@ export default function useModalConfirmOrder(router:AppRouterInstance) {
         bodyOmie
       );
 
-      const bodyOrder = {
-        address: addressOrder,
-        products: cartItems.data.item.item,
-        total: totalCart + Number(freight),
-        payment_form: selection,
-        delivery_form: deliveryOrPickUp,
-        order_number_omie: responseOmieCreateOrder.data.numero_pedido,
-      };
       const jwtToken = localStorage.getItem(localStorageKeys.ACCESS_TOKEN);
       const decodedJwt = jwtDecode(jwtToken || '');
-      await httpClient.post('/user/order', bodyOrder);
       let pixIdlet = '';
       console.log('RESPONSE DA OMIE', responseOmieCreateOrder);
       
+      const firstName = userLogged.data.item.item.name.split(' ')[0];
+
       const bodyPix = {
         param: [
           {
-            cUrlNotif: `${process.env.NEXT_PUBLIC_C_URL_NOTIF_URL}/${responseOmieCreateOrder.data.numero_pedido}/${decodedJwt.sub}/${userLogged.data.item.item.email}/${userLogged.data.item.item.name}/${responseOmieCreateOrder.data.codigo_pedido}`,
+            cUrlNotif: `${process.env.NEXT_PUBLIC_C_URL_NOTIF_URL}/${responseOmieCreateOrder.data.numero_pedido}/${decodedJwt.sub}/${userLogged.data.item.item.email}/${firstName}/${responseOmieCreateOrder.data.codigo_pedido}`,
             nIdCliente: userLogged.data.item.item.code_omie,
             vValor:
               deliveryOrPickUp === 'ENTREGA'
@@ -172,9 +165,20 @@ export default function useModalConfirmOrder(router:AppRouterInstance) {
           bodyPix
         );
         console.log('RESPONSE DA CRIAÇÃO DO PIX:', pixInfos);
-
         pixIdlet = pixInfos.data.nIdPix;
+        
       }
+      const bodyOrder = {
+        address: addressOrder,
+        products: cartItems.data.item.item,
+        total: totalCart + Number(freight),
+        payment_form: selection,
+        delivery_form: deliveryOrPickUp,
+        order_number_omie: responseOmieCreateOrder.data.numero_pedido,
+        order_code_omie: responseOmieCreateOrder.data.codigo_pedido,
+        id_pix_omie: pixIdlet,
+      };
+      await httpClient.post('/user/order', bodyOrder);
 
       toast.success('Pedido gerado com sucesso.');
 
