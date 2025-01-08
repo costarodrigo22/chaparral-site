@@ -84,7 +84,7 @@ export default function DeliveryOrSiteSelector() {
                 className="ml-2 text-base font-medium"
                 htmlFor="option-two"
               >
-                Pagar na entrega
+                Pagar na entrega/Retirada
               </Label>
               <div>
                 {selection === 'Retirada' && (

@@ -143,7 +143,6 @@ export default function useModalConfirmOrder(router:AppRouterInstance) {
       const jwtToken = localStorage.getItem(localStorageKeys.ACCESS_TOKEN);
       const decodedJwt = jwtDecode(jwtToken || '');
       let pixIdlet = '';
-      console.log('RESPONSE DA OMIE', responseOmieCreateOrder);
       
       const firstName = userLogged.data.item.item.name.split(' ')[0];
 
@@ -164,7 +163,6 @@ export default function useModalConfirmOrder(router:AppRouterInstance) {
           '/api/without/omie/create_pix',
           bodyPix
         );
-        console.log('RESPONSE DA CRIAÇÃO DO PIX:', pixInfos);
         pixIdlet = pixInfos.data.nIdPix;
         
       }

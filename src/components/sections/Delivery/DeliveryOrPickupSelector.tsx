@@ -56,6 +56,7 @@ export default function DeliveryOrPickupSelector() {
 
   function handleCloseModalUpdateAddress() {
     setOpenModalUpdateAddress(false);
+    queryClient.invalidateQueries({ queryKey: ['listAddress'] });
   }
 
   function handleChoiceOfAction() {
@@ -69,7 +70,6 @@ export default function DeliveryOrPickupSelector() {
   }
 
   async function handleSelectDelivery(value: string) {
-    console.log('handleSelectDelivery: ', value);
     if (value === 'Entrega') {
       setSelection('Entrega');
 
@@ -79,12 +79,8 @@ export default function DeliveryOrPickupSelector() {
 
       queryClient.setQueryData(['getAddressSelected'], null);
 
-      console.log('addressSelected: ', addressSelected);
-
       try {
         const address = await getAddressSelected();
-
-        console.log(address);
 
         if (address.id) {
           setAddressSelected(address);

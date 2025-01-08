@@ -96,6 +96,20 @@ export function getInitials(fullName: string) {
 
 	return firstNameInitial + lastNameInitial;
 }
+export function getFirstAndLastname(fullName: string) {
+	if (!fullName) return '';
+
+	const names = fullName.trim().split(' ');
+
+	if (names.length === 1) {
+		return names[0];
+	}
+
+	const firstName = names[0];
+	const lastName = names[names.length - 1];
+
+	return `${firstName} ${lastName}`;
+}
 export function getJustNumbers(value: string): string {
 	return value.replace(/\D/g, '');
 }

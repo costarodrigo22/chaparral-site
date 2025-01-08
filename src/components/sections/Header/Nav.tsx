@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { getInitials, handleScroll } from '@/lib/utils';
+import { getFirstAndLastname, getInitials, handleScroll } from '@/lib/utils';
 
 import { usePathname } from 'next/navigation';
 import ModalContacts, { IData } from '../Footer/components/ModalContacts';
@@ -170,7 +170,9 @@ export default function Nav({
                     </AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
-                <span className="ml-2 hidden lg:block">{userLogged.name}</span>
+                <span className="ml-2 hidden lg:block">
+                  {getFirstAndLastname(userLogged.name)}
+                </span>
                 <DropdownMenuContent>
                   <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
                   <DropdownMenuSeparator />

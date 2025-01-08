@@ -4,6 +4,7 @@ import { Order } from './OrderCardTypes';
 import { Separator } from '@/components/ui/Separator';
 import { cn, formatCurrency, formatDateTime } from '@/lib/utils';
 import Image from 'next/image';
+import { House } from 'lucide-react';
 
 interface IModalOrderDetails {
   open: boolean;
@@ -81,7 +82,7 @@ export default function ModalOrderDetails({
             </span>
           </div>
           {order.delivery_form === 'ENTREGA' && (
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center mt-3">
               <span className=" text-lg font-medium text-[#00000099]">
                 Taxa de entrega
               </span>
@@ -90,7 +91,7 @@ export default function ModalOrderDetails({
               </span>
             </div>
           )}
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center mt-3">
             <span className=" text-lg font-medium text-[#00000099]">
               Forma de pagamento
             </span>
@@ -103,10 +104,24 @@ export default function ModalOrderDetails({
                 : 'Boleto'}
             </span>
           </div>
-          <div className="flex justify-between items-center">
+          <div className="flex justify-between items-center mt-3">
             <span className=" text-lg font-medium text-[#00000099]">
               Endereço de {capitalizeFirstLetter(order.delivery_form)}
             </span>
+          </div>
+          <div className="flex border px-5 py-4 items-center rounded-lg gap-4 mb-4 mt-5">
+            <House />
+
+            {order.address?.id && (
+              <div className="flex flex-col gap-2">
+                <span className="font-semibold text-sm">
+                  {order.address?.street}
+                </span>
+                <span className="text-[#898989] text-sm">
+                  {order.address?.neighborhood}, {order.address?.number}
+                </span>
+              </div>
+            )}
           </div>
           <Separator className="my-5" />
           <div className="flex justify-between items-center">

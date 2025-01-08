@@ -94,22 +94,23 @@ export default function OrderCard({
               height={14}
             />
           </div>
-          {status === 'Aguardando pagamento' && (
-            <div
-              className="flex items-center gap-2 hover:opacity-80 cursor-pointer"
-              onClick={handlePushPixPage}
-            >
-              <Image
-                src="/pix-icon.svg"
-                alt="Logo do pix"
-                width={22}
-                height={22}
-              />
-              <span className="font-medium text-sm text-black">
-                Página do pix
-              </span>
-            </div>
-          )}
+          {status === 'Aguardando pagamento' &&
+            fullOrder?.payment_form === 'PixSite' && (
+              <div
+                className="flex items-center gap-2 hover:opacity-80 cursor-pointer"
+                onClick={handlePushPixPage}
+              >
+                <Image
+                  src="/pix-icon.svg"
+                  alt="Logo do pix"
+                  width={22}
+                  height={22}
+                />
+                <span className="font-medium text-sm text-black">
+                  Página do pix
+                </span>
+              </div>
+            )}
         </div>
       </div>
     </>

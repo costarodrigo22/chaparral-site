@@ -69,7 +69,7 @@ export default function LoginForm({ onLoginAction }: ILoginActionProps) {
 
       <form
         onSubmit={handleSubmit}
-        className="bg-white rounded-md px-8 py-8 flex items-center justify-center flex-col absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full sm:w-[400px] shadow-md"
+        className="bg-white rounded-md px-8 py-8 flex items-center justify-center flex-col w-full sm:w-[400px] shadow-md"
       >
         <Image src={logoIaca} alt="Logo IAÇA" width={70} height={60} />
 
