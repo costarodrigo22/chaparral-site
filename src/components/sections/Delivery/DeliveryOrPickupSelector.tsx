@@ -54,11 +54,6 @@ export default function DeliveryOrPickupSelector() {
     queryFn: getAddress,
   });
 
-  function handleCloseModalUpdateAddress() {
-    setOpenModalUpdateAddress(false);
-    queryClient.invalidateQueries({ queryKey: ['listAddress'] });
-  }
-
   function handleChoiceOfAction() {
     if (listAddress.length === 0) {
       setOpenModalUpdateAddress(true);
@@ -146,32 +141,42 @@ export default function DeliveryOrPickupSelector() {
     }
   }, []);
 
+  const fetchAddressSelected = useCallback(async () => {
+    setLoading(true);
+    try {
+      const addressSelected = await getAddressSelected();
+
+      if (addressSelected) {
+        setAddressSelected(addressSelected);
+
+        const valueFreight = await calcFreight(addressSelected);
+
+        setFreight(valueFreight.freightValue);
+
+        localStorage.removeItem('local_delivery');
+      }
+    } catch (error) {
+      console.error('Erro ao buscar endereço selecionado:', error);
+    } finally {
+      setLoading(false);
+    }
+  }, [setAddressSelected, setFreight]);
+
   useEffect(() => {
     handleLocalPickUpOptions();
 
-    async function fetchAddressSelected() {
-      setLoading(true);
-      try {
-        const addressSelected = await getAddressSelected();
-
-        if (addressSelected) {
-          setAddressSelected(addressSelected);
-
-          const valueFreight = await calcFreight(addressSelected);
-
-          setFreight(valueFreight.freightValue);
-
-          localStorage.removeItem('local_delivery');
-        }
-      } catch (error) {
-        console.error('Erro ao buscar endereço selecionado:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-
     fetchAddressSelected();
-  }, [handleLocalPickUpOptions, setAddressSelected, setFreight]);
+  }, [
+    handleLocalPickUpOptions,
+    setAddressSelected,
+    setFreight,
+    fetchAddressSelected,
+  ]);
+
+  function handleCloseModalUpdateAddress() {
+    setOpenModalUpdateAddress(false);
+    fetchAddressSelected();
+  }
 
   return (
     <>
@@ -212,7 +217,7 @@ export default function DeliveryOrPickupSelector() {
                   )}
 
                   {!loading && addressSelected.id && (
-                    <div className=" flex flex-col gap-2">
+                    <div className=" flex flex-col gap-2 animate-fade-in">
                       <div className="flex items-center gap-2">
                         <MapPin color="#898989" size={22} />
 
