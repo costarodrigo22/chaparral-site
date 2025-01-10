@@ -65,6 +65,10 @@ const config: Config = {
 				},
 			},
 			keyframes: {
+				'fade-in': {
+					'0%': { opacity: '0' },
+					'100%': { opacity: '1' },
+				},
 				shakeWithPause: {
 					'0%, 10%': {
 						transform: 'translateX(0)',
@@ -90,6 +94,7 @@ const config: Config = {
 			animation: {
 				shakeWithPause: 'shakeWithPause 1.5s ease-in-out infinite',
 				'caret-blink': 'caret-blink 1.25s ease-out infinite',
+				'fade-in': 'fade-in 1s ease-in-out',
 			},
 			borderRadius: {
 				lg: 'var(--radius)',
