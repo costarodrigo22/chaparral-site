@@ -155,11 +155,10 @@ export default function NewAddress({ open, onClose }: IModalUpdateAddress) {
       }
 
       toast.success('Endereço cadastrado.');
-
-      handleCloseModal();
     } catch (error) {
       toast.error(`Algo deu errado ao cadastrar seu endereço: ${error}`);
     } finally {
+      handleCloseModal();
       queryClient.invalidateQueries({ queryKey: ['listAddress'] });
     }
   });
