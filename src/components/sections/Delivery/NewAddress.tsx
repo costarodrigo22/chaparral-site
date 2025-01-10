@@ -120,8 +120,6 @@ export default function NewAddress({ open, onClose }: IModalUpdateAddress) {
 
       const listAddress = await getAddress();
 
-      console.log(listAddress);
-
       if (addressDefaut === 'Sim' || listAddress.length === 0) {
         await httpClient.post('/user/address/selecteAddressDefault', {
           addressId: addressCreated.item.id,
@@ -157,11 +155,10 @@ export default function NewAddress({ open, onClose }: IModalUpdateAddress) {
       }
 
       toast.success('Endereço cadastrado.');
-
-      handleCloseModal();
     } catch (error) {
       toast.error(`Algo deu errado ao cadastrar seu endereço: ${error}`);
     } finally {
+      handleCloseModal();
       queryClient.invalidateQueries({ queryKey: ['listAddress'] });
     }
   });

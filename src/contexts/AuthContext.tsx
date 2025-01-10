@@ -1,15 +1,15 @@
-"use client";
+'use client';
 
-import { localStorageKeys } from "@/config/localStorageKeys";
+import { localStorageKeys } from '@/config/localStorageKeys';
 import {
   deleteAvatar,
   getPresignedURL,
   uploadFileAvatar,
   userLogged,
-} from "@/services/user";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import React, { createContext, useCallback, useEffect, useState } from "react";
-import { toast } from "sonner";
+} from '@/services/user';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import React, { createContext, useCallback, useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 interface IAuthContextValue {
   user: {
@@ -97,7 +97,7 @@ export function AuthProvider({ children, user }: IAuthProviderProps) {
 
   async function handleUploadAvatar() {
     if (!upload) {
-      toast.error("Por favor, selecione uma imagem antes de salvar.");
+      toast.error('Por favor, selecione uma imagem antes de salvar.');
 
       return;
     }
@@ -111,14 +111,14 @@ export function AuthProvider({ children, user }: IAuthProviderProps) {
         setProgress(progress);
       });
 
-      toast.success("Avatar atualizado com sucesso!");
+      toast.success('Avatar atualizado com sucesso!');
     } catch (error) {
       toast.error(`Erro ao atualizar o avatar: ${error}`);
     } finally {
       setLoading(false);
       setProgress(0);
 
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1500));
 
       await handleGetDataUserLogged();
     }

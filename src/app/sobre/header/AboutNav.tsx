@@ -34,7 +34,7 @@ export default function AboutNav() {
       const res = await api.get('/api/without/company_profile/get');
       setCompanyData(res?.data?.data);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }, []);
 

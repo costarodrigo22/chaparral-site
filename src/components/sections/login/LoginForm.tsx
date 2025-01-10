@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 import { useRouter } from 'next/navigation';
 import ModalForgotPassword from '@/components/ui/ModalForgotPassword';
+import { Eye, EyeClosed } from 'lucide-react';
 
 interface ILoginActionProps {
   onLoginAction: (formData: FormData) => Promise<void | { error: string }>;
@@ -30,6 +31,7 @@ type FormData = z.infer<typeof schema>;
 export default function LoginForm({ onLoginAction }: ILoginActionProps) {
   const [loading, setLoading] = useState(false);
   const [openModalForgotPassword, setOpenModalForgotPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const router = useRouter();
 
@@ -69,7 +71,7 @@ export default function LoginForm({ onLoginAction }: ILoginActionProps) {
 
       <form
         onSubmit={handleSubmit}
-        className="bg-white rounded-md px-8 py-8 flex items-center justify-center flex-col absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full sm:w-[400px] shadow-md"
+        className="bg-white rounded-md px-8 py-8 flex items-center justify-center flex-col w-full sm:w-[400px] shadow-md"
       >
         <Image src={logoIaca} alt="Logo IAÇA" width={70} height={60} />
 
@@ -88,7 +90,7 @@ export default function LoginForm({ onLoginAction }: ILoginActionProps) {
           )}
         </div>
 
-        <div className="grid w-full items-center gap-1.5">
+        <div className="grid w-full items-center gap-1.5 relative">
           <Label className="text-xs" htmlFor="password">
             Senha
           </Label>
@@ -96,8 +98,23 @@ export default function LoginForm({ onLoginAction }: ILoginActionProps) {
             {...register('password')}
             id="password"
             placeholder="Senha"
-            type="password"
+            type={showPassword ? 'text' : 'password'}
           />
+          {showPassword ? (
+            <EyeClosed
+              onClick={() => setShowPassword(!showPassword)}
+              color="#a4a2a5"
+              size={20}
+              className="absolute right-4 top-8 cursor-pointer"
+            />
+          ) : (
+            <Eye
+              onClick={() => setShowPassword(!showPassword)}
+              color="#a4a2a5"
+              size={20}
+              className="absolute right-4 top-8 cursor-pointer"
+            />
+          )}
           {errors.password && (
             <span className="text-red-400 text-xs">
               {errors.password.message}

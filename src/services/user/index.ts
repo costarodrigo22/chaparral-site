@@ -4,8 +4,6 @@ import axios from "axios";
 export async function userLogged() {
   const { data } = await httpClient.get("/user/profile");
 
-  console.log("userLogged - ", data.item.item);
-
   return data.item.item;
 }
 

@@ -45,7 +45,7 @@ export default function BeAPartnerModal({ onClose, open }: IBeAPartnerModal) {
       form.reset();
       toast.success(res.data.message);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       toast.error('Ocorreu um erro ao enviar!');
     }
   });

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { getInitials, handleScroll } from '@/lib/utils';
+import { getFirstAndLastname, getInitials, handleScroll } from '@/lib/utils';
 
 import { usePathname } from 'next/navigation';
 import ModalContacts, { IData } from '../Footer/components/ModalContacts';
@@ -80,7 +80,13 @@ export default function Nav({
             className="cursor-pointer relative hidden md:block max-w-[139px] h-auto mt-5"
           >
             {logoImage && (
-              <Image src={logoImage} alt="Logo" width={110} height={80} />
+              <Image
+                priority
+                src={logoImage}
+                alt="Logo"
+                width={110}
+                height={80}
+              />
             )}
           </a>
         </div>
@@ -170,7 +176,9 @@ export default function Nav({
                     </AvatarFallback>
                   </Avatar>
                 </DropdownMenuTrigger>
-                <span className="ml-2 hidden lg:block">{userLogged.name}</span>
+                <span className="ml-2 hidden lg:block">
+                  {getFirstAndLastname(userLogged.name)}
+                </span>
                 <DropdownMenuContent>
                   <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
                   <DropdownMenuSeparator />
@@ -216,6 +224,7 @@ export default function Nav({
               src={'/iaça-logo.svg'}
               height={60}
               width={60}
+              priority
             />
           </a>
           <div className="cursor-pointer" onClick={toggleMenu}>

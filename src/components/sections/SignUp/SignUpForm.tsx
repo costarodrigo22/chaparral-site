@@ -111,8 +111,6 @@ export default function SignUpForm() {
         return;
       }
 
-      console.log('código_client_omie: ', response.data.codigo_cliente_omie);
-
       const bodyCognito = {
         email: data.email,
         password: data.confirmPassword,
@@ -128,9 +126,9 @@ export default function SignUpForm() {
         'Seu cadastro está quase pronto. Confirme o código que chegou no E-mail adicionado.'
       );
 
-      router.push('/confirm-account');
+      router.push(`/confirm-account/?email=${data.email}`);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setLoading(false);
     }

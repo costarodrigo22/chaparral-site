@@ -22,7 +22,7 @@ export const { signIn, auth, signOut, handlers } = NextAuth({
 				const { email, password } = data;
 
 				const response = await axios.post(
-					'https://464lajpuac.execute-api.us-east-1.amazonaws.com/auth/sign-in',
+					`${process.env.NEXT_PUBLIC_AWS_BASE_URL}/auth/sign-in`,
 					{ email, password }
 				);
 
