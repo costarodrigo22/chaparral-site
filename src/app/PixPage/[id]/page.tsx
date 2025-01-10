@@ -108,7 +108,7 @@ export default function PixPage({ params }: IPixPageProps) {
 
   return (
     <div className="pt-[100px] pb-5 flex w-full  h-auto items-center justify-center">
-      <div className="flex w-full sm:w-[70%] h-auto flex-col items-center justify-center">
+      <div className="flex w-full sm:w-[70%] h-auto flex-col items-center justify-center min-h-[500px]">
         <Image src={headerLogo} alt="logo pix" />
         <span className="text-[#2B0036] font-semibold text-base">
           {returnTextBasedOnPixStatus(pixData?.cStatus)}

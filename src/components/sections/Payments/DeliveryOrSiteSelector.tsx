@@ -25,12 +25,12 @@ export default function DeliveryOrSiteSelector() {
     setSelectionType('PixSite');
   }
 
-  function handleToggleTypePaymentPixDelivery() {
-    setSelectionType('PixDelivery');
+  function handleToggleTypePaymentDebitCardDelivery() {
+    setSelectionType('DebitCardDelivery');
   }
 
   function handleToggleTypePaymentCardDelivery() {
-    setSelectionType('CardDelivery');
+    setSelectionType('CreditCardDelivery');
   }
 
   return (
@@ -84,7 +84,7 @@ export default function DeliveryOrSiteSelector() {
                 className="ml-2 text-base font-medium"
                 htmlFor="option-two"
               >
-                Pagar na entrega/Retirada
+                Pagar na entrega/retirada
               </Label>
               <div>
                 {selection === 'Retirada' && (
@@ -92,16 +92,19 @@ export default function DeliveryOrSiteSelector() {
                     <div
                       className={cn(
                         'flex items-center gap-4 border border-[#898989] rounded-lg w-full p-5 cursor-pointer',
-                        selectionType === 'PixDelivery' && 'border-[#00E19D]'
+                        selectionType === 'DebitCardDelivery' &&
+                          'border-[#00E19D]'
                       )}
-                      onClick={handleToggleTypePaymentPixDelivery}
+                      onClick={handleToggleTypePaymentDebitCardDelivery}
                     >
-                      <Image src={logoPix} alt="logo pix" />
+                      <Image src={logoCard} alt="logo de cartão" />
 
                       <div className="flex flex-col w-full">
-                        <span className="font-semibold text-base">Pix</span>
+                        <span className="font-semibold text-base">
+                          Cartão de débito
+                        </span>
                         <span className="text-sm text-[#898989]">
-                          Utilize o QR code ou copie e cole o código
+                          Pague com seu cartão de débito na hora da entrega
                         </span>
                       </div>
                     </div>
@@ -109,16 +112,19 @@ export default function DeliveryOrSiteSelector() {
                     <div
                       className={cn(
                         'flex items-center gap-4 border border-[#898989] rounded-lg w-full p-5 cursor-pointer',
-                        selectionType === 'CardDelivery' && 'border-[#00E19D]'
+                        selectionType === 'CreditCardDelivery' &&
+                          'border-[#00E19D]'
                       )}
                       onClick={handleToggleTypePaymentCardDelivery}
                     >
-                      <Image src={logoCard} alt="logo pix" />
+                      <Image src={logoCard} alt="logo de cartão" />
 
                       <div className="flex flex-col">
-                        <span className="font-semibold text-base">Cartão</span>
+                        <span className="font-semibold text-base">
+                          Cartão de crédito
+                        </span>
                         <span className="text-sm text-[#898989]">
-                          Utilize o QR code ou copie e cole o código
+                          Pague com seu cartão de crédito na hora da entrega
                         </span>
                       </div>
                     </div>

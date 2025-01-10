@@ -37,7 +37,7 @@ export default function ModalConfirmOrder({
     loadingOrder,
     pickUpLocation,
     selection,
-  } = useModalConfirmOrder(router);
+  } = useModalConfirmOrder(router, onClose);
 
   return (
     <>
@@ -99,10 +99,12 @@ export default function ModalConfirmOrder({
                 <span className="font-semibold text-sm">
                   {selection === 'PixSite' || selection === 'PixDelivery'
                     ? 'Pix'
-                    : 'Cartão'}
+                    : selection === 'CreditCardDelivery'
+                    ? 'Cartão de Credito'
+                    : 'Cartão de Débito'}
                 </span>
                 <span className="text-[#898989] text-sm">
-                  {selection === 'PixSite' || selection === 'PixDelivery'
+                  {selection === 'PixSite'
                     ? 'Utilize o QR code ou copie e cole o código'
                     : 'Utilize seu cartão para pagamento'}
                 </span>

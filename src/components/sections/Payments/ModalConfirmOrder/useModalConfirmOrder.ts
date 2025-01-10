@@ -20,7 +20,7 @@ interface ICartItem {
   product_url_image: string;
 }
 
-export default function useModalConfirmOrder(router:AppRouterInstance) {
+export default function useModalConfirmOrder(router:AppRouterInstance, onClose: () => void) {
 
   const [loadingOrder, setLoadingOrder] = useState(false);
   // const [openModalPix, setOpenModalPix] = useState(false);
@@ -124,11 +124,13 @@ export default function useModalConfirmOrder(router:AppRouterInstance) {
           informacoes_adicionais: {
             utilizar_emails: userLogged.data.item.item.email,
             meio_pagamento:
-              selection === 'PixSite' || selection === 'PixDelivery'
+              selection === 'PixSite'
                 ? '17'
-                : selection === 'CardDelivery'
-                ? '03'
-                : '15', // cartão de crédito é 3, boleto 15 e pix 17
+                : selection === 'CreditCardDelivery'
+                ? '03' 
+                : selection === 'DebitCardDelivery' 
+                ? '04'
+                : '15', // cartão de crédito é 03, cartão de débito é 04, boleto 15 e pix 17
           },
         },
       ],
@@ -158,13 +160,12 @@ export default function useModalConfirmOrder(router:AppRouterInstance) {
           },
         ],
       };
-      if (selection === 'PixSite' || selection === 'PixDelivery') {
+      if (selection === 'PixSite') {
         const pixInfos = await api.post(
           '/api/without/omie/create_pix',
           bodyPix
         );
         pixIdlet = pixInfos.data.nIdPix;
-        
       }
       const bodyOrder = {
         address: addressOrder,
@@ -207,6 +208,7 @@ export default function useModalConfirmOrder(router:AppRouterInstance) {
     } catch (error) {
       toast.error(`Algo deu errado ao gerar seu pedido: ${error}`);
     } finally {
+      onClose();
       setLoadingOrder(false);
     }
   }

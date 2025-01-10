@@ -96,10 +96,11 @@ export default function ModalOrderDetails({
               Forma de pagamento
             </span>
             <span className="text-darkGray font-medium text-lg">
-              {order.payment_form === 'CardDelivery'
-                ? 'Cartão'
-                : order.payment_form === 'PixSite' ||
-                  order.payment_form === 'PixDelivery'
+              {order.payment_form === 'CreditCardDelivery'
+                ? 'Cartão de Crédito'
+                : order.payment_form === 'DebitCardDelivery'
+                ? 'Cartão de Débito'
+                : order.payment_form === 'PixSite'
                 ? 'Pix'
                 : 'Boleto'}
             </span>
