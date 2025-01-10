@@ -128,7 +128,7 @@ export default function SignUpForm() {
 
       router.push(`/confirm-account/?email=${data.email}`);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setLoading(false);
     }

@@ -31,7 +31,7 @@ export default function WrapperOrder({ id, code }: IWrapperOrderProps) {
 
       setOrderAtatus(response.data.pedido_venda_produto.cabecalho.etapa);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     } finally {
       setLoadingOrderAtatus(false);
     }

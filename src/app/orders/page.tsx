@@ -15,13 +15,14 @@ export default function PersonalInfos() {
   const router = useRouter();
   const [orders, setOrders] = useState<Order[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+
   const getOrders = useCallback(async () => {
     try {
       setIsLoading(true);
       const { data } = await httpClient.get<OrderResponse>('/user/order');
       setOrders(data.item.item);
     } catch (error) {
-      console.error('Ocorreu um erro ao buscar perdidos', error);
+      console.error('Ocorreu um erro ao buscar pedidos', error);
     } finally {
       setIsLoading(false);
     }
@@ -64,45 +65,40 @@ export default function PersonalInfos() {
         {isLoading ? (
           <div>
             <div className="px-0 md:px-10 xl:px-32 flex flex-col gap-5 mt-6">
-              <Skeleton className="w-full min-h-[170px] p-10 shadow-[0px_0px_10px_0px_#0000001A] rounded-[10px] " />
-              <Skeleton className="w-full min-h-[170px] p-10 shadow-[0px_0px_10px_0px_#0000001A] rounded-[10px] " />
-              <Skeleton className="w-full min-h-[170px] p-10 shadow-[0px_0px_10px_0px_#0000001A] rounded-[10px] " />
+              <Skeleton className="w-full min-h-[170px] p-10 shadow-[0px_0px_10px_0px_#0000001A] rounded-[10px]" />
+              <Skeleton className="w-full min-h-[170px] p-10 shadow-[0px_0px_10px_0px_#0000001A] rounded-[10px]" />
+              <Skeleton className="w-full min-h-[170px] p-10 shadow-[0px_0px_10px_0px_#0000001A] rounded-[10px]" />
             </div>
           </div>
         ) : (
           <div className="mt-6 flex min-h-[400px] items-center flex-col gap-5 w-full px-0 md:px-6 xl:px-32">
-            <>
-              {orders &&
-                orders?.map((order) => (
-                  <OrderCard
-                    key={order.id}
-                    fullOrder={order}
-                    order_number_omie={order.order_number_omie}
-                    order_code_omie={order.order_code_omie}
-                    createdAt={order.createdAt}
-                    total={order.total}
-                    status={order.orderStatus}
-                    pixId={order.id_pix_omie}
-                  />
-                ))}
-              {!!orders && (
-                <div className="flex flex-col gap-3 items-center justify-center">
-                  <span>Você não tem pedidos ainda. 😢</span>
-                  <span>
-                    {' '}
-                    <span
-                      onClick={() => {
-                        router.push('/product/11');
-                      }}
-                      className="underline text-darkPurple font-medium text-lg cursor-pointer hover:opacity-80"
-                    >
-                      Clique aqui
-                    </span>{' '}
-                    para comprar nosso açaí
-                  </span>
-                </div>
-              )}
-            </>
+            {orders.length > 0 ? (
+              orders.map((order) => (
+                <OrderCard
+                  key={order.id}
+                  fullOrder={order}
+                  order_number_omie={order.order_number_omie}
+                  order_code_omie={order.order_code_omie}
+                  createdAt={order.createdAt}
+                  total={order.total}
+                  status={order.orderStatus}
+                  pixId={order.id_pix_omie}
+                />
+              ))
+            ) : (
+              <div className="flex flex-col gap-3 items-center justify-center mt-[40px]">
+                <span>Você não tem pedidos ainda. 😢</span>
+                <span>
+                  <span
+                    className="underline text-darkPurple font-medium text-lg cursor-pointer hover:opacity-80"
+                    onClick={() => router.push('/product/11')}
+                  >
+                    Clique aqui
+                  </span>{' '}
+                  para comprar nosso açaí
+                </span>
+              </div>
+            )}
           </div>
         )}
       </div>
