@@ -52,7 +52,7 @@ export default function BeAPartnerModal({ onClose, open }: IBeAPartnerModal) {
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-h-[90vh] max-w-[90vw] overflow-y-auto overflow-x-auto p-3">
+      <DialogContent className="max-h-[90vh] max-w-[90vw] md:w-[1000px] overflow-y-auto overflow-x-auto p-3">
         <FormProvider {...form}>
           <form onSubmit={handleSubmit}>
             <Stepper

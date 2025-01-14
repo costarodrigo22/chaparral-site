@@ -1,4 +1,4 @@
-import { ChevronRight, Eye, MapPin, ShieldCheck, User } from 'lucide-react';
+import { ChevronRight, Eye, MapPin, User } from 'lucide-react';
 import Link from 'next/link';
 
 export default function Profile() {
@@ -62,7 +62,7 @@ export default function Profile() {
           </div>
         </div>
 
-        <div className="flex items-center w-full p-6 shadow-sm rounded-md">
+        {/* <div className="flex items-center w-full p-6 shadow-sm rounded-md">
           <ShieldCheck className="mr-6" color="#2B0036" />
 
           <div className="w-full flex justify-between items-center">
@@ -74,7 +74,7 @@ export default function Profile() {
 
             <Eye className="cursor-pointer" />
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
