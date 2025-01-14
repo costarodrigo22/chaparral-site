@@ -91,7 +91,7 @@ export default function PersonalInfos() {
                 <span>
                   <span
                     className="underline text-darkPurple font-medium text-lg cursor-pointer hover:opacity-80"
-                    onClick={() => router.push('/product/11')}
+                    onClick={() => router.push('/product/PRD00001')}
                   >
                     Clique aqui
                   </span>{' '}

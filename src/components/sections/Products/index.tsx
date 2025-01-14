@@ -7,7 +7,7 @@ export default function Products() {
   // const [image, setImage] = useState('');
   const dataArray = [
     {
-      text: '11',
+      text: 'PRD00001',
       src: '/acai-puro-sombreado.svg',
       logoSrc: '/iaca-logo-purple.svg',
       backgroundImage: '/yellow-products-bg.svg',
