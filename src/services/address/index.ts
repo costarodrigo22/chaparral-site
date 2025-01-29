@@ -51,7 +51,7 @@ export async function getAddressSelected() {
 export async function calcFreight(address: IAddressSelected) {
 	const body = {
 		origin: {
-			street: 'BR-010',
+			street: 'R. Mal. Hermes da Fonseca', // rua ao lado da Fuji
 			neighborhood: 'Maranhão Novo',
 			city: 'Imperatriz',
 			state: 'Maranhão',
