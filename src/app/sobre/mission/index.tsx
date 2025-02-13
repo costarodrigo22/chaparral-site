@@ -5,12 +5,14 @@ interface IMissionProps {
 	featuredDescription: string;
 	missionDescription: string;
 	valuesDescription: string;
+	visionDescription: string;
 }
 
 export default function Mission({
 	featuredDescription,
 	missionDescription,
 	valuesDescription,
+	visionDescription,
 }: IMissionProps) {
 	return (
 		<section className='bg-primaryWhite py-28 lg:px-24 md:px-10 xl:px-48 w-full h-auto flex flex-col gap-11'>
@@ -25,11 +27,16 @@ export default function Mission({
 					}}
 				/>
 			</div>
-			<div className='flex flex-col md:flex-row gap-12 items-center justify-center'>
+			<div className='flex flex-col md:flex-row gap-12 items-center justify-center h-[560px]'>
 				<MissionCard
 					src={'./target-icon.svg'}
 					text={missionDescription}
 					title='Missão'
+				/>
+				<MissionCard
+					src={'/eye_icon.png'}
+					text={visionDescription}
+					title='Visão'
 				/>
 				<MissionCard
 					src={'./medal-icon.svg'}
