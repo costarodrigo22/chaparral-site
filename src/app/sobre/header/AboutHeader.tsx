@@ -32,7 +32,7 @@ export default function AboutHeader({
 						}}
 					></h1>
 					<h2
-						className='max-w-[648px] text-xs md:text-base font-medium xl:text-lg'
+						className='max-w-[648px] text-xs md:text-base font-medium xl:text-lg text-justify'
 						dangerouslySetInnerHTML={{
 							__html: description,
 						}}

@@ -9,6 +9,7 @@ interface GenericCardProps {
 	title: string;
 	text: string;
 }
+
 export default function GenericCard({
 	src,
 	linkText,

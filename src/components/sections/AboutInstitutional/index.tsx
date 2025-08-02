@@ -1,7 +1,7 @@
 'use client';
 import { useEffect, useState } from 'react';
 import { getColors } from '@/lib/utils';
-import Image from 'next/image';
+// import Image from 'next/image';
 import MediaModal from './components/MediaModal';
 
 interface IAboutInstitutionalProps {
@@ -53,13 +53,13 @@ export default function AboutInstitutional({
 							}}
 						/>
 						<h4
-							className=' text-white max-w-[400px] xl:max-w-[500px] font-medium text-xs md:text-sm lg:text-base xl:text-xl'
+							className=' text-white max-w-[400px] xl:max-w-[500px] font-medium text-xs md:text-sm lg:text-base xl:text-xl text-justify'
 							dangerouslySetInnerHTML={{
 								__html: infos.description,
 							}}
 						/>
 					</div>
-					<div
+					{/* <div
 						className='flex items-center gap-4 hover:opacity-90 cursor-pointer'
 						onClick={() => {
 							setOpenModal(true);
@@ -80,7 +80,7 @@ export default function AboutInstitutional({
 						>
 							Assistir Vídeo
 						</span>
-					</div>
+					</div> */}
 				</div>
 			</section>
 		</>

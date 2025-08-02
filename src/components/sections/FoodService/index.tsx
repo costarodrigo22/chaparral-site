@@ -1,4 +1,5 @@
 'use client';
+
 import Button from '@/components/ui/Button/index';
 import { useCallback, useEffect, useState } from 'react';
 import BeAPartnerModal from './components/BeAPartnerModal';
@@ -31,6 +32,7 @@ export default function FoodService({ image }: FoodServiceProps) {
 	useEffect(() => {
 		handleGetInfos();
 	}, [handleGetInfos]);
+
 	return (
 		<>
 			<BeAPartnerModal onClose={() => setOpenModal(false)} open={openModal} />
@@ -48,6 +50,7 @@ export default function FoodService({ image }: FoodServiceProps) {
 					</h2>
 					<span className='font-normal text-sm 2xl:text-lg max-w-[630px] text-center lg:text-left'>
 						<span
+							className='text-justify'
 							dangerouslySetInnerHTML={{
 								__html: info?.description,
 							}}
@@ -61,9 +64,12 @@ export default function FoodService({ image }: FoodServiceProps) {
 					/>
 				</div>
 				<div
-					className='w-[43.68%] hidden lg:block h-auto bg-no-repeat bg-center bg-cover'
+					className='w-[50%] hidden lg:block h-full bg-no-repeat bg-center'
 					style={{
 						backgroundImage: `url(${image})`,
+						backgroundSize: 'contain',
+						backgroundRepeat: 'no-repeat',
+						backgroundPosition: 'center',
 					}}
 				></div>
 			</div>

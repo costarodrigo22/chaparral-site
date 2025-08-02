@@ -46,7 +46,7 @@ export default function OwnProduction({ image }: OwnProductionProps) {
 
 	return (
 		<section
-			className='flex xl:pl-44 pl-6 md:gap-16 lg:gap-20 w-full items-center justify-start'
+			className='flex xl:pl-44 pl-6 md:gap-10 lg:gap-10 w-full items-center justify-start'
 			style={{
 				backgroundImage: `url(${image})`,
 				aspectRatio: 1.9,
@@ -55,17 +55,17 @@ export default function OwnProduction({ image }: OwnProductionProps) {
 				backgroundRepeat: 'no-repeat',
 			}}
 		>
-			<div className='flex flex-col text-center md:text-left items-center md:items-start gap-3 md:gap-6 lg:gap-12 mt-0 lg:mt-14 xl:mt-24'>
-				<div className='flex flex-col gap-2 lg:gap-7'>
+			<div className='bg-stone-50/70 p-8 rounded-lg flex flex-col text-center md:text-left items-center md:items-start gap-3 md:gap-6 lg:gap-1 mt-0 lg:mt-14 xl:mt-24 h-auto w-2/3'>
+				<div className='flex flex-col gap-2 lg:gap-2'>
 					<h3
-						className='max-w-[400px] text-xl md:text-2xl lg:text-3xl xl:text-4xl font-semibold'
+						className=' text-xl md:text-2xl lg:text-3xl xl:text-4xl font-semibold'
 						style={{ color: getColors(infos?.title || '') }}
 						dangerouslySetInnerHTML={{
 							__html: infos?.title || '',
 						}}
 					/>
 					<h4
-						className='text-white max-w-[400px] xl:max-w-[500px] font-medium text-xs md:text-sm lg:text-base xl:text-xl'
+						className='text-white text-justify 2xl:max-w-[700px] font-medium text-xs md:text-sm lg:text-base xl:text-xl'
 						dangerouslySetInnerHTML={{
 							__html: infos?.description || '',
 						}}
@@ -77,7 +77,7 @@ export default function OwnProduction({ image }: OwnProductionProps) {
 					}}
 					style={{ color: getColors(infos?.title || '') }}
 					text='Saiba mais'
-					classNameCustom='bg-[#FFFFFF33] hover:bg-[#FFFFFF20]'
+					classNameCustom='bg-[#FFFFFF20] hover:bg-[#91848433]'
 					src='/arrow-right.svg'
 				/>
 			</div>

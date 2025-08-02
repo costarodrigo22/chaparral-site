@@ -26,13 +26,13 @@ export default function Sustainability({
 						/>
 						<div className='h-full px-2 pb-10 sm:pb-0 sm:px-0 w-full justify-center md:text-left text-center items-center md:items-start flex flex-col md:pl-[40px] xl:pl-[97px] z-10 pt-32 gap-[30px]'>
 							<h1
-								className='z-10 xl:max-w-[484px] font-semibold text-2xl xl:text-4xl text-darkGray '
+								className='z-10 xl:max-w-[484px] font-semibold text-2xl xl:text-4xl text-darkGray'
 								dangerouslySetInnerHTML={{
 									__html: title,
 								}}
 							/>
 							<h2
-								className='z-10 max-w-[600px] xl:max-w-[648px] font-medium text-lightGray text-base xl:text-lg'
+								className='z-10 max-w-[600px] xl:max-w-[648px] font-medium text-lightGray text-base xl:text-lg text-justify'
 								dangerouslySetInnerHTML={{
 									__html: description,
 								}}
